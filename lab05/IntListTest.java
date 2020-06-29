@@ -103,7 +103,6 @@ public class IntListTest {
         assertEquals(a, IntList.of(1, 2, 3, 4));
         a.add(5);
         assertEquals(a, IntList.of(1, 2, 3, 4, 5));
-
         IntList single = IntList.of(1);
         single.add(2);
         assertEquals(single, IntList.of(1, 2));
@@ -130,7 +129,6 @@ public class IntListTest {
     public void testDSquareList() {
         IntList L = IntList.of(1, 2, 3);
         assertEquals(IntList.of(1, 2, 3), L);
-
         IntList.dSquareList(L);
         assertEquals(IntList.of(1, 4, 9), L);
     }

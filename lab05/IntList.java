@@ -6,25 +6,35 @@
 
 public class IntList {
 
-    /** The integer stored by this node. */
+    /**
+     * The integer stored by this node.
+     */
     public int item;
-    /** The next node in this IntList. */
+    /**
+     * The next node in this IntList.
+     */
     public IntList next;
 
-    /** Constructs an IntList storing ITEM and next node NEXT. */
+    /**
+     * Constructs an IntList storing ITEM and next node NEXT.
+     */
     public IntList(int item, IntList next) {
         this.item = item;
         this.next = next;
     }
 
-    /** Constructs an IntList storing ITEM and no next node. */
+    /**
+     * Constructs an IntList storing ITEM and no next node.
+     */
     public IntList(int item) {
         this(item, null);
     }
 
-    /** Returns an IntList consisting of the elements in ITEMS.
+    /**
+     * Returns an IntList consisting of the elements in ITEMS.
      * IntList L = IntList.list(1, 2, 3);
-     * System.out.println(L.toString()) // Prints 1 2 3 */
+     * System.out.println(L.toString()) // Prints 1 2 3
+     */
     public static IntList of(int... items) {
         /** Check for cases when we have no element given. */
         if (items.length == 0) {
@@ -50,7 +60,25 @@ public class IntList {
      */
     public int get(int position) {
         // YOUR CODE HERE
-        return -1;
+        IntList copls = this;
+        int N = 1;
+        while (copls.next != null) {
+            copls = copls.next;
+            N += 1;
+        }
+        if (position == 0) {
+            return this.item;
+        } else if (position < 0 || position >= N) {
+            throw new IllegalArgumentException("git fucked");
+        } else {
+            IntList pos = this;
+            int i = 0;
+            while (i < position) {
+                pos = pos.next;
+                i += 1;
+            }
+            return pos.item;
+        }
     }
 
     /**
@@ -61,7 +89,14 @@ public class IntList {
      */
     public String toString() {
         // YOUR CODE HERE
-        return null;
+        IntList f = this;
+        String make_empty_array = "";
+        while (f != null) {
+            make_empty_array = make_empty_array + f.item + " ";
+            f = f.next;
+        }
+        make_empty_array = make_empty_array.trim();
+        return make_empty_array;
     }
 
     /**
@@ -81,7 +116,12 @@ public class IntList {
      * @param value, the int to be added.
      */
     public void add(int value) {
-        // YOUR CODE HERE
+        // YOUR CODE HERE.
+        IntList k = this;
+        while (k.next!=null){
+            k=k.next;
+        }
+        k.next = new IntList(value);
     }
 
     /**
@@ -91,7 +131,15 @@ public class IntList {
      */
     public int smallest() {
         // YOUR CODE HERE
-        return -1;
+        IntList j = this;
+        int min = j.item;
+        while (j != null) {
+            if (min > j.item) {
+                min = j.item;
+            }
+            j = j.next;
+        }
+        return min;
     }
 
     /**
@@ -101,7 +149,13 @@ public class IntList {
      */
     public int squaredSum() {
         // YOUR CODE HERE
-        return -1;
+        int sum = 0;
+        IntList k = this;
+        while (k != null) {
+            sum += (k.item * k.item);
+            k = k.next;
+        }
+        return sum;
     }
 
     /**
@@ -137,7 +191,8 @@ public class IntList {
         return res;
     }
 
-    /** Returns a list equal to L with all elements squared. Non-destructive.
+    /**
+     * Returns a list equal to L with all elements squared. Non-destructive.
      *
      * @param L list to non-destructively square.
      * @return the squared list.
@@ -170,8 +225,12 @@ public class IntList {
      * @param B list to be on the back of the new list.
      * @return new list with A followed by B.
      */
-     public static IntList catenate(IntList A, IntList B) {
-        // YOUR CODE HERE
-         return null;
-     }
+    public static IntList catenate(IntList A, IntList B) {
+        if (A == null) {
+            return B;
+        } else {
+            return null;
+        }
+
+    }
 }
