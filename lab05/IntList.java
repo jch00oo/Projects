@@ -142,14 +142,11 @@ public class IntList {
      * @param value, the int to be added.
      */
     public void add(int value) {
-        IntList a = new IntList(value);
-        a.item = value;
-        a.next = null;
         IntList l = this;
         while (l.next != null) {
             l = l.next;
         }
-        l.next = a;
+        l.next = new IntList(value);
     }
 
     /**
