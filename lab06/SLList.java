@@ -101,7 +101,7 @@ public class SLList {
      * Returns the size of the list.
      */
     public int size() {
-        return 0;
+        return size;
     }
 
     /** Adds x to the front of the list. */
