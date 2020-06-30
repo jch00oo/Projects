@@ -118,11 +118,36 @@ public class SLList {
 
     /** Adds x to the list at the specified index. */
     public void add(int index, int x) {
-        // TODO
+        if (index >= size) {
+            IntListNode k = sentinel;
+            size += 1;
+            while (k.next != sentinel) {
+                k = k.next;
+            }
+            k.next = new IntListNode(x, sentinel);
+        }
+        else if (index == 0) {
+            this.addFirst(x);
+            size += 1;
+        } /*good*/
+        else if (index == 1 && sentinel.next == sentinel) {
+            IntListNode j = sentinel;
+            j.next = new IntListNode(x, sentinel);
+            size += 1;
+        } /*good*/
+        else {
+            IntListNode l = sentinel;
+            for (int i = 0; i < index; i += 1) {
+                l = l.next;
+            }
+            l.next = new IntListNode(x, l.next);
+            size += 1; /*good*/
+        }
     }
+
 
     /** Destructively reverses this list. */
     public void reverse() {
-        // TODO
+
     }
 }
