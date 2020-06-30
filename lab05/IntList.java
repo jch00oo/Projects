@@ -106,8 +106,39 @@ public class IntList {
      * @return Whether the two lists are equal.
      */
     public boolean equals(Object obj) {
-        // YOUR CODE HERE
-        return false;
+        // not same type
+        if (!(obj instanceof IntList)){
+            return false;
+        }
+        //check length of first array
+        IntList k=this;
+        int count=0;
+        while (k.next!=null){
+            k=k.next;
+            count+=1;
+        }
+        //check length of second array
+        int count2=0;
+        IntList l= (IntList) obj;
+        while (l.next!=null){
+            l=l.next;
+            count2+=1;
+        }
+        //are the two lengths equal
+        if (!(count==count2)){
+            return false;
+        }
+        //is everything the same inside
+        IntList k2 = this; //this
+        IntList l2 = ((IntList)obj); //that
+        while ((k2.next!=null)&&(l2.next!=null)){
+            k2=k2.next;
+            l2=l2.next;
+            if (k2.item!=l2.item){
+                return false;
+            }
+        }
+        return true;
     }
 
     /**
@@ -119,8 +150,7 @@ public class IntList {
         // YOUR CODE HERE.
         IntList k = this;
         while (k.next!=null){
-            k=k.next;
-        }
+            k=k.next; }
         k.next = new IntList(value);
     }
 
@@ -213,10 +243,14 @@ public class IntList {
      * @return new list with A followed by B.
      */
     public static IntList dcatenate(IntList A, IntList B) {
-        // YOUR CODE HERE
-        return null;
+        // destroy list A by just adding onto it
+        IntList a = A;
+        while (a.next!=null) {
+            a = a.next; //this is just overwriting the old list
+        }
+        a.next= B;
+        return A;
     }
-
     /**
      * Returns a new IntList consisting of A followed by B,
      * non-destructively.
@@ -226,11 +260,24 @@ public class IntList {
      * @return new list with A followed by B.
      */
     public static IntList catenate(IntList A, IntList B) {
-        if (A == null) {
+        IntList a =A;
+        IntList b=B;
+        IntList c= new IntList (0);
+        IntList d=c;
+        if (A==null){
             return B;
-        } else {
-            return null;
         }
-
+        while (a!=null){
+            d.next= new IntList(a.item);
+            d=d.next;
+            a=a.next;
+            }
+        while (b!=null){
+            d.next= new IntList(b.item);
+            d=d.next;
+            b=b.next;
+        }
+        c=c.next;
+        return c;
     }
 }
