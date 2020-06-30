@@ -35,6 +35,8 @@ public class SLList {
             return item + "";
         }
 
+        public void addFirst() {
+        }
     }
 
     /* The first item (if it exists) is at sentinel.next. */
@@ -95,9 +97,11 @@ public class SLList {
         return list;
     }
 
-    /** Returns the size of the list. */
+    /**
+     * Returns the size of the list.
+     */
     public int size() {
-        return size;
+        return 0;
     }
 
     /** Adds x to the front of the list. */
@@ -145,9 +149,21 @@ public class SLList {
         }
     }
 
-
     /** Destructively reverses this list. */
     public void reverse() {
-
+        sentinel.next = reverseHelper(sentinel.next);
     }
+
+    public IntListNode reverseHelper(IntListNode head) {
+        if (head == sentinel || head.next == sentinel) {
+            return head;
+        }
+        else {
+            IntListNode reversed = reverseHelper(head.next);
+            head.next.next = head;
+            head.next = sentinel;
+            return reversed;
+        }
+    }
+
 }

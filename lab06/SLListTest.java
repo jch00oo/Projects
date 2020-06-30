@@ -27,10 +27,7 @@ public class SLListTest {
 
     @Test
     public void testSLListReverse() {
-        /* test when list doesn't have anything in it */
-        SLList a = SLList.of();
-        a.reverse();
-        assertEquals(SLList(), ); /*idk bruh */
+
 
         /* test when list only has one element */
         SLList b = SLList.of(18);
@@ -43,6 +40,15 @@ public class SLListTest {
         assertEquals(3, c.get(0));
         assertEquals(2, c.get(1));
         assertEquals(1, c.get(2));
+
+        SLList d = SLList.of(1,2,3,4,5,6);
+        d.reverse();
+        assertEquals(6, d.get(0));
+        assertEquals(5, d.get(1));
+        assertEquals(4, d.get(2));
+        assertEquals(3, d.get(3));
+        assertEquals(2, d.get(4));
+        assertEquals(1, d.get(5));
     }
 
     }
