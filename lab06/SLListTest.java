@@ -27,6 +27,7 @@ public class SLListTest {
 
     @Test
     public void testSLListReverse() {
+        /* when there's nothing */
 
 
         /* test when list only has one element */
