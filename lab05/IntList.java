@@ -268,7 +268,8 @@ public class IntList {
         if (A == null) {
             result = new IntList(B.item);
             b = b.next;
-        } else {
+        }
+        else {
             result = new IntList(A.item);
             a = a.next;
         }
