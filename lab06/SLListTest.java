@@ -42,14 +42,12 @@ public class SLListTest {
         assertEquals(2, c.get(1));
         assertEquals(1, c.get(2));
 
-        SLList d = SLList.of(1,2,3,4,5,6);
+        SLList d = SLList.of(1,2,3,4);
         d.reverse();
-        assertEquals(6, d.get(0));
-        assertEquals(5, d.get(1));
-        assertEquals(4, d.get(2));
-        assertEquals(3, d.get(3));
-        assertEquals(2, d.get(4));
-        assertEquals(1, d.get(5));
+        assertEquals(4, d.get(0));
+        assertEquals(3, d.get(1));
+        assertEquals(2, d.get(2));
+        assertEquals(1, d.get(3));
     }
 
     }
