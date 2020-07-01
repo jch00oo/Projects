@@ -245,6 +245,10 @@ public class IntList {
     public static IntList dcatenate(IntList A, IntList B) {
         // destroy list A by just adding onto it
         IntList a = A;
+        if (A==null){
+            A=B;
+            return A;
+        }
         while (a.next!=null) {
             a = a.next; //this is just overwriting the old list
         }
