@@ -122,38 +122,24 @@ public class SLList {
 
     /** Adds x to the list at the specified index. */
     public void add(int index, int x) {
-        if (index >= size) {
-            IntListNode k = sentinel;
-            size += 1;
-            while (k.next != sentinel) {
-                k = k.next;
+        size += 1; //INCREASE THE SIZE
+        IntListNode pointsatindex = sentinel; //the index pointer starts at sentinal
+        while (index > 0) { //we need to insert at index, but we need to find the before and after the index
+            index--; //index will be whatever inputted then kept subtracting until 0 then we hit the "before"
+            pointsatindex = pointsatindex.next; //ok now actually move down the list with the index pointer
+            if (pointsatindex.next == sentinel && index > 0) { //this is the case where the index too big, but we reached the sentinel end already
+                pointsatindex.next = new IntListNode(x, sentinel); //sticks it on the end. instead of sentinel it points to x, which then points sentinel
+                return; //otherwise big loop no end RIP
             }
-            k.next = new IntListNode(x, sentinel);
         }
-        else if (index == 0) {
-            this.addFirst(x);
-            size += 1;
-        } /*good*/
-        else if (index == 1 && sentinel.next == sentinel) {
-            IntListNode j = sentinel;
-            j.next = new IntListNode(x, sentinel);
-            size += 1;
-        } /*good*/
-        else {
-            IntListNode l = sentinel;
-            for (int i = 0; i < index; i += 1) {
-                l = l.next;
-            }
-            l.next = new IntListNode(x, l.next);
-            size += 1; /*good*/
-        }
+        pointsatindex.next = new IntListNode(x, pointsatindex.next); // once we reach that place we need to use order of operations. the .next is rerouted to the new intnode x we made.
+        //bc of order of operations; it's still going from objec 1 to 2 bc it evaluates PEMDAS style. so it'll evaluate pointsatindex.next in the function  which is still at object 2. so once it does that it will evaluate rest of expressoin like we want
     }
 
     /** Destructively reverses this list. */
     public void reverse() {
         sentinel.next = reverseHelper(sentinel.next);
     }
-
     public IntListNode reverseHelper(IntListNode head) {
         if (head == sentinel || head.next == sentinel) {
             return head;
@@ -165,5 +151,4 @@ public class SLList {
             return reversed;
         }
     }
-
 }

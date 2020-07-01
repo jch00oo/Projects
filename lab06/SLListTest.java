@@ -36,19 +36,22 @@ public class SLListTest {
         assertEquals(18, b.get(0));
 
         /* test normal case */
-        SLList c = SLList.of(1,2,3);
+        SLList c = SLList.of(1, 2, 3);
         c.reverse();
         assertEquals(3, c.get(0));
         assertEquals(2, c.get(1));
         assertEquals(1, c.get(2));
 
+<<<<<<< HEAD
         SLList d = SLList.of(1,2,3,4);
+=======
+        SLList d = SLList.of(1, 2, 3, 4, 5, 6);
+>>>>>>> b98e8bfc97f7a778d9521351dd5904ded580d6d0
         d.reverse();
         assertEquals(4, d.get(0));
         assertEquals(3, d.get(1));
         assertEquals(2, d.get(2));
         assertEquals(1, d.get(3));
     }
-
-    }
+}
 
