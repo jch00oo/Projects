@@ -122,52 +122,23 @@ public class SLList {
 
     /** Adds x to the list at the specified index. */
     public void add(int index, int x) {
-            size+=1;
-            IntListNode pointsatindex = sentinel;
-            while (index > 0) { //find the before insert
-                index--;
-                pointsatindex = pointsatindex.next;
-                if (pointsatindex.next==sentinel && index>0){
-                    pointsatindex.next=new IntListNode (x,sentinel);
-                    return;
-                }
+        size += 1;
+        IntListNode pointsatindex = sentinel;
+        while (index > 0) { //find the before insert
+            index--;
+            pointsatindex = pointsatindex.next;
+            if (pointsatindex.next == sentinel && index > 0) {
+                pointsatindex.next = new IntListNode(x, sentinel);
+                return;
             }
-            pointsatindex.next = new IntListNode(x, pointsatindex.next); //make a new object intlistnode. OOP exists lol
-
-
-        /**if (index >= size) { //when index is bigger than size add on end
-            IntListNode k = sentinel;
-            size += 1;
-            while (k.next != sentinel) {
-                k = k.next;
-            }
-            k.next = new IntListNode(x, sentinel);
         }
-        else if (index == 0) { //1 box list just stick in 1 box
-            this.addFirst(x);
-            size += 1;
-        }
-        else if (index == 1 && sentinel.next == sentinel) { //2 box list
-            IntListNode j = sentinel;
-            j.next = new IntListNode(x, sentinel);
-            size += 1;
-        }
-        else { //normal case
-            IntListNode l = sentinel;
-            for (int i = 0; i < index; i += 1) {
-                l = l.next;
-            }
-            l.next = new IntListNode(x, l.next);
-            size += 1;
-        } **/
-
+        pointsatindex.next = new IntListNode(x, pointsatindex.next); //make a new object intlistnode. OOP exists lol
     }
 
     /** Destructively reverses this list. */
     public void reverse() {
         sentinel.next = reverseHelper(sentinel.next);
     }
-
     public IntListNode reverseHelper(IntListNode head) {
         if (head == sentinel || head.next == sentinel) {
             return head;
@@ -179,5 +150,4 @@ public class SLList {
             return reversed;
         }
     }
-
 }
