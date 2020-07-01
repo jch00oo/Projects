@@ -52,6 +52,7 @@ public class LinkedListDeque<T> {
 
     /* adds item of type T to the back of the deque */
     public void addLast(T item) {
+
     }
 
     /* return true if deque is empty, false otherwise */
@@ -70,7 +71,9 @@ public class LinkedListDeque<T> {
 
     /* removes and returns item at front of the deque;
     return null if no such item exists */
-    public T removeFirst()
+    public T removeFirst() {
+
+    }
 
     /* removes and returns the item at the back of the deque.
     returns null if no such item exists */
