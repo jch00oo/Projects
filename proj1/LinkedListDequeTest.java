@@ -6,6 +6,15 @@ public class LinkedListDequeTest {
 
     /** Adds a few things to the deque, checking isEmpty() and size() are correct,
      * finally printing the results. */
+
+    @Test
+    public void addFirstTest() {
+        LinkedListDeque test1 = LinkedListDeque.of(1, 3, 5);
+
+        test1.addFirst(89);
+        assertEquals
+    }
+
     @Test
     public void addIsEmptySizeTest() {
         System.out.println("Running add/isEmpty/Size test.");
