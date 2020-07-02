@@ -12,9 +12,6 @@ public class LinkedListDeque<T> {
         }
     }
 
-    private class of(___)
-    private class equals(___)
-
     private int size;
     private IntNode sentinel;
 
@@ -52,7 +49,7 @@ public class LinkedListDeque<T> {
 
     /* adds item of type T to the back of the deque */
     public void addLast(T item) {
-        IntNode last = new IntNode(item, sentinel, sentinel.prev); /*not sure abt last part */
+        IntNode last = new IntNode(sentinel.prev, item, sentinel); /*not sure abt last part */
         sentinel.prev = last;
         last.prev.next = last;
         size += 1;
@@ -70,8 +67,13 @@ public class LinkedListDeque<T> {
 
     /* prints items in the deque from first to last,
     print out new line once all items have been printed */
-    public void printDeque()
-
+    public void printDeque() {
+        IntNode copy = sentinel.next;
+        while (copy != sentinel) {
+            System.out.print(copy.item + " ");
+            copy = copy.next;
+        }
+    }
     /* removes and returns item at front of the deque;
     return null if no such item exists */
     public T removeFirst() {
@@ -98,8 +100,20 @@ public class LinkedListDeque<T> {
     1 is the next item, and so forth. return null if no such item exists.
     must not alter the deque */
     public T get(int index) {
-
+        if (index < 0 || index >= size || isEmpty()) {
+            return null;
+        }
+        else {
+            IntNode curr = sentinel.next;
+            int i = 0;
+            while (i <= index) {
+                if (i == index) {
+                    return curr.item;
+                }
+                curr = curr.next;
+                i += 1;
+            }
+            return curr.item;
+        }
     }
-
-
 }
