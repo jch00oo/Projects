@@ -52,7 +52,10 @@ public class LinkedListDeque<T> {
 
     /* adds item of type T to the back of the deque */
     public void addLast(T item) {
-
+        IntNode last = new IntNode(item, sentinel, sentinel.prev); /*not sure abt last part */
+        sentinel.prev = last;
+        last.prev.next = last;
+        size += 1;
     }
 
     /* return true if deque is empty, false otherwise */
@@ -72,12 +75,24 @@ public class LinkedListDeque<T> {
     /* removes and returns item at front of the deque;
     return null if no such item exists */
     public T removeFirst() {
-
+        IntNode oldFirst = sentinel.next;
+        T First = oldFirst.item;
+        sentinel.next = oldFirst.next;
+        sentinel.next.prev = sentinel;
+        size -= 1;
+        return First;
     }
 
     /* removes and returns the item at the back of the deque.
     returns null if no such item exists */
-    public T removeLast()
+    public T removeLast() {
+        IntNode oldLast = sentinel.prev;
+        T Last = oldLast.item;
+        sentinel.prev = oldLast.prev;
+        sentinel.prev.next = sentinel;
+        size -= 1;
+        return Last;
+    }
 
     /* gets the item at the given index, where 0 is the front,
     1 is the next item, and so forth. return null if no such item exists.
