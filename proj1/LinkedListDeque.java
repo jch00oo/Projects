@@ -1,4 +1,4 @@
-public class LinkedListDeque<T> {
+public class LinkedListDeque<T> implements Deque<T> {
 
     private class IntNode {
         T item;
@@ -53,11 +53,6 @@ public class LinkedListDeque<T> {
         sentinel.prev = last;
         last.prev.next = last;
         size += 1;
-    }
-
-    /* return true if deque is empty, false otherwise */
-    public boolean isEmpty() {
-        return size == 0;
     }
 
     /*returns number of items in the deque */

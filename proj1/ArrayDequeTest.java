@@ -3,7 +3,6 @@ import static org.junit.Assert.*;
 
 public class ArrayDequeTest {
 
-    /**Tests AddFirst and addLast methods and compare using printDeque**/
     @Test
     public void Testfirstlast() {
         ArrayDeque<Integer> first= new ArrayDeque<>();
@@ -20,7 +19,31 @@ public class ArrayDequeTest {
         last.addLast(5);
         first.printDeque();
         last.printDeque();
+        assertEquals((Integer)5,(Integer)first.size());
+        assertEquals((Integer)5,(Integer)last.size());
     }
+
+    /**Checks the resize and a combo of add first and last **/
+    @Test
+    public void TrivialResizeTest() {
+        ArrayDeque<Integer> combo= new ArrayDeque<>();
+        combo.addLast(5);
+        combo.addFirst(4);
+        combo.addLast(6);
+        combo.addFirst(3);
+        combo.addLast(7);
+        assertEquals((Integer)5,(Integer)combo.size());
+        combo.printDeque();
+        combo.removeFirst();
+        assertEquals((Integer)4,(Integer)combo.size());
+        assertEquals((Integer)4,(Integer)combo.getItem(0));
+        combo.printDeque();
+        combo.removeLast();
+        assertEquals((Integer)3,(Integer)combo.size());
+        assertEquals((Integer)6,(Integer)combo.getItem(2));
+        combo.printDeque();
+    }
+
 
     /**Print only test**/
     @Test
@@ -57,5 +80,24 @@ public class ArrayDequeTest {
         assertEquals((Integer) 5, (Integer) K.get(0));
     }
 
-    
+    @Test
+    public void Trickyremoves() {
+        ArrayDeque<Integer> lld1 = new ArrayDeque<>();
+        ArrayDeque<Integer> lld2 = new ArrayDeque<>();
+        lld1.addFirst(1);
+        lld1.addLast(2);
+        lld1.removeFirst();
+        lld1.printDeque();
+        assertEquals((Integer)1,(Integer)lld1.size());
+        lld1.removeFirst();
+        lld1.printDeque();
+
+        lld2.addFirst(1);
+        lld2.addLast(2);
+        lld2.removeFirst();
+        lld2.removeFirst();
+        lld2.removeFirst();
+        lld2.printDeque();
+        assertEquals((Integer)0,(Integer)lld2.size());
+    }
     }
