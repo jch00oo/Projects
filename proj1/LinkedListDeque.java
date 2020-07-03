@@ -9,7 +9,7 @@ public class LinkedListDeque<T> implements Deque<T> {
         size = 0;
     }
 
-    /* Returns item at given int index using recursion. */
+    /** Returns item at given int index using recursion. */
     public T getRecursive(int index) {
         if (index < size && index >= 0) {
             /* do we need to decrement index? */
@@ -18,7 +18,7 @@ public class LinkedListDeque<T> implements Deque<T> {
         return null;
     }
 
-    /* A helper method for getRecursive that takes in int index
+    /** A helper method for getRecursive that takes in int index
     and an IntNode n. */
     private T getRecursiveHelper(int index, IntNode n) {
         if (index == 0) {
@@ -28,7 +28,7 @@ public class LinkedListDeque<T> implements Deque<T> {
         }
     }
 
-    /* Takes in and adds item of type T to the front of the deque. */
+    /** Takes in and adds item of type T to the front of the deque. */
     public void addFirst(T item) {
         IntNode first = new IntNode(sentinel, item, sentinel.next);
         sentinel.next = first;
@@ -36,7 +36,7 @@ public class LinkedListDeque<T> implements Deque<T> {
         size += 1;
     }
 
-    /* Takes in and adds item of type T to the back of the deque. */
+    /** Takes in and adds item of type T to the back of the deque. */
     public void addLast(T item) {
         IntNode last = new IntNode(sentinel.prev, item, sentinel);
         sentinel.prev = last;
@@ -44,12 +44,12 @@ public class LinkedListDeque<T> implements Deque<T> {
         size += 1;
     }
 
-    /* Returns number of items in the deque as an int. */
+    /** Returns number of items in the deque as an int. */
     public int size() {
         return size;
     }
 
-    /* Prints items in the deque from first to last,
+    /** Prints items in the deque from first to last,
     printing out a new line once all items have been printed. */
     public void printDeque() {
         IntNode copy = sentinel.next;
@@ -59,7 +59,7 @@ public class LinkedListDeque<T> implements Deque<T> {
         }
     }
 
-    /* Removes and returns item at front of the deque;
+    /** Removes and returns item at front of the deque;
     returns null if no such item exists. */
     public T removeFirst() {
         IntNode oldfirst = sentinel.next;
@@ -70,7 +70,7 @@ public class LinkedListDeque<T> implements Deque<T> {
         return first;
     }
 
-    /* Removes and returns the item at the back of the deque.
+    /** Removes and returns the item at the back of the deque.
     Returns null if no such item exists. */
     public T removeLast() {
         IntNode oldlast = sentinel.prev;
@@ -81,7 +81,7 @@ public class LinkedListDeque<T> implements Deque<T> {
         return last;
     }
 
-    /* Returns the item at the given int index;
+    /** Returns the item at the given int index;
     returns null if no such item exists.
     Must not alter the deque. */
     public T get(int index) {

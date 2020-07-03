@@ -13,6 +13,9 @@ public class ArrayDeque<T> implements Deque<T> {
         nextLast = 1;
     }
 
+    /**
+     * Adds int to measure capacity of array in order to resize.
+     */
     private void resize(int capacity) {
         T[] a = (T[]) new Object[capacity];
         int oldi = (nextFirst + 1) % items.length;
@@ -25,7 +28,9 @@ public class ArrayDeque<T> implements Deque<T> {
         nextLast = size;
     }
 
-    /* adds item of type T to the front of the deque */
+    /**
+     * Adds item of type T to the front of the deque.
+     */
     public void addFirst(T item) {
         if (size == items.length) {
             resize(size * 2);
@@ -35,7 +40,9 @@ public class ArrayDeque<T> implements Deque<T> {
         size += 1;
     }
 
-    /* adds item of type T to the back of the deque */
+    /**
+     * Adds item of type T to the back of the deque.
+     */
     public void addLast(T item) {
         if (size == items.length) {
             resize(size * 2);
@@ -46,13 +53,17 @@ public class ArrayDeque<T> implements Deque<T> {
     }
 
 
-    /*returns number of items in the deque */
+    /**
+     * This method returns the int number of items in the deque.
+     */
     public int size() {
         return size;
     }
 
-    /* prints items in the deque from first to last,
-    print out new line once all items have been printed */
+    /**
+     * Prints items in the deque from first to last,
+     * and print out new line once all items have been printed.
+     */
     public void printDeque() {
         int tracker = (nextFirst + 1) % items.length;
         if (size == items.length) {
@@ -67,8 +78,11 @@ public class ArrayDeque<T> implements Deque<T> {
         System.out.println("");
     }
 
-    /* removes and returns item at front of the deque;
-    return null if no such item exists */
+
+    /**
+     * This method removes and returns item at front of the deque;
+     * return null if no such item exists.
+     */
     public T removeFirst() {
         if (!(isEmpty())) {
             nextFirst = (nextFirst + 1) % items.length;
@@ -84,8 +98,11 @@ public class ArrayDeque<T> implements Deque<T> {
     }
 
 
-    /* removes and returns the item at the back of the deque.
-    returns null if no such item exists */
+    /**
+     * This method removes and returns the item
+     * at the back of the deque,
+     * returns null if no such item exists.
+     */
     public T removeLast() {
         if (!(isEmpty())) {
             nextLast = ((nextLast - 1) + items.length) % items.length;
@@ -100,9 +117,11 @@ public class ArrayDeque<T> implements Deque<T> {
         return null;
     }
 
-    /* gets the item at the given index, where 0 is the front,
-    1 is the next item, and so forth. return null if no such item exists.
-    must not alter the deque */
+    /**
+     * This method nondestructively takes in an int index and 1 as
+     * the next item, returns item T or
+     * returns null if no such item exists.
+     **/
     public T get(int index) {
         if (index >= items.length || index < 0) {
             return null;
@@ -115,13 +134,15 @@ public class ArrayDeque<T> implements Deque<T> {
         return items[arrayindex % items.length];
     }
 
-    /** These methods were used for testing.
-    public T getItem(int index) {
-        return items[index];
-    }
-
-    public int getLength() {
-        return items.length;
-    }
-    **/
+    /**
+     * I am commenting these out, but the following were used in tests.
+     * public T getItem(int index) {
+     *         return items[index];
+     *     }
+     *
+     *     public int getLength() {
+     *         return items.length;
+     *     }
+     * 	Thanks.
+     **/
 }
