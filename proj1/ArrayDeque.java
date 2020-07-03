@@ -1,4 +1,4 @@
-public class ArrayDeque<T> implements Deque<T>{
+public class ArrayDeque<T> implements Deque<T> {
 
     private T[] items;
     private int size;
@@ -31,7 +31,7 @@ public class ArrayDeque<T> implements Deque<T>{
             resize(size * 2);
         }
         items[nextFirst] = item;
-        nextFirst = ((nextFirst - 1) + items.length)  % items.length;
+        nextFirst = ((nextFirst - 1) + items.length) % items.length;
         size += 1;
     }
 
@@ -56,13 +56,13 @@ public class ArrayDeque<T> implements Deque<T>{
     public void printDeque() {
         int tracker = (nextFirst + 1) % items.length;
         if (size == items.length) {
-            for (int i = tracker; i < items.length; i= i + 1)
+            for (int i = tracker; i < items.length; i = i + 1)
                 System.out.print(items[i] + " ");
-            for (int i = tracker; i < items.length; i= i + 1)
+            for (int i = tracker; i < items.length; i = i + 1)
                 System.out.print(items[i] + " ");
             System.out.println("");
         }
-        for (int i = tracker; i != nextLast; i = (i+1) % items.length)
+        for (int i = tracker; i != nextLast; i = (i + 1) % items.length)
             System.out.print(items[i] + " ");
         System.out.println("");
     }
@@ -115,6 +115,7 @@ public class ArrayDeque<T> implements Deque<T>{
         return items[arrayindex % items.length];
     }
 
+    /** These methods were used for testing.
     public T getItem(int index) {
         return items[index];
     }
@@ -122,4 +123,5 @@ public class ArrayDeque<T> implements Deque<T>{
     public int getLength() {
         return items.length;
     }
+    **/
 }

@@ -1,11 +1,15 @@
-import jdk.jfr.StackTrace;
 import org.junit.Test;
+
 import static org.junit.Assert.*;
 
-/** Performs some basic linked list tests. */
+/**
+ * Performs some basic linked list tests.
+ */
 public class LinkedListDequeTest {
 
-    /** Creates an empty Deque. Also inspired by whoever wrote lab 6 skeleton*/
+    /**
+     * Creates an empty Deque. Also inspired by whoever wrote lab 6 skeleton
+     */
     @Test
     public void isemptytest() {
         LinkedListDeque<String> lld1 = new LinkedListDeque<>();
@@ -16,20 +20,22 @@ public class LinkedListDequeTest {
         System.out.println("Right! Expected:" + 0 + "Actual:" + lld1.size());
     }
 
-    /**Adds an item of type T to the front of the deque. This SPECIFICALLY ONLY CHECKS FIRST AND RECURSIVE GET **/
+    /**
+     * Adds an item of type T to the front of the deque. This SPECIFICALLY ONLY CHECKS FIRST AND RECURSIVE GET
+     **/
     @Test
-    public void addFirstTest(){
+    public void addFirstTest() {
         LinkedListDeque<String> lld1 = new LinkedListDeque<String>();
         LinkedListDeque<Integer> lld2 = new LinkedListDeque<Integer>();
         try {
             assertTrue(lld1.isEmpty());
             lld1.addFirst("Jihee");
-            assertEquals("Jihee",lld1.getRecursive(0));
-            assertTrue(lld1.size()==1);
+            assertEquals("Jihee", lld1.getRecursive(0));
+            assertTrue(lld1.size() == 1);
 
             lld1.addFirst("I'm");
-            assertEquals("I'm",lld1.getRecursive(0));
-            assertTrue(lld1.size()==2);
+            assertEquals("I'm", lld1.getRecursive(0));
+            assertTrue(lld1.size() == 2);
 
         } finally {
             // The deque will be printed at the end of this test
@@ -38,20 +44,23 @@ public class LinkedListDequeTest {
             lld2.printDeque();
         }
     }
-    /**Adds an item of type T to the front of the deque. This SPECIFICALLY ONLY CHECKS LAST AND NORMAL GET **/
+
+    /**
+     * Adds an item of type T to the front of the deque. This SPECIFICALLY ONLY CHECKS LAST AND NORMAL GET
+     **/
     @Test
-    public void addLastTest(){
+    public void addLastTest() {
         LinkedListDeque<String> lld1 = new LinkedListDeque<>();
 
         try {
             assertTrue(lld1.isEmpty());
             lld1.addLast("Jihee");
-            assertEquals("Jihee",lld1.get(0));
-            assertTrue(lld1.size()==1);
+            assertEquals("Jihee", lld1.get(0));
+            assertTrue(lld1.size() == 1);
 
             lld1.addLast("am I");
-            assertEquals("am I",lld1.get(1));
-            assertTrue(lld1.size()==2);
+            assertEquals("am I", lld1.get(1));
+            assertTrue(lld1.size() == 2);
 
         } finally {
             // The deque will be printed at the end of this test
@@ -60,7 +69,10 @@ public class LinkedListDequeTest {
             lld1.printDeque();
         }
     }
-    /**This tests first, last, and size was given to us**/
+
+    /**
+     * This tests first, last, and size was given to us
+     **/
     @Test
     public void addIsEmptySizeTest() {
         System.out.println("Running add/isEmpty/Size test.");
@@ -91,7 +103,9 @@ public class LinkedListDequeTest {
         }
     }
 
-    /** THIS IS THE REMOVES FIRST TEST */
+    /**
+     * THIS IS THE REMOVES FIRST TEST
+     */
     @Test
     public void addRemoveTest() {
         System.out.println("Running add/remove FIRST test.");
@@ -111,7 +125,9 @@ public class LinkedListDequeTest {
         }
     }
 
-    /** THIS IS THE REMOVES LAST TEST */
+    /**
+     * THIS IS THE REMOVES LAST TEST
+     */
     @Test
     public void addRemoveLastTest() {
         System.out.println("Running add/remove LAST test.");
@@ -139,8 +155,10 @@ public class LinkedListDequeTest {
     }
 
 
-    /**check are the get and recursive gets equal**/
-    public boolean getrecursiveget(){
+    /**
+     * check are the get and recursive gets equal
+     **/
+    public boolean getrecursiveget() {
         System.out.println("Does the recursive get and the normal get print out the same thing?");
         LinkedListDeque<Integer> lld1 = new LinkedListDeque<>();
 
@@ -150,10 +168,9 @@ public class LinkedListDequeTest {
         lld1.addLast(3);
         lld1.addLast(4);
         lld1.addLast(5);
-        if (lld1.getRecursive(3)==lld1.get(3)){
+        if (lld1.getRecursive(3) == lld1.get(3)) {
             return true;
-        }
-        else {
+        } else {
             System.out.println("WRONG WRONG WRONG");
             System.out.println(lld1.getRecursive(3));
             System.out.println(lld1.get(3));
