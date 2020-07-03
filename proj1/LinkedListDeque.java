@@ -57,7 +57,7 @@ public class LinkedListDeque<T> {
 
     /* return true if deque is empty, false otherwise */
     public boolean isEmpty() {
-        return size == 0; /* bruh? */
+        return size == 0;
     }
 
     /*returns number of items in the deque */
@@ -74,6 +74,7 @@ public class LinkedListDeque<T> {
             copy = copy.next;
         }
     }
+
     /* removes and returns item at front of the deque;
     return null if no such item exists */
     public T removeFirst() {

@@ -42,7 +42,7 @@ public class LinkedListDequeTest {
     @Test
     public void addLastTest(){
         LinkedListDeque<String> lld1 = new LinkedListDeque<>();
-        LinkedListDeque<String> lld3 = new LinkedListDeque<>();
+
         try {
             assertTrue(lld1.isEmpty());
             lld1.addLast("Jihee");
@@ -129,6 +129,16 @@ public class LinkedListDequeTest {
             lld1.printDeque();
         }
     }
+
+    @Test
+    public void doesremovereturnright() {
+        LinkedListDeque<String> lld1 = new LinkedListDeque<>();
+        lld1.addFirst("not answer");
+        lld1.addFirst("yes answer");
+        assertEquals("yes answer", lld1.removeFirst());
+    }
+
+
     /**check are the get and recursive gets equal**/
     public boolean getrecursiveget(){
         System.out.println("Does the recursive get and the normal get print out the same thing?");
