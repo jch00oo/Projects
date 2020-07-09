@@ -8,6 +8,7 @@ public class GregorianDate extends Date {
         super(year, month, dayOfMonth);
     }
 
+<<<<<<< HEAD
     // YOUR CODE HERE
     @Override
     public Date nextDate() {
@@ -29,6 +30,28 @@ public class GregorianDate extends Date {
         return new GregorianDate(newYear, newMonth, newDay);
     }
 
+=======
+
+    public GregorianDate nextDate() {
+        int m = month;
+        int dOM = dayOfMonth;
+        int y = year;
+        int dOY = dayOfYear();
+
+        if (dOY == 365) {
+            m = 1;
+            dOM = 1;
+            y += 1;
+        } else if (dOM == getMonthLength(m) && m < 12) {
+            m += 1;
+            dOM = 1;
+        } else {
+            dOM += 1;
+        }
+        GregorianDate result = new GregorianDate(y, m, dOM);
+        return result;
+    }
+>>>>>>> f7bba3a1d0780abfb8dd94611308f425d5211328
 
     @Override
     public int dayOfYear() {

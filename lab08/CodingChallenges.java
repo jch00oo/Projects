@@ -1,8 +1,12 @@
+<<<<<<< HEAD
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 //or can just import everything like import java.util.*;
+=======
+import java.util.*;
+>>>>>>> f7bba3a1d0780abfb8dd94611308f425d5211328
 
 public class CodingChallenges {
 
@@ -11,6 +15,7 @@ public class CodingChallenges {
      * values from 0 to N except for one missing number.
      */
     public static int missingNumber(int[] values) {
+<<<<<<< HEAD
         //lol thanks parth
         Set<Integer> seensofar= new HashSet<>();
         for (int i: values){
@@ -23,7 +28,22 @@ public class CodingChallenges {
                 return x;
             }
         } //lineartime
+=======
+        Set<Integer> seenSoFar = new HashSet<>();
+        for (int i : values) { //linear time
+            seenSoFar.add(i);
+        }
+        for (int x = 0; x <= values.length; x++) { //linear time
+            if (!seenSoFar.contains(x)) {
+                return x;
+            }
+        }
+>>>>>>> f7bba3a1d0780abfb8dd94611308f425d5211328
         return -1;
+    }
+
+    public CodingChallenges(String s) {
+        super();
     }
 
     /**
@@ -31,6 +51,7 @@ public class CodingChallenges {
      * Assume all values in the array are unique.
      */
     public static boolean sumTo(int[] values, int n) {
+<<<<<<< HEAD
         // TODO
         //shout out to geeks for geeks
         //get sum minus the int n and if there is any number in the array that matches yes
@@ -42,6 +63,17 @@ public class CodingChallenges {
             else {
                 return false;
             }
+=======
+        Set<Integer> compareSum = new HashSet<>();
+        for (int i: values) {
+            compareSum.add(i);
+        }
+        for (int i = 0; i < values.length; i++) {
+            int curr = n - values[i];
+            if (compareSum.contains(curr)) {
+                return true;
+            }
+>>>>>>> f7bba3a1d0780abfb8dd94611308f425d5211328
         }
         return false;
     }
@@ -51,8 +83,11 @@ public class CodingChallenges {
      * permutation of s2 if it has the same number of each character as s2.
      */
     public static boolean isPermutation(String s1, String s2) {
+<<<<<<< HEAD
         // TODO
         //thanks to stack overflow
+=======
+>>>>>>> f7bba3a1d0780abfb8dd94611308f425d5211328
         Map<Character, Integer> perm = new HashMap<>();
         if (s1.length() != s2.length()) {
             return false;
@@ -81,6 +116,10 @@ public class CodingChallenges {
                 return false;
             }
         }
+<<<<<<< HEAD
         return true;
+=======
+    return true;
+>>>>>>> f7bba3a1d0780abfb8dd94611308f425d5211328
     }
 }
