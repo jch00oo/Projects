@@ -1,3 +1,5 @@
+import java.util.*;
+
 public class CodingChallenges {
 
     /**
@@ -5,8 +7,20 @@ public class CodingChallenges {
      * values from 0 to N except for one missing number.
      */
     public static int missingNumber(int[] values) {
-        // TODO
+        Set<Integer> seenSoFar = new HashSet<>();
+        for (int i : values) { //linear time
+            seenSoFar.add(i);
+        }
+        for (int x = 0; x <= values.length; x++) { //linear time
+            if (!seenSoFar.contains(x)) {
+                return x;
+            }
+        }
         return -1;
+    }
+
+    public CodingChallenges(String s) {
+        super();
     }
 
     /**
@@ -14,7 +28,13 @@ public class CodingChallenges {
      * Assume all values in the array are unique.
      */
     public static boolean sumTo(int[] values, int n) {
-        // TODO
+        Set<Integer> compareSum = new HashSet<>();
+        for (int i = 0; i < values.length; i++) {
+            int curr = n - values[i];
+            if (compareSum.contains(curr)) {
+                return true;
+            }
+        }
         return false;
     }
 
@@ -23,7 +43,34 @@ public class CodingChallenges {
      * permutation of s2 if it has the same number of each character as s2.
      */
     public static boolean isPermutation(String s1, String s2) {
-        // TODO
-        return false;
+        Map<Character, Integer> perm = new HashMap<>();
+        if (s1.length() != s2.length()) {
+            return false;
+        }
+        char[] str1 = s1.toCharArray();
+        char[] str2 = s2.toCharArray();
+
+        for (char i : str1) {
+            if (!perm.containsKey(i)) {
+                perm.put(i, 1);
+            } else {
+                int a = perm.get(i);
+                perm.put(i, a + 1);
+            }
+        }
+        for (char k : str2) {
+            if (! perm.containsKey(k)) {
+                return false;
+            } else {
+                int counter = perm.get(k);
+                perm.put(k, counter-1);
+            }
+        }
+        for (char j: perm.keySet()) {
+            if (perm.get(j) != 0) {
+                return false;
+            }
+        }
+    return true;
     }
 }

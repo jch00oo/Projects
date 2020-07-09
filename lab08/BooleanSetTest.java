@@ -20,4 +20,10 @@ public class BooleanSetTest {
         assertTrue(aSet.isEmpty());
         assertEquals(0, aSet.size());
     }
+
+    @Test
+    public void testtoIntArray() {
+        BooleanSet b = new BooleanSet(5);
+
+    }
 }
