@@ -28,21 +28,13 @@ public class CodingChallenges {
      * Assume all values in the array are unique.
      */
     public static boolean sumTo(int[] values, int n) {
-//        Set<Integer> compareSum = new HashSet<>();
-//        for (int i = 0; i < values.length; i++) {
-//            int curr = n - values[i];
-//            if (compareSum.contains(curr)) {
-//                return true;
-//            }
-//        }
-//        return false;
-
-        // TODO
-        //shout out to geeks for geeks
-        //get sum minus the int n and if there is any number in the array that matches yes
-        Set<Integer> sum = new HashSet<>();
-        for (int counter=0; counter<values.length; counter++) {
-            if (sum.contains(n - values[counter])) {
+        Set<Integer> compareSum = new HashSet<>();
+        for (int i: values) {
+            compareSum.add(i);
+        }
+        for (int i = 0; i < values.length; i++) {
+            int curr = n - values[i];
+            if (compareSum.contains(curr)) {
                 return true;
             }
         }
