@@ -50,7 +50,7 @@ public class BooleanSet implements SimpleSet {
 
     /** Returns an array containing all of the elements in this collection. */
     public int[] toIntArray() {
-        int[] result = new int[this.size()];
+        int[] result = new int[contains.length];
         for (int i = 0; i < contains.length; i ++) {
             int indexArray = 0;
             if (contains[i] == true) {
@@ -59,5 +59,5 @@ public class BooleanSet implements SimpleSet {
             }
         }
         return result;
-    }
+  }
 }

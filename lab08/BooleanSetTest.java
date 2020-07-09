@@ -24,6 +24,10 @@ public class BooleanSetTest {
     @Test
     public void testtoIntArray() {
         BooleanSet b = new BooleanSet(5);
-
+        b.add(0);
+        b.add(4);
+        b.add(3);
+        int[] actual = {0,3,4};
+        assertArrayEquals(actual, b.toIntArray());
     }
 }
