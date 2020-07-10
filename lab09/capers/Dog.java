@@ -59,6 +59,7 @@ public class Dog implements Serializable { // FIXME
         catch (IOException e) {
             e.printStackTrace();
         }
+        System.out.println(this.toString());
     }
 
     @Override

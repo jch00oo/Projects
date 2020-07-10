@@ -1,19 +1,18 @@
 package capers;
-
 import java.io.File;
 import java.io.IOException;
 
 /** Canine Capers: A Gitlet Prelude.
  * @author Sean Dooher
-*/
+ */
 public class Main {
     /** Current Working Directory. */
     static final File CWD = new File(".");
 
-    /** Main metadata folder. */
-    static final File CAPERS_FOLDER = new File(".capers");
-
+    /** Main metadata folder. All of this was added*/
+    static final File CAPERS_FOLDER = new File (".capers");
     private static File _story;
+    private static File _dog;
 
     /**
      * Runs one of three commands:
@@ -43,23 +42,22 @@ public class Main {
      *
      * @param args arguments from the command line
      */
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
         if (args.length == 0) {
             exitWithError("Must have at least one argument");
         }
         setupPersistence();
         switch (args[0]) {
-        case "story":
-            writeStory(args);
-            break;
+            case "story":
+                writeStory(args);
+                break;
+            //FIXME
             case "dog":
                 makeDog(args);
-                break;
             case "birthday":
                 celebrateBirthday(args);
-                break;
-        default:
-            exitWithError(String.format("Unknown command: %s", args[0]));
+            default:
+                exitWithError(String.format("Unknown command: %s", args[0]));
         }
         return;
     }
@@ -74,16 +72,14 @@ public class Main {
      *    - story -- file containing the current story
      *
      */
-    public static void setupPersistence() {
+    public static void setupPersistence() throws IOException {
+        // FIXME
         CAPERS_FOLDER.mkdir();
-        Dog.DOG_FOLDER.mkdir();
-        _story = new File(CAPERS_FOLDER, "story.txt");
-        try {
-            _story.createNewFile();
-        }
-        catch (IOException e) {
-            e.printStackTrace();
-        }
+        _story= new File (CAPERS_FOLDER, "story.txt");
+        _dog= new File (CAPERS_FOLDER, ".dogs");
+        _story.createNewFile();
+        _dog.mkdir();
+
     }
 
     /**
@@ -93,7 +89,8 @@ public class Main {
      */
     public static void writeStory(String[] args) {
         validateNumArgs("story", args, 2);
-        String story = Utils.readContentsAsString(_story) + (args[1] + "\n");
+        // FIXME
+        String story = Utils.readContentsAsString(_story) + args[1] + "\n";
         Utils.writeContents(_story, story);
         System.out.println(Utils.readContentsAsString(_story));
     }
@@ -107,8 +104,9 @@ public class Main {
      */
     public static void makeDog(String[] args) {
         validateNumArgs("dog", args, 4);
-        Dog currDog = new Dog(args[1], args[2], Integer.parseInt(args[3]));
-        currDog.saveDog();
+        // FIXME
+        Dog curr = new Dog (args[1], args[2], Integer.parseInt(args[3]));
+        curr.saveDog();
     }
 
     /**
@@ -120,8 +118,9 @@ public class Main {
      */
     public static void celebrateBirthday(String[] args) {
         validateNumArgs("birthday", args, 2);
-        Dog currDog = Dog.fromFile(args[1]);
-        currDog.haveBirthday();
+        // FIXME
+        Dog curr = Dog.fromFile(args[1]);
+        curr.haveBirthday();
     }
 
     /**
@@ -150,8 +149,7 @@ public class Main {
     public static void validateNumArgs(String cmd, String[] args, int n) {
         if (args.length != n) {
             throw new RuntimeException(
-                String.format("Invalid number of arguments for: %s.", cmd));
+                    String.format("Invalid number of arguments for: %s.", cmd));
         }
     }
-
 }
