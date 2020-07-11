@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 Hello/nWorldHelloHello/nWorld/nHelloWorldHello
 World
 World
@@ -7,3 +8,11 @@ World
 Help
 Hello
 World
+=======
+Hello
+World
+Hello
+World
+Goodbye
+World
+>>>>>>> 5c43d03833b4a04d88703d70fd8905d47bc08bf8

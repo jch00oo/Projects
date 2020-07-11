@@ -7,7 +7,7 @@ import java.io.Serializable;
 
 /** Represents a dog that can be serialized.
  * @author Sean Dooher
-*/
+ */
 public class Dog implements Serializable { // FIXME
 
     /** Folder that dogs live in. */
@@ -41,7 +41,7 @@ public class Dog implements Serializable { // FIXME
             dog2.close();
         }
         catch(IOException|ClassNotFoundException poodle){
-            //nothing ever comes here anyway-- thanks with help from Marcus!
+            //nothing ever comes here anyway— thanks with help from Marcus!
         }
         return dog3;
     }
@@ -74,8 +74,8 @@ public class Dog implements Serializable { // FIXME
     @Override
     public String toString() {
         return String.format(
-            "Woof! My name is %s and I am a %s! I am %d years old! Woof!",
-            _name, _breed, _age);
+                "Woof! My name is %s and I am a %s! I am %d years old! Woof!",
+                _name, _breed, _age);
     }
 
     /** Age of dog. */

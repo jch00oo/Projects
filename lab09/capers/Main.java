@@ -4,7 +4,7 @@ import java.io.IOException;
 
 /** Canine Capers: A Gitlet Prelude.
  * @author Sean Dooher
-*/
+ */
 public class Main {
     /** Current Working Directory. */
     static final File CWD = new File(".");
@@ -58,8 +58,8 @@ public class Main {
             case "birthday":
                 celebrateBirthday(args);
                 break;
-        default:
-            exitWithError(String.format("Unknown command: %s", args[0]));
+            default:
+                exitWithError(String.format("Unknown command: %s", args[0]));
         }
         return;
     }
@@ -158,7 +158,7 @@ public class Main {
     public static void validateNumArgs(String cmd, String[] args, int n) {
         if (args.length != n) {
             throw new RuntimeException(
-                String.format("Invalid number of arguments for: %s.", cmd));
+                    String.format("Invalid number of arguments for: %s.", cmd));
         }
     }
 }
