@@ -10,7 +10,8 @@ public class Main {
     static final File CWD = new File(".");
 
     /** Main metadata folder. All of this was added*/
-    static final File CAPERS_FOLDER = new File (".capers");
+    static final File CAPERS_FOLDER = new File ("./capers");
+
     private static File _story;
     private static File _dog;
 
@@ -42,7 +43,7 @@ public class Main {
      *
      * @param args arguments from the command line
      */
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws IOException { //good
         if (args.length == 0) {
             exitWithError("Must have at least one argument");
         }
@@ -51,7 +52,6 @@ public class Main {
             case "story":
                 writeStory(args);
                 break;
-            //FIXME
             case "dog":
                 makeDog(args);
             case "birthday":
@@ -76,7 +76,7 @@ public class Main {
         // FIXME
         CAPERS_FOLDER.mkdir();
         _story= new File (CAPERS_FOLDER, "story.txt");
-        _dog= new File (CAPERS_FOLDER, ".dogs");
+        _dog= new File (CAPERS_FOLDER, "./dogs");
         _story.createNewFile();
         _dog.mkdir();
 
@@ -87,7 +87,7 @@ public class Main {
      * to a file called `story` in the .capers directory.
      * @param args Array in format: {'story', text}
      */
-    public static void writeStory(String[] args) {
+    public static void writeStory(String[] args) { //good
         validateNumArgs("story", args, 2);
         // FIXME
         String story = Utils.readContentsAsString(_story) + args[1] + "\n";
@@ -102,7 +102,7 @@ public class Main {
      * If the user inputs an invalid age, call exitWithError()
      * @param args Array in format: {'story', name, breed, age}
      */
-    public static void makeDog(String[] args) {
+    public static void makeDog(String[] args) throws IOException {
         validateNumArgs("dog", args, 4);
         // FIXME
         int i = Integer.parseInt(args[3]);
@@ -111,6 +111,7 @@ public class Main {
         } else {
             Dog curr = new Dog(args[1], args[2], Integer.parseInt(args[3]));
             curr.saveDog();
+            System.out.println(curr.toString());
         }
     }
 
@@ -121,10 +122,11 @@ public class Main {
      * If the user's input is invalid, call exitWithError()
      * @param args Array in format: {'birthday', name}
      */
-    public static void celebrateBirthday(String[] args) {
+    public static void celebrateBirthday(String[] args) throws IOException { //good
         validateNumArgs("birthday", args, 2);
         Dog curr = Dog.fromFile(args[1]);
         curr.haveBirthday();
+        curr.saveDog();
     }
 
     /**
