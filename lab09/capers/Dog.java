@@ -49,11 +49,11 @@ public class Dog implements Serializable {
      * Saves a dog to a file for future use.
      */
     public void saveDog() throws IOException {
-        File dog = new File("./capers/dogs/" + _name + ".txt");
-        if (!dog.exists()) {
-            dog.createNewFile();
+        File dogFile = new File("./capers/dogs/" + _name + ".txt");
+        if (!(dogFile.exists())) {
+            dogFile.createNewFile();
         }
-        Utils.writeObject(dog, this);
+        Utils.writeObject(dogFile, this);
     }
 
     @Override

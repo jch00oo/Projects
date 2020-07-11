@@ -74,12 +74,17 @@ public class Main {
      */
     public static void setupPersistence() throws IOException {
         // FIXME
-        CAPERS_FOLDER.mkdir();
+        if (!(CAPERS_FOLDER.exists())) {
+            CAPERS_FOLDER.mkdir();
+        }
         _story = new File ("./capers/dogs");
         _dog = new File ("./capers/story.txt");
-        _story.createNewFile();
-        _dog.mkdir();
-
+        if (!(_dog.exists())) {
+            _dog.mkdir();
+        }
+        if (!(_story.exists())) {
+            _story.createNewFile();
+        }
     }
 
     /**
@@ -90,8 +95,8 @@ public class Main {
     public static void writeStory(String[] args) { //good
         validateNumArgs("story", args, 2);
         // FIXME
-        String story = Utils.readContentsAsString(_story) + args[1] + "\n";
-        Utils.writeContents(_story, story);
+        String newStory = Utils.readContentsAsString(_story) + args[1] + "\n";
+        Utils.writeContents(_story, newStory);
         System.out.println(Utils.readContentsAsString(_story));
     }
 
