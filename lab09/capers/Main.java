@@ -75,8 +75,8 @@ public class Main {
     public static void setupPersistence() throws IOException {
         // FIXME
         CAPERS_FOLDER.mkdir();
-        _story= new File (CAPERS_FOLDER, "story.txt");
-        _dog= new File (CAPERS_FOLDER, "./dogs");
+        _story = new File ("./capers/dogs");
+        _dog = new File ("./capers/story.txt");
         _story.createNewFile();
         _dog.mkdir();
 
@@ -105,14 +105,9 @@ public class Main {
     public static void makeDog(String[] args) throws IOException {
         validateNumArgs("dog", args, 4);
         // FIXME
-        int i = Integer.parseInt(args[3]);
-        if (i < 0) {
-            exitWithError("Invalid age");
-        } else {
             Dog curr = new Dog(args[1], args[2], Integer.parseInt(args[3]));
             curr.saveDog();
             System.out.println(curr.toString());
-        }
     }
 
     /**
@@ -124,9 +119,9 @@ public class Main {
      */
     public static void celebrateBirthday(String[] args) throws IOException { //good
         validateNumArgs("birthday", args, 2);
-        Dog curr = Dog.fromFile(args[1]);
-        curr.haveBirthday();
-        curr.saveDog();
+        Dog currDog = Dog.fromFile(args[1]);
+        currDog.haveBirthday();
+        currDog.saveDog();
     }
 
     /**
