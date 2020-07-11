@@ -11,7 +11,7 @@ import java.io.Serializable;
 public class Dog implements Serializable {
 
     /** Folder that dogs live in. */
-    static final File DOG_FOLDER = new File("./capers/dogs"); // FIXME
+    static final File DOG_FOLDER = new File(Main.CAPERS_FOLDER, "/dogs"); // FIXME
 
     /**
      * Creates a dog object with the specified parameters.
@@ -32,7 +32,7 @@ public class Dog implements Serializable {
      * @return Dog read from file
      */
     public static Dog fromFile(String name) {
-        File dogFile = new File("./capers/dogs/" + name + ".txt");
+        File dogFile = Utils.join(DOG_FOLDER, name + ".txt");
         return Utils.readObject(dogFile, Dog.class);
     }
 
@@ -49,11 +49,11 @@ public class Dog implements Serializable {
      * Saves a dog to a file for future use.
      */
     public void saveDog() throws IOException {
-        File dogFile = new File("./capers/dogs/" + _name + ".txt");
-        if (!(dogFile.exists())) {
-            dogFile.createNewFile();
+        File dog = Utils.join(DOG_FOLDER, this._name, ".txt");
+        if (!dog.exists()) {
+            dog.createNewFile();
         }
-        Utils.writeObject(dogFile, this);
+        Utils.writeObject(dog, this);
     }
 
     @Override
