@@ -4,13 +4,14 @@ import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
 
+
 /** Represents a dog that can be serialized.
  * @author Sean Dooher
  */
-public class Dog implements Serializable {
+public class Dog implements Serializable { // FIXME
 
     /** Folder that dogs live in. */
-    static final File DOG_FOLDER = new File("./capers/dogs");
+    static final File DOG_FOLDER = new File(Main.CAPERS_FOLDER, "dogs"); // FIXME
 
     /**
      * Creates a dog object with the specified parameters.
@@ -31,8 +32,9 @@ public class Dog implements Serializable {
      * @return Dog read from file
      */
     public static Dog fromFile(String name) {
-        File dogFile = new File("./capers/dogs/" + name + ".txt");
-        return Utils.readObject(dogFile, Dog.class);
+        File dogFile = Utils.join(DOG_FOLDER, name + ".txt");
+        Dog dog = Utils.readObject(dogFile, Dog.class);
+        return dog;
     }
 
     /**
@@ -47,12 +49,16 @@ public class Dog implements Serializable {
     /**
      * Saves a dog to a file for future use.
      */
-    public void saveDog() throws IOException {
-        File dogFile = new File("./capers/dogs/" + _name + ".txt");
-        if (!dogFile.exists()) {
-            dogFile.createNewFile();
+    public void saveDog() {
+        File dog = Utils.join(DOG_FOLDER, this._name, ".txt");
+        try {
+            dog.createNewFile();
+            Utils.writeObject(dog, this);
         }
-        Utils.writeObject(dogFile, this);
+        catch (IOException e) {
+            e.printStackTrace();
+        }
+        System.out.println(this.toString());
     }
 
     @Override

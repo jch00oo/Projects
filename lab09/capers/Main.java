@@ -1,5 +1,4 @@
 package capers;
-
 import java.io.File;
 import java.io.IOException;
 
@@ -10,12 +9,10 @@ public class Main {
     /** Current Working Directory. */
     static final File CWD = new File(".");
 
-    /** Main metadata folder. */
-    static final File CAPERS_FOLDER = new File("./capers");
-
-    static File dogs = new File("./capers/dogs");
-    static File story = new File("./capers/story.txt");
-
+    /** Main metadata folder. All of this was added*/
+    static final File CAPERS_FOLDER = new File (".capers");
+    private static File _story;
+    private static File _dog;
 
     /**
      * Runs one of three commands:
@@ -54,12 +51,11 @@ public class Main {
             case "story":
                 writeStory(args);
                 break;
+            //FIXME
             case "dog":
                 makeDog(args);
-                break;
             case "birthday":
                 celebrateBirthday(args);
-                break;
             default:
                 exitWithError(String.format("Unknown command: %s", args[0]));
         }
@@ -77,18 +73,13 @@ public class Main {
      *
      */
     public static void setupPersistence() throws IOException {
+        // FIXME
+        CAPERS_FOLDER.mkdir();
+        _story= new File (CAPERS_FOLDER, "story.txt");
+        _dog= new File (CAPERS_FOLDER, ".dogs");
+        _story.createNewFile();
+        _dog.mkdir();
 
-        if (!CAPERS_FOLDER.exists()) {
-            CAPERS_FOLDER.mkdir();
-        }
-
-        if (!dogs.exists()) {
-            dogs.mkdir();
-        }
-
-        if (!story.exists()) {
-            story.createNewFile();
-        }
     }
 
     /**
@@ -98,37 +89,42 @@ public class Main {
      */
     public static void writeStory(String[] args) {
         validateNumArgs("story", args, 2);
-        String currStory = Utils.readContentsAsString(story);
-        currStory = currStory + args[1] + "\n";
-        Utils.writeContents(story, currStory);
-        System.out.println(Utils.readContentsAsString(story));
+        // FIXME
+        String story = Utils.readContentsAsString(_story) + args[1] + "\n";
+        Utils.writeContents(_story, story);
+        System.out.println(Utils.readContentsAsString(_story));
     }
 
     /**
      * Creates and persistently saves a dog using the first
      * three non-command arguments of args (name, breed, age).
      * Also prints out the dog's information using toString().
+     * If the user inputs an invalid age, call exitWithError()
      * @param args Array in format: {'story', name, breed, age}
      */
-    public static void makeDog(String[] args) throws IOException {
+    public static void makeDog(String[] args) {
         validateNumArgs("dog", args, 4);
-        Dog curr = new Dog(args[1], args[2], Integer.parseInt(args[3]));
-        curr.saveDog();
-        System.out.println(curr.toString());
-
+        // FIXME
+        int i = Integer.parseInt(args[3]);
+        if (i < 0) {
+            exitWithError("Invalid age");
+        } else {
+            Dog curr = new Dog(args[1], args[2], Integer.parseInt(args[3]));
+            curr.saveDog();
+        }
     }
 
     /**
      * Advances a dog's age persistently and prints out a celebratory message.
      * Also prints out the dog's information using toString().
      * Chooses dog to advance based on the first non-command argument of args.
+     * If the user's input is invalid, call exitWithError()
      * @param args Array in format: {'birthday', name}
      */
-    public static void celebrateBirthday(String[] args) throws IOException {
+    public static void celebrateBirthday(String[] args) {
         validateNumArgs("birthday", args, 2);
-        Dog birthdayDog = Dog.fromFile(args[1]);
-        birthdayDog.haveBirthday();
-        birthdayDog.saveDog();
+        Dog curr = Dog.fromFile(args[1]);
+        curr.haveBirthday();
     }
 
     /**
