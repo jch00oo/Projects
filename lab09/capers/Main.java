@@ -112,9 +112,9 @@ public class Main {
      */
     public static void makeDog(String[] args) throws IOException {
         validateNumArgs("dog", args, 4);
-        Dog goodestBoy = new Dog(args[1], args[2], Integer.parseInt(args[3]));
-        goodestBoy.saveDog();
-        System.out.println(goodestBoy.toString());
+        Dog curr = new Dog(args[1], args[2], Integer.parseInt(args[3]));
+        curr.saveDog();
+        System.out.println(curr.toString());
 
     }
 
@@ -126,9 +126,9 @@ public class Main {
      */
     public static void celebrateBirthday(String[] args) throws IOException {
         validateNumArgs("birthday", args, 2);
-        Dog birthdayBoy = Dog.fromFile(args[1]);
-        birthdayBoy.haveBirthday();
-        birthdayBoy.saveDog();
+        Dog birthdayDog = Dog.fromFile(args[1]);
+        birthdayDog.haveBirthday();
+        birthdayDog.saveDog();
     }
 
     /**
