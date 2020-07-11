@@ -4,14 +4,13 @@ import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
 
-
 /** Represents a dog that can be serialized.
  * @author Sean Dooher
-*/
-public class Dog implements Serializable { // FIXME
+ */
+public class Dog implements Serializable {
 
     /** Folder that dogs live in. */
-    static final File DOG_FOLDER = new File(Main.CAPERS_FOLDER, "dogs"); // FIXME
+    static final File DOG_FOLDER = new File("./capers/dogs");
 
     /**
      * Creates a dog object with the specified parameters.
@@ -32,9 +31,8 @@ public class Dog implements Serializable { // FIXME
      * @return Dog read from file
      */
     public static Dog fromFile(String name) {
-        File dogFile = Utils.join(DOG_FOLDER, name + ".txt");
-        Dog dog = Utils.readObject(dogFile, Dog.class);
-        return dog;
+        File dogFile = new File("./capers/dogs/" + name + ".txt");
+        return Utils.readObject(dogFile, Dog.class);
     }
 
     /**
@@ -49,24 +47,19 @@ public class Dog implements Serializable { // FIXME
     /**
      * Saves a dog to a file for future use.
      */
-    public void saveDog() {
-        File dog = Utils.join(DOG_FOLDER, this._name, ".txt");
-        try {
-            dog.createNewFile();
-            Utils.writeObject(dog, this);
-            System.out.println(this.toString());
+    public void saveDog() throws IOException {
+        File dogFile = new File("./capers/dogs/" + _name + ".txt");
+        if (!dogFile.exists()) {
+            dogFile.createNewFile();
         }
-        catch (IOException e) {
-            e.printStackTrace();
-        }
-        System.out.println(this.toString());
+        Utils.writeObject(dogFile, this);
     }
 
     @Override
     public String toString() {
         return String.format(
-            "Woof! My name is %s and I am a %s! I am %d years old! Woof!",
-            _name, _breed, _age);
+                "Woof! My name is %s and I am a %s! I am %d years old! Woof!",
+                _name, _breed, _age);
     }
 
     /** Age of dog. */
