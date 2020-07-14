@@ -1,6 +1,7 @@
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.function.Function;
 import java.util.Objects;
@@ -35,6 +36,7 @@ public class DBTable<T> {
 
     /** Add all items from a collection to the table. */
     public void add(Collection<T> col) {
+
         col.forEach(this::add);
     }
 
@@ -48,10 +50,17 @@ public class DBTable<T> {
      * results of the getter. Non-destructive.
      */
     public <R extends Comparable<R>> List<T> getOrderedBy(Function<T, R> getter) {
+<<<<<<< HEAD
         return entries.stream()
                 .sorted((o1, o2) -> getter.apply(o1).compareTo(getter.apply(o2)))
                 .collect(Collectors.toList());
 
+=======
+        // TODO from yesterday's lab
+        List<T> orderedList = getEntries();
+        Collections.sort(orderedList, (o1, o2) -> (getter.apply(o1)).compareTo(getter.apply(o2)));
+        return orderedList;
+>>>>>>> b0f71325de99a54ae074dd877cd9c172e348c4d1
     }
 
     /**
@@ -87,6 +96,7 @@ public class DBTable<T> {
                 .map(i -> getter.apply(i))
                 .collect(Collectors.toList()));
     }
+
 
     public static void main(String[] args) {
         List<User> users = Arrays.asList(
