@@ -12,7 +12,7 @@ public class Branch implements Serializable {
         this.name = name;
         pointer = id;
     }
-    
+
     /* HEAD branch */
     public Branch(String branchName) {
         this.name = "HEAD";
