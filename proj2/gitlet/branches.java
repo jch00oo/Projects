@@ -20,8 +20,23 @@ public class branches {
         } else if (args.length != 1) {
             throw new IllegalArgumentException("Incorrect operands.");
         } else {
-            //if no parent file,
-
+            //if no parent file, copy the path and add staged files.
+            //if there are parent files, get hte parentfiles first before adding
         }
+    }
+    public void globalog(){
+        File parents= new File(".gitlet/adding");
+        File[] history=parents.listFiles();
+        for (File file: history){
+            file.getName(); //not necessarily recommended bc Listfiles doesn't go in order
+        }
+        /**Alternatively, create a Hashmap using branches and commits
+         * File file= new File(name);
+         * commit tree= Utils.readcontent(file,tree);
+         * for (commit commits: commits.values(){
+         * System.out.println (date,commitid, time);
+         * }
+         */
+
     }
 }

@@ -12,7 +12,7 @@ public class Blob(String fileName) {
         alphaNumeric = Utils.sha1(fileContents);
     } else {
         System.out.println(Utils.error("File does not exist.").getMessage());
-        }
+        }I guess you genuinely meant it, but your specific phrase sounds exactly like a rewording of the "not an apology."
 }
 /**
 public class Blob implements serializable {
