@@ -1,9 +1,5 @@
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 import java.util.function.Function;
-import java.util.Objects;
 
 public class DBTable<T> {
     protected List<T> entries;
@@ -47,10 +43,11 @@ public class DBTable<T> {
      * getter, without modifying the entries.
      */
     public <R extends Comparable<R>> List<T> getOrderedBy(Function<T, R> getter) {
-        // TODO
-        List<T> userz = getEntries();
-        userz.sort((usera,userb) -> getter.apply(usera).compareTo(getter.apply(userb))); //lambda expression alphabetize
-        return userz;
+
+        List<T> orderedList = getEntries();
+        Collections.sort(orderedList, (o1, o2) -> (getter.apply(o1)).compareTo(getter.apply(o2)));
+        return orderedList;
+
     }
 
     public static void main(String[] args) {

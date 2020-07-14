@@ -1,7 +1,8 @@
 import java.util.Arrays;
 import java.util.Objects;
 
-public class User implements Comparable<User>{
+
+public class User implements Comparable<User> {
 
     private static int nextId = 1;
 
@@ -54,7 +55,11 @@ public class User implements Comparable<User>{
 
     @Override
     public String toString() {
-        return "User{" + "id=" + id + ", name=" + name + ", email=" + email + "}";
+        return "User{" +
+                "id=" + id +
+                ", name=" + name +
+                ", email=" + email +
+                "}";
     }
 
     @Override
@@ -95,6 +100,16 @@ public class User implements Comparable<User>{
         Arrays.sort(users);
         for (User user : users) {
             System.out.println(user);
+        }
+    }
+
+    @Override
+    public int compareTo(User o) {
+        if (this.id != o.id) {
+            return this.id - o.id;
+        }
+        else {
+            return this.name.compareTo(o.name);
         }
     }
 }
