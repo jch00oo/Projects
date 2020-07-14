@@ -1,8 +1,13 @@
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import static java.lang.System.*;
+
 /**
  * A DLList is a list of integers. Like SLList, it also hides the terrible
  * truth of the nakedness within, but with a few additional optimizations.
  */
-public class DLList<Item> {
+public class DLList<Item> implements Iterable <Item>{
     private class Node {
         public Node prev;
         public Item item;
@@ -19,6 +24,25 @@ public class DLList<Item> {
     private Node sentinel;
     private int size;
 
+    //nested Iterator CLASS
+    public Iterator<Item> iterator(){
+        return new DLListIterator();
+    }
+    private class DLListIterator implements Iterator <Item>{
+        private Node bookmark = sentinel;
+        public Item next(){
+            Item nextitem=bookmark.next.item;
+            bookmark=bookmark.next;
+            return nextitem;
+        }
+        public boolean hasNext(){
+            if (bookmark.next.item!=null){
+                return true;
+            }else{
+                return false;
+            }
+        }
+    }
     /** Creates an empty DLList. */
     public DLList() {
         sentinel = new Node(null, null, null);
