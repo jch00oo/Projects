@@ -52,7 +52,4 @@ public class Commit implements Serializable {
     public Commit getParentCommit() {
         return parentCommit;
     }
-    public void printCommit(String id){
-        Commit
-    }
 }

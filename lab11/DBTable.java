@@ -1,9 +1,11 @@
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.function.Function;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 public class DBTable<T> {
     private List<T> entries;
@@ -34,6 +36,7 @@ public class DBTable<T> {
 
     /** Add all items from a collection to the table. */
     public void add(Collection<T> col) {
+
         col.forEach(this::add);
     }
 
@@ -47,8 +50,10 @@ public class DBTable<T> {
      * results of the getter. Non-destructive.
      */
     public <R extends Comparable<R>> List<T> getOrderedBy(Function<T, R> getter) {
-        // TODO
-        return null;
+        // TODO from yesterday's lab
+        List<T> orderedList = getEntries();
+        Collections.sort(orderedList, (o1, o2) -> (getter.apply(o1)).compareTo(getter.apply(o2)));
+        return orderedList;
     }
 
     /**
@@ -69,8 +74,9 @@ public class DBTable<T> {
      * 
      */
     public <R> List<T> getWhitelisted(Function<T, R> getter, Collection<R> whitelist) {
-        // TODO
-        return null;
+        return entries.stream()
+                .filter(i -> whitelist.contains(getter.apply(i)))
+                .collect(Collectors.toList());
     }
 
     /**
@@ -79,9 +85,11 @@ public class DBTable<T> {
      * DBTable<String> names = table.getSubtableOf(User::getUsername);
      */
     public <R> DBTable<R> getSubtableOf(Function<T, R> getter) {
-        // TODO
-        return null;
+        return new DBTable(entries.stream()
+                .map(i -> getter.apply(i))
+                .collect(Collectors.toList()));
     }
+
 
     public static void main(String[] args) {
         List<User> users = Arrays.asList(

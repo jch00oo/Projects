@@ -1,7 +1,6 @@
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-
 import static java.lang.System.*;
 
 /**
@@ -20,18 +19,30 @@ public class DLList<Item> implements Iterable <Item>{
             next = n;
         }
     }
-    //nested Iterator CLASS
-    public Iterator<Item> iterator(){
-        return new DLListIterator();
-    }
-    private class DLListIterator implements Iterator <Item>{
-        //FIXME
-    }
 
     /* The first item (if it exists) is at sentinel.next. */
     private Node sentinel;
     private int size;
 
+    //nested Iterator CLASS
+    public Iterator<Item> iterator(){
+        return new DLListIterator();
+    }
+    private class DLListIterator implements Iterator <Item>{
+        private Node bookmark = sentinel;
+        public Item next(){
+            Item nextitem=bookmark.next.item;
+            bookmark=bookmark.next;
+            return nextitem;
+        }
+        public boolean hasNext(){
+            if (bookmark.next.item!=null){
+                return true;
+            }else{
+                return false;
+            }
+        }
+    }
     /** Creates an empty DLList. */
     public DLList() {
         sentinel = new Node(null, null, null);
@@ -92,18 +103,5 @@ public class DLList<Item> implements Iterable <Item>{
             op = op.next;
         }
         return true;
-    }
-
-    //Test
-    public static void main (String[]args){
-        List<String> tests= new ArrayList<>();
-        tests.add("test1");
-        tests.add("test2");
-        tests.add("test3");
-        tests.add("test4");
-        tests.add("test5");
-        for (String test : tests){
-            System.out.println(test);
-        }
     }
 }
