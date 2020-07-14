@@ -1,9 +1,10 @@
 package gitlet;
+import java.io.File;
 
 /** Driver class for Gitlet, the tiny stupid version-control system.
  *  @author
  */
-public class Main {
+public class Main implements serializable{
 
     /** Usage: java gitlet.Main ARGS, where ARGS contains
      *  <COMMAND> <OPERAND> .... */
@@ -16,7 +17,6 @@ public class Main {
         }
         switch(args[0]){
             case "init":
-
                 xgitlet=new gitlet();
                 xgitlet.init();
                 break;
@@ -37,14 +37,12 @@ public class Main {
                 xgitlet.globalog(args);
                 break;
                 //other cases to be added after the checkpoint
-            default: //else
+            default:
                 System.out.println("No command with that name exists.");
                 break;
             }
 
 
-
         }
-    }
 
 }
