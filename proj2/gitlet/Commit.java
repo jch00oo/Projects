@@ -1,6 +1,5 @@
 package gitlet;
 
-import java.io.File;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.time.LocalDate;
@@ -11,12 +10,11 @@ import java.util.Date;
 import java.util.*;
 
 public class Commit implements Serializable {
-
-    private String id;
-    private String commitMessage;
-    private String timeStamp;
-    private Commit parentCommit;
-    private HashMap<String, Blob> content;
+    String id;
+    String commitMessage;
+    String timeStamp;
+    Commit parentCommit;
+    HashMap<String, Blob> content;
 
     /* initializing instance variables and maybe initial commit? */
     public Commit() {
@@ -31,27 +29,26 @@ public class Commit implements Serializable {
 
     /** id = Utils.sha1(hashKeys.toArray()) for others */
 
-    /* returns id of commit */
+    public static void commit (String commitMessage) {
+        return;
+    }
+
     public String getId() {
         return id;
     }
 
-    /* returns time stamp of commit */
     public String getTimeStamp() {
         return timeStamp;
     }
 
-    /* returns commit message of commit */
     public String getCommitMessage() {
         return commitMessage;
     }
 
-    /* returns the content/file of commit */
     public HashMap getContent() {
         return content;
     }
 
-    /* returns the parent commit of current commit */
     public Commit getParentCommit() {
         return parentCommit;
     }

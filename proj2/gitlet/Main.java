@@ -9,11 +9,11 @@ public class Main {
 
     /** Usage: java gitlet.Main ARGS, where ARGS contains
      *  <COMMAND> <OPERAND> .... */
-    public static void main(String[] args) {
+    public static void Main(String... args) {
         // FILL THIS IN
-        gitlet xgitlet = null;
+        Gitlet xgitlet = null;
         //based off lab9
-        if (args.length==null){
+        if (args.length == 0){
             System.out.println("Please enter a command.");
         }
         switch(args[0]){
@@ -43,11 +43,7 @@ public class Main {
                 System.out.println("No command with that name exists.");
                 break;
             }
-
-
-
         }
-    }
 
     private HashMap<String,Commit> commithistory; //stores all the commits, id as key and Commit as value
     private HashMap <String, String> tracked;// stores all tracked files, id as key and blob as value
@@ -74,10 +70,13 @@ public class Main {
     }
 
     public static void add(String fileName) {
+
         return;
     }
 
     public static void log() {
+
         return;
     }
+
 }
