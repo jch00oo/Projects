@@ -17,6 +17,9 @@ import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 import java.util.Formatter;
 import java.util.List;
+import java.util.TimeZone;
+import java.util.Date;
+import java.text.SimpleDateFormat;
 
 
 /** Assorted utilities.
@@ -223,6 +226,7 @@ class Utils {
     /** Return a GitletException whose message is composed from MSG and ARGS as
      *  for the String.format method. */
     static GitletException error(String msg, Object... args) {
+
         return new GitletException(String.format(msg, args));
     }
 
