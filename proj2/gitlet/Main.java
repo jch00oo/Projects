@@ -2,82 +2,51 @@ package gitlet;
 
 import java.util.*;
 import java.io.*;
+
+import static gitlet.Gitlet.*;
+
 /** Driver class for Gitlet, the tiny stupid version-control system.
- *  @author
+ *  @two sad berkeley bears
  */
-public class Main {
+public class Main implements Serializable {
 
     /** Usage: java gitlet.Main ARGS, where ARGS contains
      *  <COMMAND> <OPERAND> .... */
+    private File startergit;
+    private File stage;
+    HashMap <String, String> branchHistory;// branch name as key, id of current branch as value
+
+    /**public void Gitlet() {
+     startergit= new File (cd_gitlet);
+     startergit.mkdir();
+     stage = new File (cd_stage);
+     stage.mkdir();
+     }**/
+
     public static void Main(String... args) {
         // FILL THIS IN
-        Gitlet xgitlet = null;
-        //based off lab9
         if (args.length == 0){
             System.out.println("Please enter a command.");
         }
         switch(args[0]){
             case "init":
-
-                xgitlet=new gitlet();
-                xgitlet.init();
+                init();
                 break;
             case "add":
-                xgitlet.add(args);
+                add(args);
                 break;
             case "commit":
-                xgitlet.commit(args);
-                break;
-            case "rm":
-                xgitlet.remove(args);
-
+                commit(args);
                 break;
             case "log":
-                xgitlet.log(args);
+                log();
                 break;
-            case "global-log":
-                xgitlet.globalog(args);
-                break;
-                //other cases to be added after the checkpoint
+            //other cases to be added after the checkpoint
             default: //else
                 System.out.println("No command with that name exists.");
                 break;
-            }
         }
-
-    private HashMap<String,Commit> commithistory; //stores all the commits, id as key and Commit as value
-    private HashMap <String, String> tracked;// stores all tracked files, id as key and blob as value
-    private HashMap <String, String> staged; //stores all staged files, id as key and blob as value
-    private ArrayList <String> removedFiles; //stores fileName of removed files in an array list
-    private ArrayList <String> untrackedFiles; //stores fileName of untracked files
-    private Commit recentCommit; //tracks the most recent commit
-
-    //make and declare the directories
-    private static final String cd_gitlet = ".gitlet";
-    private static final String cd_stage = ".gitlet/.stage";
-    private static final String trash = ".gitlet/.trash";
-    private static final String commitPath = ".gitlet/.commit";
-    private static final String workingPath = System.getProperty("user.dir");
-
-    public static void init() {
-
-        return;
     }
 
-    public static void commit(String commitMessage) {
-
-        return;
     }
-
-    public static void add(String fileName) {
-
-        return;
-    }
-
-    public static void log() {
-
-        return;
-    }
-
-}
 

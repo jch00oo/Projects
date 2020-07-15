@@ -219,7 +219,18 @@ class Utils {
         }
     }
 
-
+    static Object deserialize(String fileName, File parent) {
+        Gitlet o;
+        File inFile = new File(parent, fileName);
+        try {
+            ObjectInputStream inp = new ObjectInputStream(new FileInputStream(inFile));
+            o = (Gitlet) inp.readObject();
+            inp.close();
+        } catch (IOException | ClassNotFoundException exception) {
+            throw new Error("IO Error or Class Not Find");
+        }
+        return o;
+    }
 
     /* MESSAGES AND ERROR REPORTING */
 

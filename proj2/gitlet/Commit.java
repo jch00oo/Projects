@@ -13,7 +13,7 @@ public class Commit implements Serializable {
     String id;
     String commitMessage;
     String timeStamp;
-    Commit parentCommit;
+    Commit parentCommit; /** String? **/
     HashMap<String, Blob> content;
 
     /* initializing instance variables and maybe initial commit? */
@@ -27,10 +27,15 @@ public class Commit implements Serializable {
         parentCommit = this;
     }
 
-    /** id = Utils.sha1(hashKeys.toArray()) for others */
-
-    public static void commit (String commitMessage) {
-        return;
+    /* normal commits */
+    public Commit(String commitMessage, Commit parentCommit, HashMap<String, Blob> content, String timeStamp) {
+        this.commitMessage = commitMessage;
+        this.parentCommit = parentCommit;
+        this.content = content;
+        Date currDate = new Date();
+        SimpleDateFormat dateFormat = new SimpleDateFormat("E MMM dd HH:mm:ss yyyy Z");
+        this.timeStamp = dateFormat.format(currDate);
+        this.id = Utils.sha1(content.keySet().toArray());
     }
 
     public String getId() {
