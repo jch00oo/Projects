@@ -8,60 +8,45 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 
+import static gitlet.Gitlet.STAGE_PATH;
+
 public class Stage implements Serializable {
 
-//    private HashMap<String, Blob> files;
-//
-//
-//    public Stage() {
-//        files = new HashMap<>();
-//    }
-//
-//    public void addFile(String fileName, Blob content) {
-//        files.put(fileName, content);
-//    }
-//
-//    public boolean deleteFile(String fileName) {
-//        if(files.containsKey(fileName)) {
-//            files.remove(fileName);
-//            return true;
-//        } else {
-//            return false; /** error message? Continue? **/
-//        }
-//    }
-//
-//    public HashMap<String, Blob> getFiles() {
-//        return files;
-//    }
+    /* file name, id */
+    private HashMap<String, String> stagedToAdd;
+    private HashMap<String, String> stagedToRemove;
 
-    private HashMap<String, Blob> stagedBlob;
-    private HashSet<String> removedBlob;
-
-    public Stage(Stage stage) {
-        this.stagedBlob = stage.stagedBlob;
-        this.removedBlob = stage.removedBlob;
+    /* init stage */
+    public Stage() {
+        stagedToAdd = new HashMap<>();
+        stagedToRemove = new HashMap<>();
     }
 
-    public void newStage() {
-        stagedBlob = new HashMap<>();
-        removedBlob = new HashSet<>();
+    public HashMap<String, String> getStagedToAdd(){
+        return stagedToAdd;
     }
 
-    public void addToStage(String fileName) {
-        File file = new File(fileName);
-        Blob newBlob = new Blob(fileName);
-        Utils.serialize(newBlob);
-        stagedBlob.put(fileName, newBlob);
-        Utils.serialize(newBlob);
+    public HashMap<String, String> getStagedToRemove(){
+        return stagedToRemove;
     }
 
-    public void removeFromStage(String fileName) {
-        stagedBlob.remove(fileName);
-        removedBlob.add(fileName);
+    public void stageToAdd(String fileName, String id) {
+        stagedToAdd.put(fileName, id);
     }
 
-    public HashMap getStagedBlob() {
-        return stagedBlob;
+    public void stageToRemove(String fileName, String id) {
+        stagedToRemove.put(fileName, id);
     }
+
+    public void clearStage() {
+        stagedToAdd.clear();
+        stagedToRemove.clear();
+    }
+
+    public void addStage() {
+        File stageFile = Utils.join(STAGE_PATH);
+        Utils.writeObject(stageFile, this);
+    }
+
 }
 

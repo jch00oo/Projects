@@ -13,46 +13,79 @@ public class Gitlet implements Serializable {
     private HashMap<String,Commit> commitHistory; //stores all the commits, id as key and Commit as value
     private HashMap <String, String> tracked;// stores all tracked files, id as key and blob as value
     private String recentCommit; //tracks the most recent commit's id
-    private Branch currBranch;
+    private Repository currBranch;
 
     //make and declare the directories
     private static String cd_gitlet = ".gitlet";
     private static String cd_stage = ".gitlet/.stage";
     private static String commitPath = ".gitlet/.commit";
-    private String workingPath = System.getProperty("user.dir");
+    private static String workingPath = System.getProperty("user.dir");
+
+    static final File REPO_PATH = Utils.join(workingPath, ".gitlet", "repo");
+    static final File STAGE_PATH = Utils.join(workingPath, ".gitlet", "stage");
+    static final File BLOB_PATH = Utils.join(workingPath, ".gitlet", "blobs");
+    static final File COMMIT_PATH = Utils.join(workingPath, ".gitlet", "commits");
+    static final File GEN_PATH = Utils.join(workingPath);
 
     public static void init() {
-        File gitlet = new File(".gitlet");
+        File gitlet = Utils.join(GEN_PATH, ".gitlet");
+
         if (gitlet.exists()){
             System.out.println("A Gitlet version-control system already exists in the current directory.");
+            System.exit(0);
         }
         else{
             gitlet.mkdir();
-            File committing = new File(".gitlet/committing");
-            committing.mkdir();
-            Stage stage = new Stage();
-            return;
+
+            Repository repo = new Repository();
+            File inrepo= Utils.join(REPO_PATH);
+            Utils.writeObject(inrepo,repo);
+
+            Stage stage= new Stage();
+            File instage= Utils.join(STAGE_PATH);
+            Utils.writeObject(instage,stage);
+
+            File inblob =Utils.join(BLOB_PATH);
+            inblob.mkdir();
+
+            File incommitting=Utils.join(COMMIT_PATH);
+            incommitting.mkdir();
+            repo.getHead().addCommit();
         }
-    }
-
-    public void copy(Gitlet o) {
-        this.commitHistory = o.commitHistory;
-        this.tracked = o.tracked;
-        this.recentCommit = o.recentCommit;
-        this.currBranch = o.currBranch;
-    }
-
-    public static Gitlet deserialize() {
-        return (Gitlet) Utils.deserialize("gitlet", new File(cd_gitlet));
     }
 
     public void commit(String commitMessage) {
-        File file = new File(cd_gitlet);
-        File stageFile = new File(cd_stage);
-        File commitFile = new File(commitPath);
+//        File file = new File(cd_gitlet);
+//        File stageFile = new File(cd_stage);
+//        File commitFile = new File(commitPath);
         if (commitMessage.equals("")) {
             throw Utils.error("Please enter a commit message.");
         }
+        File repoFile = Utils.join(REPO_PATH);
+        Repository currRepo = Utils.readObject(repoFile, Repository.class); /*this*/
+        Commit head = currRepo.getHead();
+        HashMap<String, String> headBlob =currRepo.getTracked(); /*this*/
+        File stageFile = Utils.join(STAGE_PATH);
+        Stage currStage = Utils.readObject(stageFile, Stage.class); /*this*/
+        HashMap<String, String> stagedToAdd = currStage.getStagedToAdd();
+        HashMap<String, String> stagedToRemove = currStage.getStagedToRemove();
+        HashMap<String, String> newBlob = new HashMap<>(headBlob);
+        if (stagedToAdd.keySet().isEmpty() && stagedToRemove.keySet().isEmpty()) {
+            throw Utils.error("No changes added to the commit.");
+        }
+        for (String addedFileName: stagedToAdd.keySet()) {
+            newBlob.put(addedFileName, stagedToAdd.get(addedFileName));
+        }
+        for (String removedFileName: stagedToRemove.keySet()) {
+            newBlob.put(removedFileName, stagedToAdd.get(removedFileName));
+        }
+        currStage.clearStage();
+        currStage.addStage();
+        Commit newCommit = new Commit(commitMessage, head, newBlob);
+        newCommit.addCommit();
+        currRepo.newHead(newCommit);
+        currRepo.addRepo();
+
 //        else if (Utils.readObject(stageFile, Stage.class).getStagedBlob().isEmpty() && Utils.readObject(untrackedFiles).isEmpty()) {
 //            throw Utils.error("No changes added to the commit.");
 //        } else {
@@ -60,33 +93,39 @@ public class Gitlet implements Serializable {
 //            Commit currentCommit = Utils.readObject(____);
 //            Stage stage = Utils.readObject(stageFile, Stage.class);
 //            HashMap<String, Blob> files = currentCommit.getContent();
-        Gitlet gitlet = deserialize();
-        this.copy(gitlet);
-        Commit currentCommit = (Commit) Commit.deserialize(); //* add deserialize w string id **/
-        HashMap<String, Blob> committedBlob = currentCommit.getContent();
-        Stage currentStage = new Stage(Stage.deserialize()); //*paste ds into Stage */
-        HashMap<String, String> addedBlob = currentStage.getStagedBlob();
+
         }
 
-    public static void add(String[] fileName) {
-        File added = new File(String.valueOf(fileName));
-        if (!added.exists()) { //https://stackoverflow.com/questions/1816673/how-do-i-check-if-a-file-exists-in-java
-            throw new IllegalArgumentException("File does not exist.");
-        } else if (fileName.length != 1) {
-            throw new IllegalArgumentException("Incorrect operands.");
-        } else {
-            //takeover from init
-            Stage stage = Utils.readObject(added,Stage.class);
-            //how to bring the fucking hash values along with it
-            File addedwithid= Utils.join(added,Commit.getId());
+    public static void add(String fileName) {
+        File toAdd = new File(fileName);
+        if (!(toAdd.exists())) {
+            throw Utils.error("File does not exist.");
+        } else { /* check if stage contains file */
+            File fileInRepo = Utils.join(REPO_PATH);
+            Repository currRepo = Utils.readObject(fileInRepo, Repository.class);
+            HashMap<String, String> headContent = currRepo.getTracked(); /* use */
+            File fileInStage = Utils.join(STAGE_PATH);
+            Stage currStage = Utils.readObject(fileInStage, Stage.class); /*use*/
+            Blob blobToAdd = new Blob(fileName);
+            if (currStage.getStagedToAdd().containsKey(fileName)) { /* any other test cases? */
+                currStage.getStagedToAdd().remove(fileName);
+                currStage.stageToAdd(fileName, blobToAdd.getBlobId());
+                blobToAdd.trackBlob();
+            } else {
+                currStage.stageToAdd(fileName, blobToAdd.getBlobId());
+                blobToAdd.trackBlob();
+            }
+            File toStageFile = Utils.join(STAGE_PATH);
+            Utils.writeObject(toStageFile, currStage);
         }
     }
 
     public static void log() {
-        File committed = new File(commitPath);
-        Branch allCommits = Utils.readObject(committed, Branch.class);
-        ArrayList<Commit> commits = /* somehow get commits in branch here */;
-        ListIterator commitsItr = commits.listITerator();
+        File committed = Utils.join(COMMIT_PATH);
+        Repository allCommits = Utils.readObject(committed, Repository.class);
+        HashSet <String> commits = allCommits.getAllCommits();
+        ArrayList <String> actualCommits = new ArrayList<>(commits);
+        ListIterator commitsItr = actualCommits.listIterator();
         while (commitsItr.hasNext()) {
             Commit commit = (Commit) commitsItr.next();
             System.out.println("===");
@@ -94,7 +133,6 @@ public class Gitlet implements Serializable {
             System.out.println("Date: " + commit.getTimeStamp());
             System.out.println();
         }
-
 //        File[] history=parents.listFiles();
 //        for (File file: history){
 //            Commit file=(Commit)file;
@@ -103,6 +141,5 @@ public class Gitlet implements Serializable {
 //            System.out.println("Date:"+file.getTimeStamp);
 //            System.out.println(file.getCommitMessage);
 //        }
-    } /** based on arin's recommendation but like idk? **/
-
+    }
 }
