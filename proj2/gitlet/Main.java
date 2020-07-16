@@ -43,7 +43,7 @@ public class Main implements Serializable {
                     commitHelper(args);
                     break;
                 case "log":
-                    log();
+                    command.log();
                     break;
                 //other cases to be added after the checkpoint
                 default: //else
