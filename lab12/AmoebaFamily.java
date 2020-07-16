@@ -209,29 +209,40 @@ public class AmoebaFamily implements Iterable<AmoebaFamily.Amoeba> {
        O(N) operations. */
     public class AmoebaBFSIterator implements Iterator<Amoeba> {
 
-        private ArrayDeque<Amoeba> fringe = new ArrayDeque<>();
+        private Deque<Amoeba> fringe = new ArrayDeque<Amoeba>();
 
         /* AmoebaBFSIterator constructor. Sets up all of the initial information
            for the AmoebaBFSIterator. */
         public AmoebaBFSIterator() {
             if (root != null) {
-                fringe.push(root);
+                fringe.addLast(root);
             }
         }
 
         /* Returns true if there is a next element to return. */
         public boolean hasNext() {
-            return (!(fringe.isEmpty()));
+            return !fringe.isEmpty();
         }
 
         /* Returns the next element. */
         public Amoeba next() {
+//            if (!hasNext()) {
+//                throw new NoSuchElementException("Amoeba ran out of elements");
+//            }
+//            Amoeba parent = fringe.pop();
+//            for (Amoeba child : parent.getChildren()) {
+//                fringe.addLast(child);
+//            }
+//            return parent;
             if (!hasNext()) {
                 throw new NoSuchElementException("Amoeba ran out of elements");
             }
-            Amoeba parent = fringe.pop();
-            for (Amoeba child : parent.getChildren()) {
-                fringe.addLast(child);
+            Amoeba parent = fringe.removeFirst();
+            ArrayList<Amoeba> child = parent.getChildren();
+            if (!child.isEmpty()) {
+                for (Amoeba c: child) {
+                    fringe.addLast(c);
+                }
             }
             return parent;
         }
