@@ -144,4 +144,4 @@ public class Gitlet implements Serializable {
 //            System.out.println(file.getCommitMessage);
 //        }
     }
-}
+}//i'm not sure what happened but detached head
