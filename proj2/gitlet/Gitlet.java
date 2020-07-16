@@ -122,9 +122,10 @@ public class Gitlet implements Serializable {
 
     public static void log() { //recommended method by aerin
         File committed = new File (String.valueOf(COMMIT_PATH));
-        Repository allCommits = Utils.readObject(committed, Repository.class); //autograder says bad
+        Repository allCommit = Utils.readObject(committed, Repository.class); //autograder says bad
         //https://howtodoinjava.com/java/collections/arraylist/hashset-to-arraylist/
-        HashSet <String> commits = new HashSet<>(allCommits.getAllCommits());
+        //HashSet <String> commits = new HashSet<>(allCommits.getAllCommits());
+        HashSet <String> commits = allCommit.getAllCommits();
         ArrayList <String> actualCommits = new ArrayList<>(commits);
         ListIterator commitsItr = actualCommits.listIterator();
         while (commitsItr.hasNext()) {
