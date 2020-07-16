@@ -17,7 +17,7 @@ public class Commit implements Serializable {
     String id;
     String commitMessage;
     String timeStamp;
-    String parentCommit; /** String? **/
+    String parentCommit;
     /* name of file and id */
     HashMap<String, String> content;
 
@@ -67,5 +67,5 @@ public class Commit implements Serializable {
     public void addCommit() {
         File commitFile = Utils.join(COMMIT_PATH, getId());
         Utils.writeObject(commitFile, this);
-    } //I had the wrong tag oops
+    }
 }

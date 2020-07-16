@@ -37,7 +37,7 @@ public class Gitlet implements Serializable {
         else{
             gitlet.mkdir();
 
-            Repository repo = new Repository(); //WRONG HERE TOO INIT
+            Repository repo = new Repository();
             File inrepo= Utils.join(REPO_PATH);
             Utils.writeObject(inrepo,repo);
 
@@ -120,10 +120,12 @@ public class Gitlet implements Serializable {
         }
     }
 
-    public static void log() {
+    public static void log() { //recommended method by aerin
         File committed = Utils.join(COMMIT_PATH);
-        Repository allCommits = Utils.readObject(committed, Repository.class);
-        HashSet <String> commits = allCommits.getAllCommits();
+        Repository allCommits = Utils.readObject(committed, Repository.class); //autograder says bad
+        //https://howtodoinjava.com/java/collections/arraylist/hashset-to-arraylist/
+        //hope this works
+        HashSet <String> commits = new HashSet<>(allCommits.getAllCommits());
         ArrayList <String> actualCommits = new ArrayList<>(commits);
         ListIterator commitsItr = actualCommits.listIterator();
         while (commitsItr.hasNext()) {
@@ -133,6 +135,7 @@ public class Gitlet implements Serializable {
             System.out.println("Date: " + commit.getTimeStamp());
             System.out.println();
         }
+//        k's og code
 //        File[] history=parents.listFiles();
 //        for (File file: history){
 //            Commit file=(Commit)file;
