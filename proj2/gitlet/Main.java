@@ -43,7 +43,7 @@ public class Main implements Serializable {
                     commitHelper(args);
                     break;
                 case "log":
-                    log();
+                    command.log();
                     break;
                 //other cases to be added after the checkpoint
                 default: //else
@@ -78,14 +78,4 @@ public class Main implements Serializable {
             }
         }
     }
-
-//    public static void logHelperMain(String[] args) {
-//        if (args.length != 1) {
-//            Utils.message("Incorrect operands.");
-//        } else {
-//            command.log();
-//        }
-//    }
-
-
 }

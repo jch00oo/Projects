@@ -106,60 +106,50 @@ public class Gitlet implements Serializable {
             File fileInStage = Utils.join(STAGE_PATH);
             Stage currStage = Utils.readObject(fileInStage, Stage.class); /*use*/
             Blob blobToAdd = new Blob(fileName);
-            if (currStage.getStagedToAdd().containsKey(fileName)) { /* any other test cases? */
-                currStage.getStagedToAdd().remove(fileName);
-                currStage.stageToAdd(fileName, blobToAdd.getBlobId());
-                blobToAdd.trackBlob();
+            if (currStage.getStagedToRemove().containsKey(fileName)) {
+                currStage.getStagedToRemove().remove(fileName);
+            } else if (headContent.containsKey(fileName) && headContent.get(fileName).equals(blobToAdd.getBlobId())) {
+                if (currStage.getStagedToAdd().containsKey(fileName)) {
+                    currStage.getStagedToAdd().remove(fileName);
+                }
             } else {
                 currStage.stageToAdd(fileName, blobToAdd.getBlobId());
                 blobToAdd.trackBlob();
             }
             File toStageFile = Utils.join(STAGE_PATH);
             Utils.writeObject(toStageFile, currStage);
+            }
+    }
+
+
+//            if (currStage.getStagedToAdd().containsKey(fileName)) { /* any other test cases? */
+//                currStage.getStagedToAdd().remove(fileName);
+//                currStage.stageToAdd(fileName, blobToAdd.getBlobId());
+//                blobToAdd.trackBlob();
+//            } else {
+//                currStage.stageToAdd(fileName, blobToAdd.getBlobId());
+//                blobToAdd.trackBlob();
+//            }
+//            File toStageFile = Utils.join(STAGE_PATH);
+//            Utils.writeObject(toStageFile, currStage);
+//        }
+//    }
+
+    public void log() {
+        Commit pointer = new Commit();
+        Commit head = new Commit();
+        head.copyCommit(pointer);
+        while (pointer != null) {
+            logHelper(pointer);
+            pointer = pointer.getParentCommit();
         }
     }
 
-
-
-//    public static void log() { //recommended method by arin
-//        File committed = Utils.join(COMMIT_PATH);
-//        Repository allCommits = Utils.readObject(committed, Repository.class); //autograder says bad
-//        //https://howtodoinjava.com/java/collections/arraylist/hashset-to-arraylist/
-//        HashSet <String> commits = new HashSet<>(allCommits.getAllCommits());
-//        ArrayList <String> actualCommits = new ArrayList<>(commits);
-//        ListIterator commitsItr = actualCommits.listIterator();
-//        while (commitsItr.hasNext()) {
-//            Commit commit = (Commit) commitsItr.next();
-//            System.out.println("===");
-//            System.out.println("commit " + commit.getId());
-//            System.out.println("Date: " + commit.getTimeStamp());
-//            System.out.println();
-//        }
-//
-//    public static void log() { //recommended method by aerin
-//        File committed = new File(String.valueOf(COMMIT_PATH));
-//        Repository allCommit = Utils.readObject(committed, Repository.class); //autograder says bad
-//        //https://howtodoinjava.com/java/collections/arraylist/hashset-to-arraylist/
-//        //HashSet <String> commits = new HashSet<>(allCommits.getAllCommits());
-//        HashSet<String> commits = allCommit.getAllCommits();
-//        ArrayList<String> actualCommits = new ArrayList<>(commits);
-//        ListIterator commitsItr = actualCommits.listIterator();
-//        while (commitsItr.hasNext()) {
-//            Commit commit = (Commit) commitsItr.next();
-//            System.out.println("===");
-//            System.out.println("commit " + commit.getId());
-//            System.out.println("Date: " + commit.getTimeStamp());
-//            System.out.println();
-//        }
-
-//        k's og code
-//        File[] history=parents.listFiles();
-//        for (File file: history){
-//            Commit file=(Commit)file;
-//            System.out.println("===");
-//            System.out.println("commit"+file.getId);
-//            System.out.println("Date:"+file.getTimeStamp);
-//            System.out.println(file.getCommitMessage);
-//        }
-
+    public void logHelper(Commit curr) {
+        System.out.println("===");
+        System.out.println("commit " + curr.getId());
+        System.out.println("Date: " + curr.getTimeStamp());
+        System.out.println(curr.getCommitMessage());
+        System.out.println();
     }
+}
