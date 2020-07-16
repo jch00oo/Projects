@@ -10,16 +10,16 @@ import static gitlet.Gitlet.REPO_PATH;
 public class Repository implements Serializable {
 
     /* branch name and id */
-    private HashMap<String, String> branches;
-    private Commit head;
-    private String currBranch;
-    private HashSet<String> allCommits;
+    HashMap<String, String> branches;
+    Commit head;
+    String currBranch;
+    HashSet<String> allCommits;
 
     private HashMap<String, Commit> trackCommits;
 
     /*init new repo */
     public Repository() {
-        head = new Commit(); //WRONG HERE TOO INIT
+        head = new Commit();
         currBranch = "master";
         branches = new HashMap<>();
         branches.put(currBranch, head.getId());

@@ -120,6 +120,7 @@ public class Gitlet implements Serializable {
         }
     }
 
+<<<<<<< HEAD
 
 
 //    public static void log() { //recommended method by arin
@@ -137,6 +138,23 @@ public class Gitlet implements Serializable {
 //            System.out.println();
 //        }
 
+=======
+    public static void log() { //recommended method by aerin
+        File committed = new File (String.valueOf(COMMIT_PATH));
+        Repository allCommit = Utils.readObject(committed, Repository.class); //autograder says bad
+        //https://howtodoinjava.com/java/collections/arraylist/hashset-to-arraylist/
+        //HashSet <String> commits = new HashSet<>(allCommits.getAllCommits());
+        HashSet <String> commits = allCommit.getAllCommits();
+        ArrayList <String> actualCommits = new ArrayList<>(commits);
+        ListIterator commitsItr = actualCommits.listIterator();
+        while (commitsItr.hasNext()) {
+            Commit commit = (Commit) commitsItr.next();
+            System.out.println("===");
+            System.out.println("commit " + commit.getId());
+            System.out.println("Date: " + commit.getTimeStamp());
+            System.out.println();
+        }
+>>>>>>> b45f023d01afce3bc6e76f739d52981bf8085ad4
 //        k's og code
 //        File[] history=parents.listFiles();
 //        for (File file: history){
