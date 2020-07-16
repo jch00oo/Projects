@@ -58,9 +58,6 @@ public class Gitlet implements Serializable {
 //        File file = new File(cd_gitlet);
 //        File stageFile = new File(cd_stage);
 //        File commitFile = new File(commitPath);
-        if (commitMessage.equals("")) {
-            throw Utils.error("Please enter a commit message.");
-        }
         File repoFile = Utils.join(REPO_PATH);
         Repository currRepo = Utils.readObject(repoFile, Repository.class); /*this*/
         Commit head = currRepo.getHead();
@@ -70,6 +67,9 @@ public class Gitlet implements Serializable {
         HashMap<String, String> stagedToAdd = currStage.getStagedToAdd();
         HashMap<String, String> stagedToRemove = currStage.getStagedToRemove();
         HashMap<String, String> newBlob = new HashMap<>(headBlob);
+        if (commitMessage.equals("")) {
+            throw Utils.error("Please enter a commit message.");
+        }
         if (stagedToAdd.keySet().isEmpty() && stagedToRemove.keySet().isEmpty()) {
             throw Utils.error("No changes added to the commit.");
         }
@@ -120,20 +120,23 @@ public class Gitlet implements Serializable {
         }
     }
 
-    public static void log() { //recommended method by aerin
-        File committed = new File (String.valueOf(COMMIT_PATH));
-        Repository allCommits = Utils.readObject(committed, Repository.class); //autograder says bad
-        //https://howtodoinjava.com/java/collections/arraylist/hashset-to-arraylist/
-        HashSet <String> commits = new HashSet<>(allCommits.getAllCommits());
-        ArrayList <String> actualCommits = new ArrayList<>(commits);
-        ListIterator commitsItr = actualCommits.listIterator();
-        while (commitsItr.hasNext()) {
-            Commit commit = (Commit) commitsItr.next();
-            System.out.println("===");
-            System.out.println("commit " + commit.getId());
-            System.out.println("Date: " + commit.getTimeStamp());
-            System.out.println();
-        }
+
+
+//    public static void log() { //recommended method by arin
+//        File committed = Utils.join(COMMIT_PATH);
+//        Repository allCommits = Utils.readObject(committed, Repository.class); //autograder says bad
+//        //https://howtodoinjava.com/java/collections/arraylist/hashset-to-arraylist/
+//        HashSet <String> commits = new HashSet<>(allCommits.getAllCommits());
+//        ArrayList <String> actualCommits = new ArrayList<>(commits);
+//        ListIterator commitsItr = actualCommits.listIterator();
+//        while (commitsItr.hasNext()) {
+//            Commit commit = (Commit) commitsItr.next();
+//            System.out.println("===");
+//            System.out.println("commit " + commit.getId());
+//            System.out.println("Date: " + commit.getTimeStamp());
+//            System.out.println();
+//        }
+
 //        k's og code
 //        File[] history=parents.listFiles();
 //        for (File file: history){
@@ -143,5 +146,5 @@ public class Gitlet implements Serializable {
 //            System.out.println("Date:"+file.getTimeStamp);
 //            System.out.println(file.getCommitMessage);
 //        }
+
     }
-}

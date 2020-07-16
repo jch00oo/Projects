@@ -15,6 +15,8 @@ public class Repository implements Serializable {
     private String currBranch;
     private HashSet<String> allCommits;
 
+    private HashMap<String, Commit> trackCommits;
+
     /*init new repo */
     public Repository() {
         head = new Commit(); //WRONG HERE TOO INIT
@@ -63,4 +65,22 @@ public class Repository implements Serializable {
         File repoFile = Utils.join(REPO_PATH);
         Utils.writeObject(repoFile, this);
     }
+
+    public void log() {
+        Commit pointer = new Commit();
+        head.copyCommit(pointer);
+        while (pointer != null) {
+            logHelper(pointer);
+            pointer = pointer.getParentCommit();
+        }
+    }
+
+    public void logHelper(Commit curr) {
+        System.out.println("===");
+        System.out.println("commit " + curr.getId());
+        System.out.println("Date: " + curr.getTimeStamp());
+        System.out.println(curr.getCommitMessage());
+        System.out.println();
+    }
+
 }

@@ -8,6 +8,7 @@ import java.util.Calendar;
 import java.util.Set;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Formatter;
 import java.util.*;
 
 public class Commit implements Serializable {
@@ -24,12 +25,28 @@ public class Commit implements Serializable {
     /* initializing instance variables and maybe initial commit? */
     public Commit() {
         commitMessage = "initial commit";
-        SimpleDateFormat dateFormat = new SimpleDateFormat("E MMM dd HH:mm:ss yyyy Z");
+        SimpleDateFormat dateFormat = new SimpleDateFormat("EEE MMM d HH:mm:ss yyyy Z");
         timeStamp = dateFormat.format(0);
+//        timeStamp = new Date(0);
         content = new HashMap<>();
-        //id = Utils.sha1(content.toString(), parentCommit, commitMessage, timeStamp);
-        id= Utils.sha1(content.keySet().toArray()); //https://stackoverflow.com/questions/1090556/java-how-to-convert-hashmapstring-object-to-array
+//        id = Utils.sha1(content.toString(), parentCommit, commitMessage, timeStamp);
+//        id= Utils.sha1(content.keySet().toArray()); //https://stackoverflow.com/questions/1090556/java-how-to-convert-hashmapstring-object-to-array
+        id = makeId();
         parentCommit = "";
+    }
+
+    public Commit copyCommit(Commit copiedCommit) {
+        copiedCommit.id = this.id;
+        copiedCommit.commitMessage = this.commitMessage;
+        copiedCommit.timeStamp = this.timeStamp;
+        copiedCommit.parentCommit = this.parentCommit;
+        copiedCommit.content = this.content;
+        return copiedCommit;
+    }
+
+    private String makeId() {
+        byte[] converted = Utils.serialize(this);
+        return Utils.sha1((Object) converted);
     }
 
     /* normal commits */
@@ -40,8 +57,9 @@ public class Commit implements Serializable {
         Date currDate = new Date();
         SimpleDateFormat dateFormat = new SimpleDateFormat("E MMM dd HH:mm:ss yyyy Z");
         this.timeStamp = dateFormat.format(currDate);
-        //this.id = Utils.sha1(content.toString(), parentCommit, commitMessage, timeStamp); /** questionable **/
-        this.id=Utils.sha1(content.keySet().toArray());
+//        this.id = Utils.sha1(content.toString(), parentCommit, commitMessage, timeStamp); /** questionable **/
+//        id= Utils.sha1(content.keySet().toArray());
+        id = makeId();
     }
 
     public String getId() {
@@ -60,8 +78,20 @@ public class Commit implements Serializable {
         return content;
     }
 
-    public String getParentCommit() {
+    public String getParentCommitId() {
         return parentCommit;
+    }
+
+    public Commit getParentCommit() {
+        Commit parentCommitNew = null;
+        if (getParentCommitId().equals("")) {
+            return null;
+        }
+        else {
+            File parentFile = Utils.join(COMMIT_PATH, getParentCommitId());
+            parentCommitNew = Utils.readObject(parentFile, Commit.class);
+        }
+        return parentCommitNew;
     }
 
     public void addCommit() {

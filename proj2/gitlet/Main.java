@@ -79,4 +79,13 @@ public class Main implements Serializable {
         }
     }
 
+//    public static void logHelperMain(String[] args) {
+//        if (args.length != 1) {
+//            Utils.message("Incorrect operands.");
+//        } else {
+//            command.log();
+//        }
+//    }
+    
+
 }
