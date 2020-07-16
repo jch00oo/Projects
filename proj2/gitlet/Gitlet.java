@@ -121,7 +121,7 @@ public class Gitlet implements Serializable {
     }
 
     public static void log() { //recommended method by aerin
-        File committed = Utils.join(COMMIT_PATH);
+        File committed = Utils.join(commitPath);
         Repository allCommits = Utils.readObject(committed, Repository.class); //autograder says bad
         //https://howtodoinjava.com/java/collections/arraylist/hashset-to-arraylist/
         HashSet <String> commits = new HashSet<>(allCommits.getAllCommits());
@@ -144,4 +144,4 @@ public class Gitlet implements Serializable {
 //            System.out.println(file.getCommitMessage);
 //        }
     }
-}//again idk what happened but i lost points
+}
