@@ -37,7 +37,7 @@ public class Gitlet implements Serializable {
         else{
             gitlet.mkdir();
 
-            Repository repo = new Repository();
+            Repository repo = new Repository(); //WRONG HERE TOO INIT
             File inrepo= Utils.join(REPO_PATH);
             Utils.writeObject(inrepo,repo);
 

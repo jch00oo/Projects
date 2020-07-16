@@ -1,5 +1,5 @@
 package gitlet;
-
+import org.junit.*;
 import ucb.junit.textui;
 import org.junit.Test;
 import static org.junit.Assert.*;

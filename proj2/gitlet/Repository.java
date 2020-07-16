@@ -17,7 +17,7 @@ public class Repository implements Serializable {
 
     /*init new repo */
     public Repository() {
-        head = new Commit();
+        head = new Commit(); //WRONG HERE TOO INIT
         currBranch = "master";
         branches = new HashMap<>();
         branches.put(currBranch, head.getId());
