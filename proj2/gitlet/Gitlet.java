@@ -118,6 +118,23 @@ public class Gitlet implements Serializable {
             Utils.writeObject(toStageFile, currStage);
         }
     }
+    public void log() {
+        Commit pointer = new Commit();
+        Commit head = new Commit();
+        head.copyCommit(pointer);
+        while (pointer != null) {
+            logHelper(pointer);
+            pointer = pointer.getParentCommit();
+        }
+    }
+
+    public void logHelper(Commit curr) {
+        System.out.println("===");
+        System.out.println("commit " + curr.getId());
+        System.out.println("Date: " + curr.getTimeStamp());
+        System.out.println(curr.getCommitMessage());
+        System.out.println();
+    }
 
 
 

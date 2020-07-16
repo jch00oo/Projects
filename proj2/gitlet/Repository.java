@@ -66,7 +66,7 @@ public class Repository implements Serializable {
         Utils.writeObject(repoFile, this);
     }
 
-    public void log() {
+    /**public void log() {
         Commit pointer = new Commit();
         head.copyCommit(pointer);
         while (pointer != null) {
@@ -81,6 +81,6 @@ public class Repository implements Serializable {
         System.out.println("Date: " + curr.getTimeStamp());
         System.out.println(curr.getCommitMessage());
         System.out.println();
-    }
+    }**/
 
 }
