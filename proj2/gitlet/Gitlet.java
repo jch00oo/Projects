@@ -24,7 +24,7 @@ public class Gitlet implements Serializable {
     static final File REPO_PATH = Utils.join(workingPath, ".gitlet", "repo");
     static final File STAGE_PATH = Utils.join(workingPath, ".gitlet", "stage");
     static final File BLOB_PATH = Utils.join(workingPath, ".gitlet", "blobs");
-    static final File COMMIT_PATH = Utils.join(workingPath, ".gitlet", "commit");
+    static final File COMMIT_PATH = Utils.join(workingPath, ".gitlet", "commits");
     static final File GEN_PATH = Utils.join(workingPath);
 
     public static void init() {
@@ -124,7 +124,6 @@ public class Gitlet implements Serializable {
         File committed = Utils.join(COMMIT_PATH);
         Repository allCommits = Utils.readObject(committed, Repository.class); //autograder says bad
         //https://howtodoinjava.com/java/collections/arraylist/hashset-to-arraylist/
-        //fuck fuck fuck
         HashSet <String> commits = new HashSet<>(allCommits.getAllCommits());
         ArrayList <String> actualCommits = new ArrayList<>(commits);
         ListIterator commitsItr = actualCommits.listIterator();
