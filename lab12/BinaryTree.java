@@ -16,13 +16,15 @@ public class BinaryTree<T> {
 
     /* Returns the height of the tree. */
     public int height() {
-        // TODO: YOUR CODE HERE
+        if (root != null) {
+            return root.height();
+        }
         return 0;
     }
 
     /* Returns true if the tree's left and right children are the same height
        and are themselves completely balanced. */
-    public boolean isCompletelyBalanced() {
+    public boolean isCompletelyBalanced() { /** optional  */
         // TODO: YOUR CODE HERE
         return false;
     }
@@ -30,7 +32,18 @@ public class BinaryTree<T> {
     /* Returns a BinaryTree representing the Fibonacci calculation for N. */
     public static BinaryTree<Integer> fibTree(int N) {
         BinaryTree<Integer> result = new BinaryTree<Integer>();
-        return null;
+        if (N == 0) {
+            result.root = new TreeNode(0);
+            return result;
+        } else if (N == 1) {
+            result.root = new TreeNode(1);
+            return result;
+        } else {
+            result.root = new TreeNode((int) fibTree(N-1).root.item + (int) fibTree(N-2).root.item);
+            result.root.left = fibTree(N-1).root;
+            result.root.right = fibTree(N-2).root;
+        }
+        return result;
     }
 
     /* Print the values in the tree in preorder: root value first, then values
@@ -168,6 +181,21 @@ public class BinaryTree<T> {
             }
         }
 
-        // TODO: ADD HELPER METHODS HERE
+        private int height() {
+            if (left == null&& right == null) {
+                return 1;
+            }
+            else if (left == null) {
+                return 1 + right.height();
+            } else if (right == null) {
+                return 1 + left.height();
+            } else {
+                int heightLeft = left.height();
+                int heightRight = right.height();
+                return 1 + Math.max(heightLeft, heightRight);
+            }
+        }
+
+
     }
 }
