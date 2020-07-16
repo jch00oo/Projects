@@ -10,10 +10,10 @@ import static gitlet.Gitlet.REPO_PATH;
 public class Repository implements Serializable {
 
     /* branch name and id */
-    private HashMap<String, String> branches;
-    private Commit head;
-    private String currBranch;
-    private HashSet<String> allCommits;
+    HashMap<String, String> branches;
+    Commit head;
+    String currBranch;
+    HashSet<String> allCommits;
 
     /*init new repo */
     public Repository() {
