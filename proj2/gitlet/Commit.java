@@ -67,5 +67,5 @@ public class Commit implements Serializable {
     public void addCommit() {
         File commitFile = Utils.join(COMMIT_PATH, getId());
         Utils.writeObject(commitFile, this);
-    }
+    } //I had the wrong tag oops
 }
