@@ -46,6 +46,9 @@ public class Main implements Serializable {
                 case "log":
                     log();
                     break;
+                case "branch":
+                    branchHelper(args);
+                    break;
                 //other cases to be added after the checkpoint
                 default: //else
                     System.out.println("No command with that name exists.");
@@ -53,15 +56,6 @@ public class Main implements Serializable {
             }
         }
     }
-
-//    public static void log() {
-//        File commitFile = new File(commitPath);
-//        Repository currRepo = Utils.readObject(commitFile, Repository.class);
-//        Collection commitIDs = currRepo.branches.values();
-//
-//        ArrayList <Commit> commits = currRepo.branches.values();
-//
-//    }
 
     public static void commitHelper(String[] args) { /* our commit takes in one String */
         if (args.length > 2) {
@@ -83,6 +77,18 @@ public class Main implements Serializable {
         } else {
             try {
                 command.add(args[1]);
+            } catch (GitletException error) {
+                Utils.message(error.getMessage());
+            }
+        }
+    }
+
+    public static void branchHelper(String[] args) {
+        if (args.length != 2) {
+            System.out.println("Incorrect operands.");
+        } else {
+            try {
+                command.branch(args[1]);
             } catch (GitletException error) {
                 Utils.message(error.getMessage());
             }
