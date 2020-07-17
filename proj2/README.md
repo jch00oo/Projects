@@ -1,6 +1,6 @@
 # **Gitlet**
-## Classes and Data Structures 
-### a. Main implement serializable too 
+## Classes and Methods
+### a. Gitlet 
 If no arguments entered, print out exception error 
 Create big switch blocks- init, add, commit, log - and create the others after first checkpoint. Default block is error staetment- no command exists.
 * private HashMap<String,Commit> commitHistory; //stores all the commits, id as key and Commit as value
@@ -28,13 +28,15 @@ Create big switch blocks- init, add, commit, log - and create the others after f
 * Create a new file .gitlet
 * If file exists, throw error message already exists 
 * Otherwise make a directory and commit it there. Direct to staging class to stage. 
-### b. Commit implement serializable 
-Initial commit; get local date/time/content formatting for log. 
-### c. Branch
-String name, pointer. current Branch. Set current branch to be head, make get methods for names, branches
-### d. Blob
-Create a blob class to make a blob object. Begin tracking the object if it exists, pring error statement if it does not exist. Set current file to be a new file- if this file exists, read contents and track file
-Change file to alphanumeric code using SHA1. 
+  
+### b. Blob
+
+
+### c. Repository
+
+
+### d. Commit
+
+
 ### e. Stage 
-Create a stage faster and more efficiently with hash maps. Easier to clear the stage and implement. 
-Public stage, add files, delete files, get files 
+
