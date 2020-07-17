@@ -66,21 +66,21 @@ public class Repository implements Serializable {
         Utils.writeObject(repoFile, this);
     }
 
-    /**public void log() {
-        Commit pointer = new Commit();
-        head.copyCommit(pointer);
-        while (pointer != null) {
-            logHelper(pointer);
-            pointer = pointer.getParentCommit();
-        }
-    }
-
-    public void logHelper(Commit curr) {
-        System.out.println("===");
-        System.out.println("commit " + curr.getId());
-        System.out.println("Date: " + curr.getTimeStamp());
-        System.out.println(curr.getCommitMessage());
-        System.out.println();
-    }**/
+//    public void log() {
+//        Commit pointer = new Commit();
+//        head.copyCommit(pointer);
+//        while (pointer != null) {
+//            logHelper(pointer);
+//            pointer = pointer.getParentCommit();
+//        }
+//    }
+//
+//    public void logHelper(Commit curr) {
+//        System.out.println("===");
+//        System.out.println("commit " + curr.getId());
+//        System.out.println("Date: " + curr.getTimeStamp());
+//        System.out.println(curr.getCommitMessage());
+//        System.out.println();
+//    }
 
 }

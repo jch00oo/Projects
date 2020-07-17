@@ -15,6 +15,7 @@ public class Main implements Serializable {
     private File stage;
     private static Gitlet command = new Gitlet();
     HashMap <String, String> branchHistory;// branch name as key, id of current branch as value
+    private static String commitPath = ".gitlet/.commit";
 
     /**public void Gitlet() {
      startergit= new File (cd_gitlet);
@@ -43,7 +44,7 @@ public class Main implements Serializable {
                     commitHelper(args);
                     break;
                 case "log":
-                    command.log();
+                    log();
                     break;
                 //other cases to be added after the checkpoint
                 default: //else
@@ -52,6 +53,15 @@ public class Main implements Serializable {
             }
         }
     }
+
+//    public static void log() {
+//        File commitFile = new File(commitPath);
+//        Repository currRepo = Utils.readObject(commitFile, Repository.class);
+//        Collection commitIDs = currRepo.branches.values();
+//
+//        ArrayList <Commit> commits = currRepo.branches.values();
+//
+//    }
 
     public static void commitHelper(String[] args) { /* our commit takes in one String */
         if (args.length > 2) {

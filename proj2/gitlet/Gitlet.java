@@ -135,21 +135,24 @@ public class Gitlet implements Serializable {
 //        }
 //    }
 
-    public void log() {
-        Commit pointer = new Commit();
-        Commit head = new Commit();
-        head.copyCommit(pointer);
-        while (pointer != null) {
+    public static void log() {
+        File repoFile = Utils.join(REPO_PATH);
+        Repository currRepo = Utils.readObject(repoFile, Repository.class);
+        Commit pointer = currRepo.head;
+        while (! pointer.getParentCommitId().equals("")) {
             logHelper(pointer);
             pointer = pointer.getParentCommit();
         }
+        logHelper(pointer);
     }
 
-    public void logHelper(Commit curr) {
+
+    public static void logHelper(Commit curr) {
         System.out.println("===");
         System.out.println("commit " + curr.getId());
         System.out.println("Date: " + curr.getTimeStamp());
         System.out.println(curr.getCommitMessage());
         System.out.println();
     }
+
 }
