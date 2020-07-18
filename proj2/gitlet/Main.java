@@ -49,6 +49,12 @@ public class Main implements Serializable {
                 case "branch":
                     branchHelper(args);
                     break;
+                case "global-log":
+                    global();
+                    break;
+                case "find":
+                    find(args);
+                    break;
                 //other cases to be added after the checkpoint
                 default: //else
                     System.out.println("No command with that name exists.");
