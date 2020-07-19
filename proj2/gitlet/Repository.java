@@ -13,7 +13,8 @@ public class Repository implements Serializable {
     HashMap<String, String> branches;
     Commit head;
     String currBranch;
-    HashSet<String> allCommits;
+    HashMap<String,Commit> allCommits;
+    //HashSet<String> allCommits;
 
     private HashMap<String, Commit> trackCommits;
 
@@ -23,8 +24,10 @@ public class Repository implements Serializable {
         currBranch = "master";
         branches = new HashMap<>();
         branches.put(currBranch, head.getId());
-        allCommits = new HashSet<>();
-        allCommits.add(head.getId());
+        //allCommits = new HashSet<>();
+        //allCommits.add(head.getId());
+        allCommits = new HashMap<>();
+        allCommits.put(head.getId(),head); //dubious code, but I needed to get a string,commit Map
     }
 
     public Commit getHead() {
@@ -35,7 +38,7 @@ public class Repository implements Serializable {
         return currBranch;
     }
 
-    public HashSet<String> getAllCommits() {
+    public HashMap<String,Commit> getAllCommits() {
         return allCommits;
     }
 
@@ -53,7 +56,8 @@ public class Repository implements Serializable {
     public void newHead(Commit curr) {
         head = curr;
         branches.put(currBranch, curr.getId());
-        allCommits.add(curr.getId());
+        allCommits.put(head.getId(),head);
+        //allCommits.add(curr.getId()); I had to change to Hashmap
     }
 
     public void newBranch(String name, Commit head) {

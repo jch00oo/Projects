@@ -222,9 +222,34 @@ public class Gitlet implements Serializable {
             }
             statusFormat.format("%s\n", branch);
         }
+    }
+    public static void global(){
+        File repoFile = Utils.join(REPO_PATH);
+        Repository currRepo = Utils.readObject(repoFile, Repository.class);
+        HashMap<String,Commit> pointer = currRepo.getAllCommits();
+        for (Commit i : pointer.values()) {
+            logHelper(i); //i needs to be commit to go into logHelper; must change from Hashset to Hashmap
+        }
+    }
 
+<<<<<<< HEAD
         
 
+=======
+    public static void find(String[] message){
+        File repoFile3 = Utils.join(REPO_PATH);
+        Repository currRepo = Utils.readObject(repoFile3, Repository.class);
+        HashMap<String,Commit> pointer = currRepo.getAllCommits();
+        try{
+            for (Commit i : pointer.values()) {
+                if (i.getCommitMessage().equals(message)){
+                    System.out.println(i.getId());
+                }
+            }
+        } catch (Exception e) {
+            System.out.println(Utils.error("Found no commit with that message"));
+        }
+>>>>>>> fd65614ad6be547b21ed3b1960e4dac649200df6
     }
 
 

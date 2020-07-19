@@ -1,0 +1,24 @@
+#Can find a commit message, but from all commits
+>init
+<<<
+D HEADER "commit [a-f0-9]+"
+D DATE "Date: \w\w\w \w\w\w \d+ \d\d:\d\d:\d\d \d\d\d\d [-+]\d\d\d\d"
++ wug.txt wug.txt
++ notwug.txt notwug.txt
+> add wug.txt
+<<<
+>add notwug.txt
+<<<
+> commit "wug"
+<<<
++ yipyipappa.txt yipyipappa.txt
+> add yipyipappa.txt
+<<<
+> commit "yip yip appa"
+<<<
+>find(yip yip appa)
+===
+${HEADER}
+File with Wug message exists
+
+<<<*
