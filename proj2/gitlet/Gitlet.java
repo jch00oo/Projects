@@ -223,6 +223,7 @@ public class Gitlet implements Serializable {
             statusFormat.format("%s\n", branch);
         }
 
+        
 
     }
 
