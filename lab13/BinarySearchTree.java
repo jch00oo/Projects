@@ -3,22 +3,47 @@ public class BinarySearchTree<T extends Comparable<T>> extends BinaryTree<T> {
     /* Creates an empty BST. */
     public BinarySearchTree() {
         // TODO: YOUR CODE HERE
+        super();
+
     }
 
     /* Creates a BST with root as ROOT. */
     public BinarySearchTree(TreeNode root) {
         // TODO: YOUR CODE HERE
+        super(root);
     }
 
     /* Returns true if the BST contains the given KEY. */
+    //https://stackoverflow.com/questions/32752598/bst-contains-method-not-working-properly-in-java
     public boolean contains(T key) {
         // TODO: YOUR CODE HERE
-        return false;
+        return containsHelp(key,root);
+    }
+    public boolean containsHelp(T key, TreeNode root) {
+        if (key.compareTo(root.item) < 0) {
+            if(root.left!=null){
+                return containsHelp(key,root.left);
+            }
+            else{
+                return false;
+            }
+        } else if (key.compareTo(root.item) > 0) {
+            //go to right branch
+            if (root.right!=null){
+                return containsHelp(key,root.right);
+            }
+            else{
+                return false;
+            }
+        } else {
+            return true;
+        }
     }
 
     /* Adds a node for KEY iff KEY isn't in the BST already. */
     public void add(T key) {
         // TODO: YOUR CODE HERE
+
     }
 
     /* Deletes a node from the BST. 

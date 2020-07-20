@@ -24,7 +24,13 @@ public class BinaryTree<T> {
 
     /* Print the values in the tree in inorder. */
     public void printInorder() {
-        //TODO: YOUR CODE HERE
+        //TODO: YOUR CODE HERE from lab12
+        if (root == null) {
+            System.out.println("(empty tree)");
+        } else {
+            root.printInorder();
+            System.out.println();
+        }
     }
 
     /* Prints the BinaryTree in preorder or in inorder. Used for your testing. */
@@ -66,7 +72,14 @@ public class BinaryTree<T> {
 
         /* Prints the nodes of the BinaryTree in inorder. Used for your testing. */
         private void printInorder() {
-            //TODO: YOUR CODE HERE
+            //TODO: YOUR CODE HERE from lab12
+            if (left != null) {
+                left.printInorder();
+            }
+            System.out.print(item + " ");
+            if (right != null) {
+                right.printInorder();
+            }
         }
     }
 }
