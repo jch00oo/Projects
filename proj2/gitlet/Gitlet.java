@@ -212,7 +212,7 @@ public class Gitlet implements Serializable {
         File stageFile = Utils.join(STAGE_PATH);
         Stage currStage = Utils.readObject(stageFile, Stage.class);
 
-        statusFormat.format("=== Branches ===");
+        System.out.println("=== Branches ===");
         int numOfBranches = currRepo.getBranches().size();
         Object[] branchNames = currRepo.getBranches().keySet().toArray();
         Arrays.sort(branchNames);
@@ -222,7 +222,48 @@ public class Gitlet implements Serializable {
             }
             statusFormat.format("%s\n", branch);
         }
+        System.out.println();
+
+        System.out.println("=== Staged Files ===");
+        Object[] allStaged = currStage.getStagedToAdd().keySet().toArray();
+        Arrays.sort(allStaged);
+        for (Object file: allStaged) {
+            statusFormat.format("%s\n", file);
+        }
+        System.out.println();
+
+        System.out.println("=== Removed Files ===");
+        Object[] allRemoved = currStage.getStagedToRemove().keySet().toArray();
+        Arrays.sort(allRemoved);
+        for (Object file: allRemoved) {
+            statusFormat.format("%s\n", file);
+        }
+        System.out.println();
+
+        /** DEFINITELY EDIT **/
+        System.out.println("=== Modifications Not Staged For Commit ===");
+        HashSet<String> notStaged = new HashSet<>();
+        notStaged.addAll(currRepo.getModified(currStage.getStagedToAdd()));
+        notStaged.addAll(currRepo.getDeletedFiles(currStage.getStagedToAdd(), currStage.getStagedToRemove()));
+        ArrayList<String> notStagedList = new ArrayList<>(notStaged);
+        Collections.sort(notStagedList);
+        for (String modified: notStagedList) {
+            statusFormat.format("%s\n", modified);
+        }
+        System.out.println();
+
+        /** DEFINITELY EDIT **/
+        System.out.println("=== Untracked Files ===");
+        ArrayList<String> allUntracked = currRepo.getUntracked(currStage.getStagedToAdd());
+        Collections.sort(allUntracked);
+        for (String untracked: allUntracked) {
+            statusFormat.format("%s\n", untracked);
+        }
+        System.out.println();
+
+        System.out.println(statusFormat.toString());
     }
+
     public static void global(){
         File repoFile = Utils.join(REPO_PATH);
         Repository currRepo = Utils.readObject(repoFile, Repository.class);
