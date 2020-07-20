@@ -232,6 +232,10 @@ public class Gitlet implements Serializable {
         }
     }
 
+<<<<<<< HEAD
+        
+
+=======
     public static void find(String[] message){
         File repoFile3 = Utils.join(REPO_PATH);
         Repository currRepo = Utils.readObject(repoFile3, Repository.class);
@@ -245,6 +249,7 @@ public class Gitlet implements Serializable {
         } catch (Exception e) {
             System.out.println(Utils.error("Found no commit with that message"));
         }
+>>>>>>> fd65614ad6be547b21ed3b1960e4dac649200df6
     }
 
 
