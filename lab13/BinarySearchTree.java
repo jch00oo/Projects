@@ -4,7 +4,6 @@ public class BinarySearchTree<T extends Comparable<T>> extends BinaryTree<T> {
     public BinarySearchTree() {
         // TODO: YOUR CODE HERE
         super();
-
     }
 
     /* Creates a BST with root as ROOT. */
@@ -41,10 +40,45 @@ public class BinarySearchTree<T extends Comparable<T>> extends BinaryTree<T> {
     }
 
     /* Adds a node for KEY iff KEY isn't in the BST already. */
-    public void add(T key) {
+    /**public void add(T key) {
         // TODO: YOUR CODE HERE
-
+        if (key.compareTo(root.item) < 0) {
+            if(root.left!=null){
+                add(key, root.left);
+            }
+            else{
+                root.left= new TreeNode(key);
+            }
+        } else if(key.compareTo(root.item) > 0) {
+            //go to right branch
+            if (root.right!=null){
+                add (key,root.right);
+            }
+            else{
+                root.right= new TreeNode(key);
+            }
+        } else {
+            System.out.println("Key is already in tree");
+        }
+    } **/
+    public void add(T key) {
+        if (!(this.contains(key))) {
+            root = addHelper(root, key);
+        }
     }
+
+    public TreeNode addHelper(TreeNode t, T key) {
+        if (t == null) {
+            return new TreeNode(key);
+        } else if (key.compareTo(t.item) < 0) {
+            t.left = addHelper(t.left, key);
+            return t;
+        } else {
+            t.right = addHelper(t.right, key);
+            return t;
+        }
+    }
+
 
     /* Deletes a node from the BST. 
      * Even though you do not have to implement delete, you 
