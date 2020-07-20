@@ -71,11 +71,12 @@ public class BinaryTree<T> {
 
         /* Prints the nodes of the BinaryTree in inorder. Used for your testing. */
         public void printInorder() {
-            if (root == null) {
-                System.out.println("(empty tree)");
-            } else {
-                root.printInorder();
-                System.out.println();
+            if (left != null) {
+                left.printInorder();
+            }
+            System.out.print(item + " ");
+            if (right != null) {
+                right.printInorder();
             }
         }
     }

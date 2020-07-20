@@ -29,10 +29,22 @@ public class BinarySearchTree<T extends Comparable<T>> extends BinaryTree<T> {
 
     /* Adds a node for KEY iff KEY isn't in the BST already. */
     public void add(T key) {
-
+        if (!(this.contains(key))) {
+            root = addHelper(root, key);
+        }
     }
 
-
+    public TreeNode addHelper(TreeNode t, T key) {
+        if (t == null) {
+            return new TreeNode(key);
+        } else if (key.compareTo(t.item) < 0) {
+            t.left = addHelper(t.left, key);
+            return t;
+        } else {
+            t.right = addHelper(t.right, key);
+            return t;
+        }
+    }
 
     /* Deletes a node from the BST. 
      * Even though you do not have to implement delete, you 
