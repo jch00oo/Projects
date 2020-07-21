@@ -55,6 +55,8 @@ public class Main implements Serializable {
                 case "find":
                     find(args);
                     break;
+                case "reset":
+                    reset(args[1]);
                 //other cases to be added after the checkpoint
                 default: //else
                     System.out.println("No command with that name exists.");

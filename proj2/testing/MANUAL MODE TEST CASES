@@ -1,0 +1,183 @@
+MANUAL MODE TEST CASES 
+
+STEP 1 : INITIALIZE to begin copying over gitlet to begin testing do this in proj 2 directory:
+
+javac gitlet/*.java
+mkdir ~/test-gitlet
+mkdir ~/test-gitlet/gitlet
+cp gitlet/*.class ~/test-gitlet/gitlet
+cd ~/test-gitlet
+
+STEP 2: BEGIN TESTING SEE BOTTOM OF THIS FILE 
+
+STEP 3:at the very end of testing do this in proj 2 directory:
+
+rm ~/test-gitlet/gitlet/*.class
+rm -r ~/test-gitlet/.gitlet
+javac gitlet/*.java
+cp gitlet/*.class ~/test-gitlet/gitlet
+
+#Note that this basically copies the gitlet folder over and to test manually again, you have to delete the file and recopy it.  
+
+#If the second does not work, please just delete that whole rm -r ~/test-gitlet made in step 1. 
+
+STEP 2: LONGER VERSION WITH ALL TESTS 
+
+=======================INIT TEST====================
+java gitlet.Main init 
+
+//should initialize 
+=======================DOUBLE INIT TEST====================
+java gitlet.Main init
+java gitlet.Main init 
+
+//should throw error message repository already exists 
+=======================ADD ONE FILE TEST====================
+java gitlet.Main init
+java gitlet.Main add wug.txt
+java gitlet.Main commit "added wug"
+java gitlet.Main log
+
+//should show one added wug commit. SHOULD HAVE PASSED, BUT DIDN'T
+=======================ADD TWO FILE TEST====================
+java gitlet.Main init
+java gitlet.Main add wug.txt
+java gitlet.Main add notwug.txt
+java gitlet.Main commit "fml"
+java gitlet.Main log
+
+//should have 2 commit, 2 files
+=======================NORM REMOVE FILE TEST====================
+java gitlet.Main init
+java gitlet.Main add wug.txt
+java gitlet.Main add notwug.txt
+java gitlet.Main rm wug.txt
+java gitlet.Main commit "fml"
+java gitlet.Main log
+
+//only should have wug
+
+=======================REMOVE TO EXTINCTION FILE TEST====================
+java gitlet.Main init
+java gitlet.Main add wug.txt
+java gitlet.Main add notwug.txt
+java gitlet.Main rm wug.txt
+java gitlet.Main rm notwug.txt
+java gitlet.Main status
+
+//extinction
+=======================NONEXISTENT REMOVE FILE TEST====================
+java gitlet.Main init
+java gitlet.Main add wug.txt
+java gitlet.Main add notwug.txt
+java gitlet.Main rm yipyip.txt
+
+//No reason to remove the file 
+=======================NORMAL GLOBAL LOG TEST====================
+java gitlet.Main init
+java gitlet.Main add wug.txt
+java gitlet.Main add notwug.txt
+java gitlet.Main commit "fml"
+java gitlet.Main add yipyip.txt
+java gitlet.Main commit "appa"
+java gitlet.Main global
+
+//should show 2 commits 
+=======================CAN FIND TEST ====================
+java gitlet.Main init
+java gitlet.Main add wug.txt
+java gitlet.Main commit "wug"
+java gitlet.Main add notwug.txt
+java gitlet.Main commit "notwug"
+java gitlet.Main find wug
+
+//yes should find wug 
+=======================CAN'T FIND TEST ====================
+java gitlet.Main init
+java gitlet.Main add wug.txt
+java gitlet.Maincommit "wug"
+java gitlet.Main add notwug.txt
+java gitlet.Main commit "notwug"
+java gitlet.Main find yipyip
+
+//DNE
+=======================STATUS TEST ====================
+java gitlet.Main init
+java gitlet.Main add wug.txt
+java gitlet.Main add notwug.txt
+java gitlet.Main status 
+java gitlet.Main rm notwug.txt
+java gitlet.Main status
+
+//2 files staged then 1 file removed 
+
+=======================BRANCH & STATUS TEST ====================
+java gitlet.Main init
+java gitlet.Main add wug.txt
+java gitlet.Main add notwug.txt
+java gitlet.Main commit "build a branch"
+java gitlet.Main branch smolbranch
+java gitlet.Main add yipyip.txt 
+java gitlet.Main status 
+
+//must make more status tests to make sure asterick on current branch
+=======================CHECKOUT TEST 1 ====================
+java gitlet.Main init
+java gitlet.Main add wug.txt
+java gitlet.Main add notwug.txt
+java gitlet.Main commit "two files"
+*edit wug* 
+java gitlet.Main add wug.txt 
+java gitlet.Main commit "updated wug"
+java gitlet.Main checkout --wug.txt
+java gitlet.Main log
+
+//overwrote the former wug txt 
+=======================CHECKOUT TEST 2 ====================
+java gitlet.Main init
+java gitlet.Main add wug.txt
+java gitlet.Main commit "wugs"
+*edit wug* 
+java gitlet.Main add wug.txt 
+java gitlet.Main commit "updated wug"
+*edit wug*
+java gitlet.Main add wug.txt
+java gitlet.Main commit "updated 2 wug"
+java gitlet.Main checkout commitidfromfirst --wug.txt
+
+//reverted to first wug 
+=======================CHECKOUT TEST 3 ====================
+
+//MUST CREATE THIS TEST AND INCORPORATE FAILURES 
+
+
+=======================BRANCH REMOVE TEST ====================
+java gitlet.Main init
+java gitlet.Main add wug.txt
+java gitlet.Main add notwug.txt
+java gitlet.Main commit "build a branch"
+java gitlet.Main branch smolbranch
+java gitlet.Main add yipyip.txt 
+java gitlet.Main rm-branch smolbranch
+java gitlet.Main status
+
+//removes a branch
+=======================BRANCH REMOVE DNE TEST ====================
+java gitlet.Main init
+java gitlet.Main add wug.txt
+java gitlet.Main add notwug.txt
+java gitlet.Main commit "build a branch"
+java gitlet.Main branch smolbranch
+java gitlet.Main add yipyip.txt 
+java gitlet.Main rm-branch bigbranch
+
+//error branch dne
+
+=======================RESET TEST ====================
+
+=======================REBASE TEST ====================
+
+=======================MERGE TEST ====================
+
+
+
