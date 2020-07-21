@@ -38,7 +38,7 @@ java gitlet.Main add wug.txt
 java gitlet.Main commit "added wug"
 java gitlet.Main log
 
-//should show one added wug commit 
+//should show one added wug commit. SHOULD HAVE PASSED, BUT DIDN'T
 =======================ADD TWO FILE TEST====================
 java gitlet.Main init
 java gitlet.Main add wug.txt

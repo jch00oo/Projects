@@ -12,7 +12,8 @@ public class Repository implements Serializable {
     HashMap<String, String> branches;
     Commit head;
     String currBranch;
-    HashMap<String,Commit> allCommits;
+    HashMap<String, Commit> allCommits;
+    ArrayList<Commit> allCommitscurrbranch;
     //HashSet<String> allCommits;
 
     private HashMap<String, Commit> trackCommits;
@@ -25,10 +26,8 @@ public class Repository implements Serializable {
         currBranch = "master";
         branches = new HashMap<>();
         branches.put(currBranch, head.getId());
-        //allCommits = new HashSet<>();
-        //allCommits.add(head.getId());
         allCommits = new HashMap<>();
-        allCommits.put(head.getId(),head); //dubious code, but I needed to get a string,commit Map
+        allCommits.put(head.getId(), head); //dubious code, but I needed to get a string,commit Map
     }
 
     public Commit getHead() {
@@ -39,7 +38,11 @@ public class Repository implements Serializable {
         return currBranch;
     }
 
-    public HashMap<String,Commit> getAllCommits() {
+    public ArrayList<Commit> getcurrbranchcommit() {
+        return allCommitscurrbranch;
+    }
+
+    public HashMap<String, Commit> getAllCommits() {
         return allCommits;
     }
 
@@ -51,12 +54,14 @@ public class Repository implements Serializable {
         return head.getContent();
     }
 
-    /** add method to get modified files, deleted files, untracked files **/
+    /**
+     * add method to get modified files, deleted files, untracked files
+     **/
 
     public void newHead(Commit curr) {
         head = curr;
         branches.put(currBranch, curr.getId());
-        allCommits.put(head.getId(),head);
+        allCommits.put(head.getId(), head);
         //allCommits.add(curr.getId()); I had to change to Hashmap
     }
 
@@ -70,12 +75,14 @@ public class Repository implements Serializable {
         Utils.writeObject(repoFile, this);
     }
 
-    /** edit this **/
+    /**
+     * edit this
+     **/
     public ArrayList<String> getModified(HashMap<String, String> stagedFiles) {
         List<String> allStaged = Utils.plainFilenamesIn(GEN_PATH);
         boolean isStaged, isTracked;
         ArrayList<String> modified = new ArrayList<>();
-        for (String file: allStaged) {
+        for (String file : allStaged) {
             isStaged = stagedFiles.containsKey(file);
             isTracked = getTracked().containsKey(file);
             if (!isStaged && isTracked) {
@@ -93,17 +100,19 @@ public class Repository implements Serializable {
         return modified;
     }
 
-    /** edit this **/
+    /**
+     * edit this
+     **/
     ArrayList<String> getDeletedFiles(HashMap<String, String> allStaged,
                                       HashMap<String, String> allRemoved) {
         List<String> allPresent = Utils.plainFilenamesIn(GEN_PATH);
         ArrayList<String> deleted = new ArrayList<>();
-        for (String staged: allStaged.keySet()) {
+        for (String staged : allStaged.keySet()) {
             if (!allPresent.contains(staged)) {
                 deleted.add(staged + " (deleted)");
             }
         }
-        for (String tracked: getTracked().keySet()) {
+        for (String tracked : getTracked().keySet()) {
             if (!allRemoved.containsKey(tracked)
                     && !allPresent.contains(tracked)) {
                 deleted.add(tracked + " (deleted)");
@@ -112,11 +121,13 @@ public class Repository implements Serializable {
         return deleted;
     }
 
-    /** edit this **/
+    /**
+     * edit this
+     **/
     public ArrayList<String> getUntracked(HashMap<String, String> stagedFiles) {
         List<String> allFiles = Utils.plainFilenamesIn(GEN_PATH);
         ArrayList<String> untrackedFiles = new ArrayList<>();
-        for (String file: allFiles) {
+        for (String file : allFiles) {
             if (!(stagedFiles.containsKey(file)) && !(getTracked().containsKey(file))) {
                 untrackedFiles.add(file);
             }
@@ -124,24 +135,5 @@ public class Repository implements Serializable {
         Collections.sort(untrackedFiles);
         return untrackedFiles;
     }
-
-
-
-//    public void log() {
-//        Commit pointer = new Commit();
-//        head.copyCommit(pointer);
-//        while (pointer != null) {
-//            logHelper(pointer);
-//            pointer = pointer.getParentCommit();
-//        }
-//    }
-//
-//    public void logHelper(Commit curr) {
-//        System.out.println("===");
-//        System.out.println("commit " + curr.getId());
-//        System.out.println("Date: " + curr.getTimeStamp());
-//        System.out.println(curr.getCommitMessage());
-//        System.out.println();
-//    }
-
 }
+

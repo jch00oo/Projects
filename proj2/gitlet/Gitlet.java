@@ -287,6 +287,46 @@ public class Gitlet implements Serializable {
             System.out.println(Utils.error("Found no commit with that message"));
         }
     }
+    /***
+    public static void checkout(String [] args){
+        try{
+            String fileName;
+            if (args[0]=="--"&&args.length==2){
+                //first case revert to original and make pointer go back to head
+                fileName=args[1];
+                //getHead();
+            }
+            else if(args[1]=="--"&&args.length==3){
+                //second case
+            }else if(args[1]==branchname){
+                //were multiple files in a commit. end of the command, overwrite everything. If tracked, deleted, clear stage.
+
+            }
+        } catch(Exception e){
+            System.out.println(Utils.error("No checkout command like that exists."))
+        }
+
+   } **/
+    public static void reset(String fileLetter){ //user enters shortened sha1 name
+        File repoFile4 = Utils.join(REPO_PATH);
+        Repository currRepo = Utils.readObject(repoFile4, Repository.class);
+        ArrayList<Commit> curr= currRepo.getcurrbranchcommit();
+        Stage stage = new Stage(); //dubious code
+        for (Commit commit:curr){
+            if (commit.getId().startsWith(fileLetter)){
+                if(!tracked.isEmpty()){ //Noncompiling code how to reference tracked files
+                    System.out.println(Utils.error("There is an untracked file in the way; delete it, or add and commit it first."));
+                } else {
+                fileLetter=commit.getId();//if starts with the entered 5 letter string, is the same thing
+                currRepo.newHead(commit);//moves the head
+                stage.clearStage();
+                }
+            }
+            else{
+                System.out.println(Utils.error("No commit with that id exists."));
+            }
+        }
+    }
 
 
 }
