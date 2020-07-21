@@ -314,7 +314,7 @@ public class Gitlet implements Serializable {
         Stage stage = new Stage(); //dubious code
         for (Commit commit:curr){
             if (commit.getId().startsWith(fileLetter)){
-                if(!tracked.isEmpty()){ //Noncompiling code how to reference tracked files
+                if(!isTracked.isEmpty()){ //Noncompiling code how to reference tracked files
                     System.out.println(Utils.error("There is an untracked file in the way; delete it, or add and commit it first."));
                 } else {
                 fileLetter=commit.getId();//if starts with the entered 5 letter string, is the same thing
