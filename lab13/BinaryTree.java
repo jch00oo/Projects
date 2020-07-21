@@ -1,5 +1,3 @@
-import java.util.ArrayList;
-
 public class BinaryTree<T> {
 
     protected TreeNode root;
@@ -10,6 +8,15 @@ public class BinaryTree<T> {
 
     public BinaryTree(TreeNode t) {
         root = t;
+    }
+
+    /* Prints the BinaryTree in preorder or in inorder. Used for your testing. */
+    protected static void print(BinaryTree t, String description) {
+        System.out.println(description + " in preorder");
+        t.printPreorder();
+        System.out.println(description + " in inorder");
+        t.printInorder();
+        System.out.println();
     }
 
     /* Print the values in the tree in preorder. */
@@ -32,15 +39,6 @@ public class BinaryTree<T> {
         }
     }
 
-    /* Prints the BinaryTree in preorder or in inorder. Used for your testing. */
-    protected static void print(BinaryTree t, String description) {
-        System.out.println(description + " in preorder");
-        t.printPreorder();
-        System.out.println(description + " in inorder");
-        t.printInorder();
-        System.out.println();
-    }
-
     protected class TreeNode {
 
         T item;
@@ -49,7 +47,8 @@ public class BinaryTree<T> {
         int size = 0;
 
         public TreeNode(T item) {
-            this.item = item; left = right = null;
+            this.item = item;
+            left = right = null;
         }
 
         public TreeNode(T item, TreeNode left, TreeNode right) {

@@ -46,10 +46,10 @@ public class BinarySearchTree<T extends Comparable<T>> extends BinaryTree<T> {
         }
     }
 
-    /* Deletes a node from the BST. 
-     * Even though you do not have to implement delete, you 
+    /* Deletes a node from the BST.
+     * Even though you do not have to implement delete, you
      * should read through and understand the basic steps.
-    */
+     */
     public T delete(T key) {
         TreeNode parent = null;
         TreeNode curr = root;
