@@ -13,7 +13,7 @@ public class BST<T> {
        iterator ITER of N items. ITER will output the items in sorted order,
        and ITER will contain objects that will be the item of each BSTNode. */
     private BSTNode<T> sortedIterToTree(Iterator<T> iter, int N) {
-<<<<<<< HEAD
+
         T[] list = (T[]) new Object[N];
         for (int i = 0; i < N; i++) {
             list[i] = (iter.next());
@@ -44,19 +44,8 @@ public class BST<T> {
             t.item = list[mid];
             t.left = sortedIterHelper(s1, s1.length);
             t.right = sortedIterHelper(s2, s2.length);
-
         }
         return t;
-=======
-        // TODO: YOUR CODE HERE
-        //
-        if(N==0){
-            return null;
-        } else if(N==1){
-            return new BSTNode(iter.next());
-        }
-        return new BSTNode(sortedIterToTree(iter,N-1)); //just for compiling purposes idk yet
->>>>>>> 5e4c9ff708f5e8060499bb7bb106bf7f68e47fb1
     }
 
     /* Prints the tree represented by ROOT. */
