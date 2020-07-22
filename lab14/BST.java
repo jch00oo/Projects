@@ -18,7 +18,7 @@ public class BST<T> {
         for (int i = 0; i < N; i++) {
             list[i] = (iter.next());
         }
-        return sortedIterHelper(list, N);
+        return sortedIterHelper(list, N-1);
 
     }
 
