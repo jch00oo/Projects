@@ -41,4 +41,11 @@ public class Blob implements Serializable {
         File blobsFile = Utils.join(BLOB_PATH, this.getBlobId());
         Utils.writeContents(blobsFile, this.getContents());
     }
+
+    static void blobCheckoutHelper (String id, String fileName) {
+        File find = Utils.join(fileName);
+        File from =Utils.join(Gitlet.BLOB_PATH, id);
+        String content = Utils.readContentsAsString(from);
+        Utils.writeContents(find, content);
+    }
 }

@@ -14,7 +14,7 @@ public class Repository implements Serializable {
     String currBranch;
     HashMap<String, Commit> allCommits;
     ArrayList<Commit> allCommitscurrbranch;
-    //HashSet<String> allCommits;
+    HashSet<String> allTheCommits;
 
     private HashMap<String, Commit> trackCommits;
     private static String workingPath = System.getProperty("user.dir");
@@ -26,6 +26,8 @@ public class Repository implements Serializable {
         currBranch = "master";
         branches = new HashMap<>();
         branches.put(currBranch, head.getId());
+        allTheCommits = new HashSet<>();
+        allTheCommits.add(head.getId());
         allCommits = new HashMap<>();
         allCommits.put(head.getId(), head); //dubious code, but I needed to get a string,commit Map
     }
@@ -46,6 +48,8 @@ public class Repository implements Serializable {
         return allCommits;
     }
 
+    public HashSet<String> getAllCommitsIds() { return allTheCommits; }
+
     public HashMap<String, String> getBranches() {
         return branches;
     }
@@ -58,12 +62,19 @@ public class Repository implements Serializable {
      * add method to get modified files, deleted files, untracked files
      **/
 
-    public void newHead(Commit curr) {
+    public void newHMHead(Commit curr) {
         head = curr;
         branches.put(currBranch, curr.getId());
         allCommits.put(head.getId(), head);
         //allCommits.add(curr.getId()); I had to change to Hashmap
     }
+
+    public void newHead(Commit curr) {
+        head = curr;
+        branches.put(currBranch, curr.getId());
+        allTheCommits.add(curr.getId());
+    }
+
 
     public void newBranch(String name, Commit head) {
         this.head = head;

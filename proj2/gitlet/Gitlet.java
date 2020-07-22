@@ -199,6 +199,22 @@ public class Gitlet implements Serializable {
         currStage.addStage();
     }
 
+    public void rmBranch (String branchName) {
+        File repoFile = Utils.join(REPO_PATH);
+        Repository currRepo = Utils.readObject(repoFile, Repository.class);
+
+        HashMap<String, String> branches = currRepo.getBranches();
+
+        if (!branches.containsKey(branchName)) {
+            throw Utils.error("A branch with that name does not exist.");
+        } else if (branchName.equals(currRepo.getCurrBranch())) {
+            throw Utils.error("Cannot remove the current branch.");
+        } else {
+            branches.remove(branchName);
+        }
+        currRepo.addRepo();
+    }
+
     /* Prints out all branches' names with * by the master branch, staged files,
     * removed files, modified files that have not been staged, and untracked files.
     */
@@ -260,8 +276,6 @@ public class Gitlet implements Serializable {
             statusFormat.format("%s\n", untracked);
         }
         System.out.println();
-
-        System.out.println(statusFormat.toString());
     }
 
     public static void global(){
@@ -305,28 +319,110 @@ public class Gitlet implements Serializable {
         } catch(Exception e){
             System.out.println(Utils.error("No checkout command like that exists."))
         }
-
    } **/
-    public static void reset(String fileLetter){ //user enters shortened sha1 name
-        File repoFile4 = Utils.join(REPO_PATH);
-        Repository currRepo = Utils.readObject(repoFile4, Repository.class);
-        ArrayList<Commit> curr= currRepo.getcurrbranchcommit();
-        Stage stage = new Stage(); //dubious code
-        for (Commit commit:curr){
-            if (commit.getId().startsWith(fileLetter)){
-                if(!isTracked.isEmpty()){ //Noncompiling code how to reference tracked files
-                    System.out.println(Utils.error("There is an untracked file in the way; delete it, or add and commit it first."));
-                } else {
-                fileLetter=commit.getId();//if starts with the entered 5 letter string, is the same thing
-                currRepo.newHead(commit);//moves the head
-                stage.clearStage();
-                }
-            }
-            else{
-                System.out.println(Utils.error("No commit with that id exists."));
+
+    /* Case 1:
+    * @param file name
+    */
+    public void checkout1 (String fileName) {
+        File repoFile = Utils.join(REPO_PATH);
+        Repository currRepo = Utils.readObject(repoFile, Repository.class);
+        String headCommitId = currRepo.getHead().getId();
+        checkout2(headCommitId, fileName);
+    }
+
+    /* Case 2:
+     * @param commit id and file name
+     */
+    public void checkout2 (String id, String fileName) {
+        File repoFile = Utils.join(REPO_PATH);
+        Repository currRepo = Utils.readObject(repoFile, Repository.class);
+        if (!currRepo.getAllCommitsIds().contains(id)) {
+            throw Utils.error("No commit with that id exists.");
+        } else {
+            File commitFile = Utils.join(COMMIT_PATH, id);
+            Commit currCommit = Utils.readObject(commitFile, Commit.class);
+            boolean found = currCommit.getContent().containsKey(fileName);
+            if (!found) {
+                throw Utils.error("File does not exist in that commit.");
+            } else {
+                String fileId = currCommit.getContent().get(fileName);
+                Blob.blobCheckoutHelper(fileId, fileName);
             }
         }
     }
+
+    /* Case 3:
+     * @param branch name
+     */
+    public void checkout3 (String branchName) {
+        File repoFile = Utils.join(REPO_PATH);
+        Repository currRepo = Utils.readObject(repoFile, Repository.class);
+
+        File stageFile = Utils.join(STAGE_PATH);
+        Stage currStage = Utils.readObject(stageFile, Stage.class);
+
+        if (!currRepo.getBranches().containsKey(branchName)) {
+            throw Utils.error("No such branch exists.");
+        } else if (currRepo.getCurrBranch().equals(branchName)) {
+            throw Utils.error("No need to checkout the current branch.");
+        } else {
+            String branchCommitId = currRepo.getBranches().get(branchName);
+            File commitFile = Utils.join(COMMIT_PATH, branchCommitId);
+            Commit branchHeadCommit = Utils.readObject(commitFile, Commit.class);
+
+            /***/
+            HashMap<String, String> prevTracked = branchHeadCommit.getContent();
+            HashMap<String, String> currTracked = currRepo.getTracked();
+            List<String> workingFiles = Utils.plainFilenamesIn(GEN_PATH);
+
+            for (String working : workingFiles) {
+                if (prevTracked.containsKey(working)
+                        && !currRepo.getTracked().containsKey(working)) {
+                    throw Utils.error("There is an untracked file in the way;"
+                            + " delete it or add it first.");
+                }
+            }
+
+            for (String tracked : currTracked.keySet()) {
+                if (!prevTracked.containsKey(tracked)
+                        && workingFiles.contains(tracked)) {
+                    Utils.restrictedDelete(tracked);
+                }
+            }
+            for (String prev : prevTracked.keySet()) {
+                String blobID = prevTracked.get(prev);
+                Blob.blobCheckoutHelper(blobID, prev);
+            }
+
+            currRepo.newBranch(branchName, branchHeadCommit);
+            currStage.clearStage();
+            currRepo.addRepo();
+            currStage.addStage();
+        }
+    }
+
+//    public void reset(String fileLetter){ //user enters shortened sha1 name
+//        File repoFile4 = Utils.join(REPO_PATH);
+//        Repository currRepo = Utils.readObject(repoFile4, Repository.class);
+//        ArrayList<Commit> curr= currRepo.getcurrbranchcommit();
+//        Stage stage = new Stage(); //dubious code
+//        for (Commit commit:curr){
+//            if (commit.getId().startsWith(fileLetter)){
+//                if(!isTracked.isEmpty()){ //Noncompiling code how to reference tracked files
+//                    System.out.println(Utils.error("There is an untracked file in the way; delete it, or add and commit it first."));
+//                } else {
+//                fileLetter=commit.getId();//if starts with the entered 5 letter string, is the same thing
+//                currRepo.newHMHead(commit);//moves the head
+//                stage.clearStage();
+//                }
+//            }
+//            else{
+//                System.out.println(Utils.error("No commit with that id exists."));
+//            }
+//        }
+//    }
+
 
 
 }
