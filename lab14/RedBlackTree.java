@@ -84,7 +84,7 @@ public class RedBlackTree<T extends Comparable<T>> {
         root = insert(root, item);
         root.isBlack = true;
     }
-
+    //screw this
     private RBTreeNode<T> insert(RBTreeNode<T> node, T item) {
         if (node == null) {
             node= new RBTreeNode<T> (false, item);

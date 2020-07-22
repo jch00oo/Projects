@@ -2,7 +2,7 @@ import java.util.LinkedList;
 import java.util.Iterator;
 
 public class BST<T> {
-
+    //reverted back to the one that at least passed 1.2
     BSTNode<T> root;
 
     public BST(LinkedList<T> list) {
@@ -19,7 +19,6 @@ public class BST<T> {
             list[i] = (iter.next());
         }
         return sortedIterHelper(list, N);
-
     }
 
     private BSTNode<T> sortedIterHelper(T[] list, int N) {
@@ -36,7 +35,7 @@ public class BST<T> {
             t.left = new BSTNode<T>(list[0]);
             t.right = new BSTNode<T>(list[2]);
         } else {
-            int mid = N / 2 + N % 2;
+            int mid = N / 2;
             T[] s1 = (T[]) new Object[mid];
             System.arraycopy(list, 0, s1, 0, mid);
             T[] s2 = (T[]) new Object[N - mid - 1];
