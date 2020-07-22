@@ -49,14 +49,24 @@ public class Main implements Serializable {
                 case "branch":
                     branchHelper(args);
                     break;
+                case "rm":
+                    rmHelper(args);
+                    break;
+                case "rm-branch":
+                    rmBranchHelper(args);
+                    break;
                 case "global-log":
-                    global();
+                    globalLogHelper(args);
                     break;
                 case "find":
                     find(args);
                     break;
                 case "reset":
-                    reset(args[1]);
+                   reset(args[1]);
+                   break;
+                case "checkout":
+                    checkoutHelper(args);
+                    break;
                 //other cases to be added after the checkpoint
                 default: //else
                     System.out.println("No command with that name exists.");
@@ -100,6 +110,62 @@ public class Main implements Serializable {
             } catch (GitletException error) {
                 Utils.message(error.getMessage());
             }
+        }
+    }
+
+    public static void rmHelper(String[] args) {
+        if (args.length != 2) {
+            Utils.message("Incorrect operands.");
+        } else {
+            try {
+                command.rm(args[1]);
+            } catch (GitletException g) {
+                Utils.message(g.getMessage());
+            }
+        }
+    }
+
+    public static void rmBranchHelper(String[] args) {
+        if (args.length != 2) {
+            Utils.message("Incorrect operands.");
+        } else {
+            try {
+                command.rmBranch(args[1]);
+            } catch (GitletException g) {
+                Utils.message(g.getMessage());
+            }
+        }
+    }
+
+    public static void globalLogHelper(String[] args) {
+        if (args.length != 1) {
+            Utils.message("Incorrect operands.");
+        } else {
+            command.global();
+        }
+    }
+
+    public static void checkoutHelper(String[] args) {
+        if (args.length == 2) {
+            try {
+                command.checkout3(args[1]);
+            } catch (GitletException error) {
+                Utils.message(error.getMessage());
+            }
+        } else if (args.length == 3 && args[1].equals("--")) {
+            try {
+                command.checkout1(args[2]);
+            } catch (GitletException g) {
+                Utils.message(g.getMessage());
+            }
+        } else if (args.length == 4 && args[2].equals("--")) {
+            try {
+                command.checkout2(args[1], args[3]);
+            } catch (GitletException g) {
+                Utils.message(g.getMessage());
+            }
+        } else {
+            Utils.message("Incorrect operands.");
         }
     }
 }
