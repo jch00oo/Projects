@@ -24,7 +24,7 @@ public class Main implements Serializable {
      stage.mkdir();
      }**/
 
-    public static void main(String... args) {
+    public static void main(String[] args) {
         // FILL THIS IN
         if (args.length == 0){
             System.out.println("Please enter a command.");
