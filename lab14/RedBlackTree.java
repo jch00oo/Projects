@@ -84,12 +84,11 @@ public class RedBlackTree<T extends Comparable<T>> {
         root = insert(root, item);
         root.isBlack = true;
     }
-
+    //screw this
     private RBTreeNode<T> insert(RBTreeNode<T> node, T item) {
         if (node == null) {
-            return new RBTreeNode<T> (false, item);
+            node= new RBTreeNode<T> (false, item);
         }
-
         int n = item.compareTo(node.item);
         if (n == 0) {
             return node;
@@ -142,5 +141,5 @@ public class RedBlackTree<T extends Comparable<T>> {
             this.right = right;
         }
     }
-
+//go bears
 }
