@@ -27,6 +27,30 @@
 * Note: this method can be improved on because spec says not necessarily recommended 
 ##### logHelper(Commit curr)
 * helper method for log() that tracks each commit
+##### branch(String branchName)
+* create a new branch pointer with the input branch name
+* add branch name and head commit id to hash map of all branches
+##### rm(String fileName)
+* if file is tracked by the current head commit and staged for addition, unstage and delete from working directory
+* if not tracked, unstage but do not delete from working directory
+##### rmBranch(String branchName)
+* remove branch with given branch name from hash map keeping track of all branches
+##### status()
+* print out branches, staged files, removed files, modified files, and untracked files
+##### global()
+* log() but with every single commit made so far
+##### find (String[] message)
+* print out commit ids of all commits with the input commit message
+##### checkout1 (String fileName)
+* takes the version of the file in the head commit and puts it in the working directory
+* overwrite the version of the file that’s already there if there is one
+##### checkout2 (String id, String fileName)
+* takes the version of the file with the given id and puts it in the working directory
+* overwrite the version of the file that’s already there if there is one
+##### checkout3 (String branchName)
+* Takes all files in the commit at the head of the given branch, and puts them in the working directory, overwriting the versions of the files that are already there if they exist. Also, at the end of this command, the given branch will now be considered the current branch (HEAD). Any files that are tracked in the current branch but are not present in the checked-out branch are deleted. The staging area is cleared, unless the checked-out branch is the current branch
+##### reset(String fileLetter)
+* check out all files tracked by given commit
   
 ### b. Blob
 * String fileName
@@ -60,6 +84,11 @@
 * changes/add branch by changing head commit pointer and changing name
 ##### addRepo()
 * write Repo object into file
+##### getFullId(String abbrId)
+* return full commit id when abbreviated commit id is input
+##### getUntracked(HashMap<String, String> stagedFiles)
+* return list of all currently untracked files
+
 
 ### d. Commit
 
