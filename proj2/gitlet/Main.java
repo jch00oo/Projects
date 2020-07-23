@@ -59,7 +59,7 @@ public class Main implements Serializable {
                     globalLogHelper(args);
                     break;
                 case "find":
-                    find(args);
+                    find(args[1]);
                     break;
                 case "reset":
                    reset(args[1]);
@@ -67,8 +67,7 @@ public class Main implements Serializable {
                 case "checkout":
                     checkoutHelper(args);
                     break;
-                //other cases to be added after the checkpoint
-                default: //else
+                default:
                     System.out.println("No command with that name exists.");
                     break;
             }
