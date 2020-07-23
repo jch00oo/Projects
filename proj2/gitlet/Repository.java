@@ -10,7 +10,7 @@ public class Repository implements Serializable {
 
     /* branch name and id */
     HashMap<String, String> branches;
-    static Commit head;
+    Commit head;
     String currBranch;
     HashMap<String, Commit> allCommits;
     ArrayList<Commit> allCommitscurrbranch;
@@ -54,7 +54,7 @@ public class Repository implements Serializable {
         return branches;
     }
 
-    public static HashMap<String, String> getTracked() {
+    public HashMap<String, String> getTracked() {
         return head.getContent();
     }
 

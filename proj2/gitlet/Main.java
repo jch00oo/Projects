@@ -44,7 +44,7 @@ public class Main implements Serializable {
                     commitHelper(args);
                     break;
                 case "log":
-                    log();
+                    logHelper(args);
                     break;
                 case "branch":
                     branchHelper(args);
@@ -98,6 +98,14 @@ public class Main implements Serializable {
             } catch (GitletException error) {
                 Utils.message(error.getMessage());
             }
+        }
+    }
+
+    public static void logHelper(String[] args) {
+        if (args.length != 1) {
+            Utils.message("Incorrect operands.");
+        } else {
+            command.log();
         }
     }
 

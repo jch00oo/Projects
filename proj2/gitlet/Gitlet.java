@@ -276,11 +276,11 @@ public class Gitlet implements Serializable {
         /* loop through file names */
         for (String file : stagedFileNames) {
             isStaged = currStage.getStagedToAdd().containsKey(file);
-            isTracked = Repository.getTracked().containsKey(file);
+            isTracked = currRepo.getTracked().containsKey(file);
 
             if (!isStaged && isTracked) {
                 String wd = new Blob(file).getBlobId();
-                if (!Repository.getTracked().get(file).equals(wd)) {
+                if (!currRepo.getTracked().get(file).equals(wd)) {
                     modified.add(file + " (modified)");
                 }
             } else if (isStaged) {
@@ -298,7 +298,7 @@ public class Gitlet implements Serializable {
                 deleted.add(staged + " (deleted)");
             }
         }
-        for (String tracked : Repository.getTracked().keySet()) {
+        for (String tracked : currRepo.getTracked().keySet()) {
             if (!currStage.getStagedToRemove().containsKey(tracked)
                     && !allPresent.contains(tracked)) {
                 deleted.add(tracked + " (deleted)");
@@ -323,7 +323,7 @@ public class Gitlet implements Serializable {
         List<String> allFiles = Utils.plainFilenamesIn(GEN_PATH);
         ArrayList<String> untrackedFiles = new ArrayList<>();
         for (String file : allFiles) {
-            if (!(currStage.getStagedToAdd().containsKey(file)) && !(Repository.getTracked().containsKey(file))) {
+            if (!(currStage.getStagedToAdd().containsKey(file)) && !(currRepo.getTracked().containsKey(file))) {
                 untrackedFiles.add(file);
             }
         }
@@ -461,7 +461,7 @@ public class Gitlet implements Serializable {
         for (Commit commit:curr){
             if (commit.getId().startsWith(fileLetter)){
                 if(allUntracked==null){ //how to reference untracked files
-                    System.out.println(Utils.error("There is an untracked file in the way; delete it, or add and commit it first."));
+                    System.out.println("There is an untracked file in the way; delete it, or add and commit it first.");
                     System.exit(0);
                 } else {
                     fileLetter=commit.getId();//if starts with the entered 5 letter string, is the same thing
