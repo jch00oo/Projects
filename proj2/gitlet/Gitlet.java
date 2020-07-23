@@ -333,6 +333,7 @@ public class Gitlet implements Serializable {
         for (String untracked: untrackedFiles) {
             System.out.println(untracked);
         }
+        System.out.println();
     }
 
     public static void global(){ //doesn't have to be in order, screw hashmap
@@ -351,6 +352,7 @@ public class Gitlet implements Serializable {
         File repoFile = Utils.join(REPO_PATH);
         Repository currRepo = Utils.readObject(repoFile, Repository.class);
         Commit found;
+        Formatter uh = new Formatter();
 
 //        File allcommitsfolder = Utils.join(COMMIT_PATH);
 //        File[] eacommit= allcommitsfolder.listFiles();
@@ -361,7 +363,7 @@ public class Gitlet implements Serializable {
             found = Utils.readObject(allcommitsfolder, Commit.class);
             if (found.getCommitMessage().equals(message)) {
                 exists = true;
-                System.out.println(found.getId());
+                uh.format("%s\n", found.getId());
             }
         }
 //            Commit j=Utils.readObject(i,Commit.class);
@@ -372,10 +374,11 @@ public class Gitlet implements Serializable {
 //            else{
 //                exists=false;
 //            }
-        if (exists==false){
+        if (exists == false){
             System.out.println("Found no commit with that message.");
             System.exit(0);
         }
+        System.out.println(uh.toString());
     }
 
     /* Case 1:
@@ -475,20 +478,15 @@ public class Gitlet implements Serializable {
         File stageFile = Utils.join(STAGE_PATH);
         Stage currStage = Utils.readObject(stageFile, Stage.class);
 
-//        String fullId = currRepo.getFullId(commitId);
-//        File lastCommitFile = Utils.join(COMMIT_PATH, fullId);
-//        Commit lastCommit = Utils.readObject(lastCommitFile, Commit.class);
-//        List<String> filesInWD = Utils.plainFilenamesIn(GEN_PATH);
+        String fullId = currRepo.getFullId(commitId);
+        File lastCommitFile = Utils.join(COMMIT_PATH, fullId);
+        Commit lastCommit = Utils.readObject(lastCommitFile, Commit.class);
+        List<String> filesInWD = Utils.plainFilenamesIn(GEN_PATH);
 
-        if (!currRepo.getFullId(commitId).equals("")) {
+        if (!currRepo.getAllCommitsIds().contains(fullId)) {
             System.out.println("No commit with that id exists.");
             System.exit(0);
         } else {
-            String fullId = currRepo.getFullId(commitId);
-            File lastCommitFile = Utils.join(COMMIT_PATH, fullId);
-            Commit lastCommit = Utils.readObject(lastCommitFile, Commit.class);
-            List<String> filesInWD = Utils.plainFilenamesIn(GEN_PATH);
-
             for (String fileName : filesInWD) {
                 if (lastCommit.getContent().containsKey(fileName) && !currRepo.getTracked().containsKey(fileName)) {
                     System.out.println("There is an untracked file in the way; delete it, or add and commit it first.");
@@ -510,27 +508,6 @@ public class Gitlet implements Serializable {
             currStage.clearStage();
             currRepo.addRepo();
             currStage.addStage();
-
-
-//        ArrayList<Commit> curr= currRepo.getcurrbranchcommit();
-//
-//        ArrayList<String> allUntracked = currRepo.getUntracked(currStage.getStagedToAdd());
-//        for (Commit commit:curr){
-//            if (commit.getId().startsWith(commitId)){
-//                if(allUntracked==null){ //how to reference untracked files
-//                    System.out.println("There is an untracked file in the way; delete it, or add and commit it first.");
-//                    System.exit(0);
-//                } else {
-//                    commitId=commit.getId();//if starts with the entered 5 letter string, is the same thing
-//                    currRepo.newHead(commit);//moves the head
-//                    currStage.clearStage();
-//                }
-//            }
-//            else{
-//                System.out.println(Utils.error("No commit with that id exists."));
-//                System.exit(0);
-//            }
-//        }
         }
     }
     /**new reset using the repository method
