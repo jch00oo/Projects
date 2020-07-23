@@ -168,4 +168,13 @@ public class Main implements Serializable {
             Utils.message("Incorrect operands.");
         }
     }
+
+    public static void statusHelper(String[] args) {
+        if (args.length != 1) {
+            System.out.println("Incorrect operands.");
+            System.exit(0);
+        } else {
+            command.status();
+        }
+    }
 }

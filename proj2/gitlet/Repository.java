@@ -10,7 +10,7 @@ public class Repository implements Serializable {
 
     /* branch name and id */
     HashMap<String, String> branches;
-    Commit head;
+    static Commit head;
     String currBranch;
     HashMap<String, Commit> allCommits;
     ArrayList<Commit> allCommitscurrbranch;
@@ -54,7 +54,7 @@ public class Repository implements Serializable {
         return branches;
     }
 
-    public HashMap<String, String> getTracked() {
+    public static HashMap<String, String> getTracked() {
         return head.getContent();
     }
 
@@ -75,7 +75,6 @@ public class Repository implements Serializable {
         allTheCommits.add(curr.getId());
     }
 
-
     public void newBranch(String name, Commit head) {
         this.head = head;
         currBranch = name;
@@ -86,51 +85,65 @@ public class Repository implements Serializable {
         Utils.writeObject(repoFile, this);
     }
 
-    /**
-     * edit this
-     **/
-    public ArrayList<String> getModified(HashMap<String, String> stagedFiles) {
-        List<String> allStaged = Utils.plainFilenamesIn(GEN_PATH);
-        boolean isStaged, isTracked;
-        ArrayList<String> modified = new ArrayList<>();
-        for (String file : allStaged) {
-            isStaged = stagedFiles.containsKey(file);
-            isTracked = getTracked().containsKey(file);
-            if (!isStaged && isTracked) {
-                String wd = new Blob(file).getBlobId();
-                if (!getTracked().get(file).equals(wd)) {
-                    modified.add(file + " (modified)");
-                }
-            } else if (isStaged) {
-                String wd = new Blob(file).getBlobId();
-                if (!stagedFiles.get(file).equals(wd)) {
-                    modified.add(file + " (modified)");
-                }
+//    /**
+//     * edit this -- take in all staged files to add to next commit
+//     **/
+//    public ArrayList<String> getModified(HashMap<String, String> stagedFiles) {
+//        /* get names of all files in current working directory */
+//        List<String> allStaged = Utils.plainFilenamesIn(GEN_PATH);
+//        boolean isStaged, isTracked;
+//        ArrayList<String> modified = new ArrayList<>();
+//
+//        /* loop through file names */
+//        for (String file : allStaged) {
+//            isStaged = stagedFiles.containsKey(file);
+//            isTracked = getTracked().containsKey(file);
+//
+//            if (!isStaged && isTracked) {
+//                String wd = new Blob(file).getBlobId();
+//                if (!getTracked().get(file).equals(wd)) {
+//                    modified.add(file + " (modified)");
+//                }
+//            } else if (isStaged) {
+//                String wd = new Blob(file).getBlobId();
+//                if (!stagedFiles.get(file).equals(wd)) {
+//                    modified.add(file + " (modified)");
+//                }
+//            }
+//        }
+//        return modified;
+//    }
+
+//    /**
+//     * edit this
+//     **/
+//    ArrayList<String> getDeletedFiles(HashMap<String, String> allStaged, HashMap<String, String> allRemoved) {
+//        List<String> allPresent = Utils.plainFilenamesIn(GEN_PATH);
+//        ArrayList<String> deleted = new ArrayList<>();
+//        for (String staged : allStaged.keySet()) {
+//            if (!allPresent.contains(staged)) {
+//                deleted.add(staged + " (deleted)");
+//            }
+//        }
+//        for (String tracked : getTracked().keySet()) {
+//            if (!allRemoved.containsKey(tracked)
+//                    && !allPresent.contains(tracked)) {
+//                deleted.add(tracked + " (deleted)");
+//            }
+//        }
+//        return deleted;
+//    }
+
+    String getFullId(String abbrId) {
+        HashSet<String> allCommitIds = getAllCommitsIds();
+        for (String id: allCommitIds) {
+            if (id.startsWith(abbrId)) {
+                return id;
             }
         }
-        return modified;
+        return "";
     }
 
-    /**
-     * edit this
-     **/
-    ArrayList<String> getDeletedFiles(HashMap<String, String> allStaged,
-                                      HashMap<String, String> allRemoved) {
-        List<String> allPresent = Utils.plainFilenamesIn(GEN_PATH);
-        ArrayList<String> deleted = new ArrayList<>();
-        for (String staged : allStaged.keySet()) {
-            if (!allPresent.contains(staged)) {
-                deleted.add(staged + " (deleted)");
-            }
-        }
-        for (String tracked : getTracked().keySet()) {
-            if (!allRemoved.containsKey(tracked)
-                    && !allPresent.contains(tracked)) {
-                deleted.add(tracked + " (deleted)");
-            }
-        }
-        return deleted;
-    }
 
     /**
      * edit this
