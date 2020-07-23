@@ -58,6 +58,12 @@ public class Repository implements Serializable {
         return head.getContent();
     }
 
+    void repoResetHelper(Commit last) {
+        head = last;
+        String lastId = last.getId();
+        branches.put(getCurrBranch(), lastId);
+    }
+
     /**
      * add method to get modified files, deleted files, untracked files
      **/
@@ -143,7 +149,6 @@ public class Repository implements Serializable {
         }
         return "";
     }
-
 
     /**
      * edit this
