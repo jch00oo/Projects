@@ -428,7 +428,7 @@ public class Gitlet implements Serializable {
                 if (prevTracked.containsKey(working)
                         && !currRepo.getTracked().containsKey(working)) {
                     System.out.println("There is an untracked file in the way;"
-                            + " delete it or add it first.");
+                            + "delete it or add it first.");
                     System.exit(0);
                 }
             }
