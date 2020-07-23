@@ -62,7 +62,7 @@ public class Main implements Serializable {
                     find(args[1]);
                     break;
                 case "reset":
-                   reset(args[1]);
+                   resetHelper(args);
                    break;
                 case "checkout":
                     checkoutHelper(args);
@@ -186,6 +186,19 @@ public class Main implements Serializable {
             System.exit(0);
         } else {
             command.status();
+        }
+    }
+
+    public static void resetHelper(String[] args) {
+        if (args.length != 2) {
+            System.out.println("Incorrect operands.");
+            System.exit(0);
+        } else {
+            try {
+                command.reset(args[1]);
+            } catch (GitletException error) {
+                Utils.message(error.getMessage());
+            }
         }
     }
 }
