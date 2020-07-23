@@ -333,7 +333,6 @@ public class Gitlet implements Serializable {
         for (String untracked: untrackedFiles) {
             System.out.println(untracked);
         }
-        System.out.println();
     }
 
     public static void global(){ //doesn't have to be in order, screw hashmap
@@ -349,21 +348,33 @@ public class Gitlet implements Serializable {
         Repository currRepo = Utils.readObject(repoFile3, Repository.class);
         HashMap<String,Commit> pointer = currRepo.getAllCommits(); .getAllCommits isn't working??? **/
         //temp fix is to use files and folders
-        File allcommitsfolder=Utils.join(COMMIT_PATH);
-        File[] eacommit= allcommitsfolder.listFiles();
-        Boolean exists = null;
-        for (File i : eacommit) {
-            Commit j=Utils.readObject(i,Commit.class);
-            if (j.getCommitMessage().equals(message)){
-                exists=true;
-                System.out.println(j.getId());
-            }
-            else{
-                exists=false;
+        File repoFile = Utils.join(REPO_PATH);
+        Repository currRepo = Utils.readObject(repoFile, Repository.class);
+        Commit found;
+
+//        File allcommitsfolder = Utils.join(COMMIT_PATH);
+//        File[] eacommit= allcommitsfolder.listFiles();
+        Boolean exists = false;
+
+        for (String commitId: currRepo.getAllCommitsIds()) {
+            File allcommitsfolder = Utils.join(COMMIT_PATH, commitId);
+            found = Utils.readObject(allcommitsfolder, Commit.class);
+            if (found.getCommitMessage().equals(message)) {
+                exists = true;
+                System.out.println(found.getId());
             }
         }
+//            Commit j=Utils.readObject(i,Commit.class);
+//            if (j.getCommitMessage().equals(message)){
+//                exists=true;
+//                System.out.println(j.getId());
+//            }
+//            else{
+//                exists=false;
+//            }
         if (exists==false){
-            System.out.println(Utils.error("Found no commit with that message."));
+            System.out.println("Found no commit with that message.");
+            System.exit(0);
         }
     }
 
@@ -464,15 +475,20 @@ public class Gitlet implements Serializable {
         File stageFile = Utils.join(STAGE_PATH);
         Stage currStage = Utils.readObject(stageFile, Stage.class);
 
-        String fullId = currRepo.getFullId(commitId);
-        File lastCommitFile = Utils.join(COMMIT_PATH, fullId);
-        Commit lastCommit = Utils.readObject(lastCommitFile, Commit.class);
-        List<String> filesInWD = Utils.plainFilenamesIn(GEN_PATH);
+//        String fullId = currRepo.getFullId(commitId);
+//        File lastCommitFile = Utils.join(COMMIT_PATH, fullId);
+//        Commit lastCommit = Utils.readObject(lastCommitFile, Commit.class);
+//        List<String> filesInWD = Utils.plainFilenamesIn(GEN_PATH);
 
-        if (!currRepo.getAllCommitsIds().contains(fullId)) {
+        if (!currRepo.getFullId(commitId).equals("")) {
             System.out.println("No commit with that id exists.");
             System.exit(0);
         } else {
+            String fullId = currRepo.getFullId(commitId);
+            File lastCommitFile = Utils.join(COMMIT_PATH, fullId);
+            Commit lastCommit = Utils.readObject(lastCommitFile, Commit.class);
+            List<String> filesInWD = Utils.plainFilenamesIn(GEN_PATH);
+
             for (String fileName : filesInWD) {
                 if (lastCommit.getContent().containsKey(fileName) && !currRepo.getTracked().containsKey(fileName)) {
                     System.out.println("There is an untracked file in the way; delete it, or add and commit it first.");

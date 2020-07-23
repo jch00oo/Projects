@@ -58,9 +58,6 @@ public class Main implements Serializable {
                 case "global-log":
                     globalLogHelper(args);
                     break;
-                case "find":
-                    find(args[1]);
-                    break;
                 case "reset":
                    resetHelper(args);
                    break;
@@ -69,6 +66,9 @@ public class Main implements Serializable {
                     break;
                 case "status":
                     statusHelper(args);
+                    break;
+                case "find":
+                    findHelper(args);
                     break;
                 //other cases to be added after the checkpoint
                 default: //else
@@ -196,6 +196,19 @@ public class Main implements Serializable {
         } else {
             try {
                 command.reset(args[1]);
+            } catch (GitletException error) {
+                Utils.message(error.getMessage());
+            }
+        }
+    }
+
+    public static void findHelper(String[] args) {
+        if (args.length != 2) {
+            System.out.println("Incorrect operands.");
+            System.exit(0);
+        } else {
+            try {
+                command.find(args[1]);
             } catch (GitletException error) {
                 Utils.message(error.getMessage());
             }
