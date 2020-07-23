@@ -336,28 +336,34 @@ public class Gitlet implements Serializable {
         System.out.println();
     }
 
-    public static void global(){
-        File repoFile = Utils.join(REPO_PATH);
-        Repository currRepo = Utils.readObject(repoFile, Repository.class);
-        HashMap<String,Commit> pointer = currRepo.getAllCommits();
-        for (Commit i : pointer.values()) {
-            logHelper(i); //i needs to be commit to go into logHelper; must change from Hashset to Hashmap
+    public static void global(){ //doesn't have to be in order, screw hashmap
+        File allcommitsfolder = Utils.join(COMMIT_PATH);
+        File [] eacommit= allcommitsfolder.listFiles(); //https://www.geeksforgeeks.org/file-listfiles-method-in-java-with-examples/
+        for (File i : eacommit){
+            logHelper(Utils.readObject(i,Commit.class));
         }
     }
 
-    public static void find(String[] message){
-        File repoFile3 = Utils.join(REPO_PATH);
+    public static void find(String message){
+        /**File repoFile3 = Utils.join(REPO_PATH);
         Repository currRepo = Utils.readObject(repoFile3, Repository.class);
-        HashMap<String,Commit> pointer = currRepo.getAllCommits();
-        try{
-            for (Commit i : pointer.values()) {
-                if (i.getCommitMessage().equals(message)){
-                    System.out.println(i.getId());
-                }
+        HashMap<String,Commit> pointer = currRepo.getAllCommits(); .getAllCommits isn't working??? **/
+        //temp fix is to use files and folders
+        File allcommitsfolder=Utils.join(COMMIT_PATH);
+        File[] eacommit= allcommitsfolder.listFiles();
+        Boolean exists = null;
+        for (File i : eacommit) {
+            Commit j=Utils.readObject(i,Commit.class);
+            if (j.getCommitMessage().equals(message)){
+                exists=true;
+                System.out.println(j.getId());
             }
-        } catch (Exception e) {
-            System.out.println(Utils.error("Found no commit with that message"));
-            System.exit(0);
+            else{
+                exists=false;
+            }
+        }
+        if (exists==false){
+            System.out.println(Utils.error("Found no commit with that message."));
         }
     }
 
@@ -475,28 +481,32 @@ public class Gitlet implements Serializable {
             }
         }
     }
-/**
-//    public void OLD reset(String fileLetter){ //user enters shortened sha1 name
-//        File repoFile4 = Utils.join(REPO_PATH);
-//        Repository currRepo = Utils.readObject(repoFile4, Repository.class);
-//        ArrayList<Commit> curr= currRepo.getcurrbranchcommit();
-//        Stage stage = new Stage(); //dubious code
-//        for (Commit commit:curr){
-//            if (commit.getId().startsWith(fileLetter)){
-//                if(!isTracked.isEmpty()){ //Noncompiling code how to reference tracked files
-//                    System.out.println(Utils.error("There is an untracked file in the way; delete it, or add and commit it first."));
-//                } else {
-//                fileLetter=commit.getId();//if starts with the entered 5 letter string, is the same thing
-//                currRepo.newHMHead(commit);//moves the head
-//                stage.clearStage();
-//                }
-//            }
-//            else{
-//                System.out.println(Utils.error("No commit with that id exists."));
-//            }
-//        }
-//    }
-    public static void checkout(String [] args){
+    /**new reset using the repository method
+    public static void reset_new(String fileLetter){ //user enters shortened sha1 name
+        File repoFile4 = Utils.join(REPO_PATH);
+        Repository currRepo = Utils.readObject(repoFile4, Repository.class);
+        ArrayList<Commit> curr= currRepo.getcurrbranchcommit();
+        File stageFile = Utils.join(STAGE_PATH);
+        Stage currStage = Utils.readObject(stageFile, Stage.class);
+        ArrayList<String> allUntracked = currRepo.getUntracked(currStage.getStagedToAdd());
+        for (Commit commit:curr){
+            if (commit.getFullId(fileLetter)){
+                if(allUntracked==null){
+                    System.out.println("There is an untracked file in the way; delete it, or add and commit it first.");
+                    System.exit(0);
+                } else {
+                    fileLetter=commit.getId();//if starts with the entered 5 letter string, is the same thing
+                    currRepo.newHead(commit);//moves the head
+                    currStage.clearStage();
+                }
+            }
+            else{
+                System.out.println(Utils.error("No commit with that id exists."));
+                System.exit(0);
+            }
+        }
+    } **/
+    /**public static void checkout(String [] args){
         try{
             String fileName;
             if (args[0]=="--"&&args.length==2){

@@ -59,7 +59,7 @@ public class Main implements Serializable {
                     globalLogHelper(args);
                     break;
                 case "find":
-                    find(args);
+                    find(args[1]);
                     break;
                 case "reset":
                    reset(args[1]);
