@@ -85,7 +85,7 @@ public class Gitlet implements Serializable {
             newBlob.put(addedFileName, stagedToAdd.get(addedFileName));
         }
         for (String removedFileName : stagedToRemove.keySet()) {
-            newBlob.put(removedFileName, stagedToAdd.get(removedFileName));
+            newBlob.put(removedFileName, stagedToRemove.get(removedFileName));
         }
         currStage.clearStage();
         currStage.addStage();
@@ -147,10 +147,10 @@ public class Gitlet implements Serializable {
         Repository currRepo = Utils.readObject(repoFile, Repository.class);
         Commit pointer = currRepo.head;
         while (! pointer.getParentCommitId().equals("")) {
-            logHelper(pointer);
+            pointer.firstLogHelper();
             pointer = pointer.getParentCommit(currRepo);
         }
-        logHelper(pointer);
+        pointer.firstLogHelper();
         System.exit(0);
     }
 
@@ -220,7 +220,7 @@ public class Gitlet implements Serializable {
             currStage.getStagedToAdd().remove(fileName);
         }
         /* staged for removal and/or delete from working directory. */
-        if (isTracked) {
+        else if (isTracked) {
             String idToRemove = currRepo.getTracked().get(fileName);
             if (!currStage.getStagedToRemove().containsKey(fileName)) {
                 currStage.stageToRemove(fileName, idToRemove);
