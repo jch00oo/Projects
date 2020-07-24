@@ -358,15 +358,13 @@ public class Gitlet implements Serializable {
     }
 
     public static void find(String message){
-        File repoFile = Utils.join(REPO_PATH);
+        /**File repoFile = Utils.join(REPO_PATH);
         Repository currRepo = Utils.readObject(repoFile, Repository.class);
         Commit found;
         Formatter uh = new Formatter();
-
-//        File allcommitsfolder = Utils.join(COMMIT_PATH);
-//        File[] eacommit= allcommitsfolder.listFiles();
+        File allcommitsfolder = Utils.join(COMMIT_PATH);
+        File[] eacommit= allcommitsfolder.listFiles();
         Boolean exists = false;
-
         for (String commitId: currRepo.getAllCommitsIds()) {
             File allcommitsfolder = Utils.join(COMMIT_PATH, commitId);
             found = Utils.readObject(allcommitsfolder, Commit.class);
@@ -375,19 +373,35 @@ public class Gitlet implements Serializable {
                 uh.format("%s\n", found.getId());
             }
         }
-//            Commit j=Utils.readObject(i,Commit.class);
-//            if (j.getCommitMessage().equals(message)){
-//                exists=true;
-//                System.out.println(j.getId());
-//            }
-//            else{
-//                exists=false;
-//            }
+            Commit j=Utils.readObject(i,Commit.class);
+            if (j.getCommitMessage().equals(message)){
+                exists=true;
+                System.out.println(j.getId());
+            }
+            else{
+                exists=false;
+            }
         if (exists == false){
             System.out.println("Found no commit with that message.");
             System.exit(0);
         }
-        System.out.println(uh.toString());
+        System.out.println(uh.toString());**/
+        File allcommitsfolder=Utils.join(COMMIT_PATH);
+        File[] eacommit= allcommitsfolder.listFiles();
+        Boolean exists = null;
+        for (File i : eacommit) {
+            Commit j=Utils.readObject(i,Commit.class);
+            if (j.getCommitMessage().equals(message)){
+                exists=true;
+                System.out.println(j.getId());
+            }
+            else{
+                exists=false;
+            }
+        }
+        if (exists==false){
+            System.out.println(Utils.error("Found no commit with that message."));
+        }
     }
 
     /* Case 1:
