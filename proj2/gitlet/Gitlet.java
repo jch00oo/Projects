@@ -219,6 +219,7 @@ public class Gitlet implements Serializable {
 //on the bright side it doesn't infinite loop anymore
         //it's not looping anymore but when staged + removed, it doesn't update that in status
 //when committed and removed it's supposed to just go to untracked files, not 100% delete + this causes File DNE error
+        //no more infinite loop
     }
 
     public void rmBranch (String branchName) {
