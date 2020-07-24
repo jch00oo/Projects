@@ -492,26 +492,62 @@ public class Gitlet implements Serializable {
         }
     }
 
-    public static void reset(String commitId) { //user enters shortened sha1 name
+    public static void reset(String commitId) throws GitletException { //user enters shortened sha1 name
+//        File repoFile4 = Utils.join(REPO_PATH);
+//        Repository currRepo = Utils.readObject(repoFile4, Repository.class);
+//
+//        File stageFile = Utils.join(STAGE_PATH);
+//        Stage currStage = Utils.readObject(stageFile, Stage.class);
+//
+//        String fullId = currRepo.getFullId(commitId);
+//        File lastCommitFile = Utils.join(COMMIT_PATH, fullId);
+//        Commit lastCommit = Utils.readObject(lastCommitFile, Commit.class);
+//        List<String> filesInWD = Utils.plainFilenamesIn(GEN_PATH);
+//
+//        if (!currRepo.getAllCommitsIds().contains(fullId)) {
+//            System.out.println("No commit with that id exists.");
+//            System.exit(0);
+//        } else {
+//            for (String fileName : filesInWD) {
+//                if (lastCommit.getContent().containsKey(fileName) && !currRepo.getTracked().containsKey(fileName)) {
+//                    System.out.println("There is an untracked file in the way; delete it, or add and commit it first.");
+//                    System.exit(0);
+//                }
+//            }
+//
+//            for (String trackedFile : currRepo.getTracked().keySet()) {
+//                if (!lastCommit.getContent().containsKey(trackedFile) && filesInWD.contains(trackedFile)) {
+//                    Utils.restrictedDelete(trackedFile);
+//                }
+//            }
+//
+//            for (String lastTracked : lastCommit.getContent().keySet()) {
+//                String fileId = lastCommit.getContent().get(lastTracked);
+//                Blob.blobCheckoutHelper(fileId, lastTracked);
+//            }
+//            currRepo.repoResetHelper(lastCommit);
+//            currStage.clearStage();
+//            currRepo.addRepo();
+//            currStage.addStage();
+//        }
+
         File repoFile4 = Utils.join(REPO_PATH);
         Repository currRepo = Utils.readObject(repoFile4, Repository.class);
 
-        File stageFile = Utils.join(STAGE_PATH);
-        Stage currStage = Utils.readObject(stageFile, Stage.class);
-
-        String fullId = currRepo.getFullId(commitId);
-        File lastCommitFile = Utils.join(COMMIT_PATH, fullId);
-        Commit lastCommit = Utils.readObject(lastCommitFile, Commit.class);
-        List<String> filesInWD = Utils.plainFilenamesIn(GEN_PATH);
-
-        if (!currRepo.getAllCommitsIds().contains(fullId)) {
+        if (!currRepo.getAllCommitsIds().contains(currRepo.getFullId(commitId))) {
             System.out.println("No commit with that id exists.");
             System.exit(0);
         } else {
+            File stageFile = Utils.join(STAGE_PATH);
+            Stage currStage = Utils.readObject(stageFile, Stage.class);
+            String fullId = currRepo.getFullId(commitId);
+            File lastCommitFile = Utils.join(COMMIT_PATH, fullId);
+            Commit lastCommit = Utils.readObject(lastCommitFile, Commit.class);
+            List<String> filesInWD = Utils.plainFilenamesIn(GEN_PATH);
+
             for (String fileName : filesInWD) {
                 if (lastCommit.getContent().containsKey(fileName) && !currRepo.getTracked().containsKey(fileName)) {
-                    System.out.println("There is an untracked file in the way; delete it, or add and commit it first.");
-                    System.exit(0);
+                    throw Utils.error("There is an untracked file in the way;" + "delete it, or add and commit it first.");
                 }
             }
 
