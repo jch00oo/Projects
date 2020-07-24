@@ -189,7 +189,6 @@ public class Gitlet implements Serializable {
      */
     public void rm(String fileName) {
         /* create booleans to check if file is tracked and/or staged. */
-        //need to move the head pointer to the prior file and resolve the infinite loop
         File stageFile = Utils.join(STAGE_PATH);
         Stage currStage = Utils.readObject(stageFile, Stage.class);
         boolean isStaged = currStage.getStagedToAdd().containsKey(fileName);
@@ -202,13 +201,12 @@ public class Gitlet implements Serializable {
             System.out.println("File does not exist.");
             System.exit(0);
         }
-
         /* file should be unstaged whether it's tracked or not. */
-        else if (isStaged) {
+        if (isStaged) {
             currStage.getStagedToAdd().remove(fileName);
         }
         /* staged for removal and/or delete from working directory. */
-        else if (isTracked) {
+        if (isTracked) {
             //move this file to untracked, don't actually delete it otherwise big loop
             String idToRemove = currRepo.getTracked().get(fileName);
             untrackedFiles.add(idToRemove);
@@ -219,7 +217,6 @@ public class Gitlet implements Serializable {
 //on the bright side it doesn't infinite loop anymore
         //it's not looping anymore but when staged + removed, it doesn't update that in status
 //when committed and removed it's supposed to just go to untracked files, not 100% delete + this causes File DNE error
-        //no more infinite loop
     }
 
     public void rmBranch (String branchName) {
