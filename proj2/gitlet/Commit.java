@@ -82,16 +82,26 @@ public class Commit implements Serializable {
         return parentCommit;
     }
 
-    public Commit getParentCommit() {
-        Commit parentCommitNew = null;
+    public Commit getParentCommit(Repository repo) {
+        Commit currParent = null;
+        HashSet<String> allCommits = repo.getAllCommitsIds();
         if (getParentCommitId().equals("")) {
             return null;
         }
-        else {
+        if (allCommits.contains(getParentCommitId())) {
             File parentFile = Utils.join(COMMIT_PATH, getParentCommitId());
-            parentCommitNew = Utils.readObject(parentFile, Commit.class);
+            currParent = Utils.readObject(parentFile, Commit.class);
         }
-        return parentCommitNew;
+        return currParent;
+//        Commit parentCommitNew = null;
+//        if (getParentCommitId().equals("")) {
+//            return null;
+//        }
+//        else {
+//            File parentFile = Utils.join(COMMIT_PATH, getParentCommitId());
+//            parentCommitNew = Utils.readObject(parentFile, Commit.class);
+//        }
+//        return parentCommitNew;
     }
 
     public void addCommit() {

@@ -12,7 +12,7 @@ public class Repository implements Serializable {
     HashMap<String, String> branches;
     Commit head;
     String currBranch;
-    HashMap<String, Commit> allCommits;
+//    HashMap<String, Commit> allCommits;
     ArrayList<Commit> allCommitscurrbranch;
     HashSet<String> allTheCommits;
 
@@ -28,8 +28,8 @@ public class Repository implements Serializable {
         branches.put(currBranch, head.getId());
         allTheCommits = new HashSet<>();
         allTheCommits.add(head.getId());
-        allCommits = new HashMap<>();
-        allCommits.put(head.getId(), head); //dubious code, but I needed to get a string,commit Map
+//        allCommits = new HashMap<>();
+//        allCommits.put(head.getId(), head); //dubious code, but I needed to get a string,commit Map
     }
 
     public Commit getHead() {
@@ -44,9 +44,9 @@ public class Repository implements Serializable {
         return allCommitscurrbranch;
     }
 
-    public HashMap<String, Commit> getAllCommits() {
-        return allCommits;
-    }
+//    public HashMap<String, Commit> getAllCommits() {
+//        return allCommits;
+//    }
 
     public HashSet<String> getAllCommitsIds() { return allTheCommits; }
 
@@ -68,12 +68,12 @@ public class Repository implements Serializable {
      * add method to get modified files, deleted files, untracked files
      **/
 
-    public void newHMHead(Commit curr) {
-        head = curr;
-        branches.put(currBranch, curr.getId());
-        allCommits.put(head.getId(), head);
-        //allCommits.add(curr.getId()); I had to change to Hashmap
-    }
+//    public void newHMHead(Commit curr) {
+//        head = curr;
+//        branches.put(currBranch, curr.getId());
+//        allCommits.put(head.getId(), head);
+//        //allCommits.add(curr.getId()); I had to change to Hashmap
+//    }
 
     public void newHead(Commit curr) {
         head = curr;

@@ -12,6 +12,7 @@
 > commit "version 2 of wug.txt"
 <<<
 = wug.txt notwug.txt
+
 # Each ${HEADER} captures its commit UID.
 D UID "[a-f0-9]+"
 D HEADER "commit (${UID})"
@@ -33,6 +34,7 @@ ${DATE}
 initial commit
 
 <<<*
+
 # UID of second version
 D UID2 "${1}"
 # UID of current version
