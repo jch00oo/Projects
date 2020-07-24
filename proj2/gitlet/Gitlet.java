@@ -468,8 +468,7 @@ public class Gitlet implements Serializable {
             for (String working : workingFiles) {
                 if (prevTracked.containsKey(working)
                         && !currRepo.getTracked().containsKey(working)) {
-                    System.out.println("There is an untracked file in the way;"
-                            + "delete it or add it first.");
+                    System.out.println("There is an untracked file in the way; delete it or add it first.");
                     System.exit(0);
                 }
             }
@@ -493,44 +492,6 @@ public class Gitlet implements Serializable {
     }
 
     public static void reset(String commitId) throws GitletException { //user enters shortened sha1 name
-//        File repoFile4 = Utils.join(REPO_PATH);
-//        Repository currRepo = Utils.readObject(repoFile4, Repository.class);
-//
-//        File stageFile = Utils.join(STAGE_PATH);
-//        Stage currStage = Utils.readObject(stageFile, Stage.class);
-//
-//        String fullId = currRepo.getFullId(commitId);
-//        File lastCommitFile = Utils.join(COMMIT_PATH, fullId);
-//        Commit lastCommit = Utils.readObject(lastCommitFile, Commit.class);
-//        List<String> filesInWD = Utils.plainFilenamesIn(GEN_PATH);
-//
-//        if (!currRepo.getAllCommitsIds().contains(fullId)) {
-//            System.out.println("No commit with that id exists.");
-//            System.exit(0);
-//        } else {
-//            for (String fileName : filesInWD) {
-//                if (lastCommit.getContent().containsKey(fileName) && !currRepo.getTracked().containsKey(fileName)) {
-//                    System.out.println("There is an untracked file in the way; delete it, or add and commit it first.");
-//                    System.exit(0);
-//                }
-//            }
-//
-//            for (String trackedFile : currRepo.getTracked().keySet()) {
-//                if (!lastCommit.getContent().containsKey(trackedFile) && filesInWD.contains(trackedFile)) {
-//                    Utils.restrictedDelete(trackedFile);
-//                }
-//            }
-//
-//            for (String lastTracked : lastCommit.getContent().keySet()) {
-//                String fileId = lastCommit.getContent().get(lastTracked);
-//                Blob.blobCheckoutHelper(fileId, lastTracked);
-//            }
-//            currRepo.repoResetHelper(lastCommit);
-//            currStage.clearStage();
-//            currRepo.addRepo();
-//            currStage.addStage();
-//        }
-
         File repoFile4 = Utils.join(REPO_PATH);
         Repository currRepo = Utils.readObject(repoFile4, Repository.class);
 
@@ -567,31 +528,7 @@ public class Gitlet implements Serializable {
             currStage.addStage();
         }
     }
-    /**new reset using the repository method
-    public static void reset_new(String fileLetter){ //user enters shortened sha1 name
-        File repoFile4 = Utils.join(REPO_PATH);
-        Repository currRepo = Utils.readObject(repoFile4, Repository.class);
-        ArrayList<Commit> curr= currRepo.getcurrbranchcommit();
-        File stageFile = Utils.join(STAGE_PATH);
-        Stage currStage = Utils.readObject(stageFile, Stage.class);
-        ArrayList<String> allUntracked = currRepo.getUntracked(currStage.getStagedToAdd());
-        for (Commit commit:curr){
-            if (commit.getFullId(fileLetter)){
-                if(allUntracked==null){
-                    System.out.println("There is an untracked file in the way; delete it, or add and commit it first.");
-                    System.exit(0);
-                } else {
-                    fileLetter=commit.getId();//if starts with the entered 5 letter string, is the same thing
-                    currRepo.newHead(commit);//moves the head
-                    currStage.clearStage();
-                }
-            }
-            else{
-                System.out.println(Utils.error("No commit with that id exists."));
-                System.exit(0);
-            }
-        }
-    } **/
+
     /**public static void checkout(String [] args){
         try{
             String fileName;
