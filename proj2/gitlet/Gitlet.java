@@ -77,7 +77,7 @@ public class Gitlet implements Serializable {
             System.out.println("Please enter a commit message.");
             System.exit(0);
         }
-        else if (stagedToAdd.keySet().isEmpty() && stagedToRemove.keySet().isEmpty()) {
+        if (stagedToAdd.keySet().isEmpty() && stagedToRemove.keySet().isEmpty()) {
             System.out.println("No changes added to the commit.");
             System.exit(0);
         }
@@ -88,10 +88,10 @@ public class Gitlet implements Serializable {
             newBlob.put(removedFileName, stagedToAdd.get(removedFileName));
         }
         currStage.clearStage();
-        Commit newCommit = new Commit(commitMessage, head, newBlob);
-        currRepo.newHead(newCommit);
-        newCommit.addCommit();
         currStage.addStage();
+        Commit newCommit = new Commit(commitMessage, head, newBlob);
+        newCommit.addCommit();
+        currRepo.newHead(newCommit);
         currRepo.addRepo();
     }
 
@@ -128,16 +128,21 @@ public class Gitlet implements Serializable {
         }
     }
 
+//    public void log() {
+//        File repoFile = Utils.join(REPO_PATH);
+//        Repository currRepo = Utils.readObject(repoFile, Repository.class);
+//        Commit pointer = currRepo.head;
+//        while (! pointer.getParentCommitId().equals("")) {
+//            pointer.firstLogHelper();
+//            pointer = pointer.getParentCommit(currRepo);
+//        }
+//        pointer.firstLogHelper();
+//    }
+
     /* Prints out commit hashID, date, and commit message in order
      * from the head commit to initial commit.
      */
     public static void log() {
-//        Your implementation is overserializing which is likely leading to your note making the
-//        runtime requirements. I see that you save strings instead of pointers in your commit object,
-//        but the same thing goes for a repository obejct. You cannot just create a hashmap of
-//        strings to commits, then write the repo to disc, it is way to ineffiecent and likely destorying
-//        your runtime. Make sure you only write and read from disc when absoltuely needed.
-
         File repoFile = Utils.join(REPO_PATH);
         Repository currRepo = Utils.readObject(repoFile, Repository.class);
         Commit pointer = currRepo.head;
@@ -147,19 +152,6 @@ public class Gitlet implements Serializable {
         }
         logHelper(pointer);
         System.exit(0);
-//        File repoFile = Utils.join(REPO_PATH);
-//        Repository currRepo = Utils.readObject(repoFile, Repository.class);
-//        Commit headPointer = currRepo.head;
-//        while (headPointer != null) {
-//            if (headPointer.getParentCommitId().equals("")) {
-//                System.exit(0);
-//            } else {
-//                logHelper(headPointer);
-//                Commit temp = headPointer.getParentCommit(currRepo);
-//                headPointer = temp;
-//            }
-//        }
-//        System.exit(0);
     }
 
     /* @param current pointer commit
@@ -208,9 +200,8 @@ public class Gitlet implements Serializable {
      * addition, unstage and delete from working directory.
      * If not tracked, unstage but do not delete from working directory.
      */
-    public void rm(String fileName) throws GitletException {
+    public static void rm(String fileName) {
         /* create booleans to check if file is tracked and/or staged. */
-        //need to move the head pointer to the prior file and resolve the infinite loop
         File stageFile = Utils.join(STAGE_PATH);
         Stage currStage = Utils.readObject(stageFile, Stage.class);
         boolean isStaged = currStage.getStagedToAdd().containsKey(fileName);
@@ -219,31 +210,25 @@ public class Gitlet implements Serializable {
         Repository currRepo = Utils.readObject(repoFile, Repository.class);
         boolean isTracked = currRepo.getTracked().containsKey(fileName);
 
-        if (!isTracked && !isStaged) {
-            System.out.println("No reason to remove file.");
+        if (!isStaged && !isTracked) {
+            System.out.println("No reason to remove the file.");
             System.exit(0);
         }
+
         /* file should be unstaged whether it's tracked or not. */
         if (isStaged) {
             currStage.getStagedToAdd().remove(fileName);
         }
         /* staged for removal and/or delete from working directory. */
-        else if (isTracked) {
-            //move this file to untracked, don't actually delete it otherwise big loop
+        if (isTracked) {
             String idToRemove = currRepo.getTracked().get(fileName);
             if (!currStage.getStagedToRemove().containsKey(fileName)) {
                 currStage.stageToRemove(fileName, idToRemove);
             }
             Utils.restrictedDelete(fileName);
-//            untrackedFiles.add(idToRemove);
         }
         currStage.addStage();
-
-//        else{
-//            Utils.message("No need to remove file.");
-//            throw new GitletException();
     }
-
 
     public void rmBranch (String branchName) {
         File repoFile = Utils.join(REPO_PATH);

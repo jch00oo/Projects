@@ -108,4 +108,12 @@ public class Commit implements Serializable {
         File commitFile = Utils.join(COMMIT_PATH, getId());
         Utils.writeObject(commitFile, this);
     }
+
+    public void firstLogHelper() {
+        System.out.println("===");
+        System.out.println("commit " + this.getId());
+        System.out.println("Date: " + this.getTimeStamp());
+        System.out.println(this.getCommitMessage());
+        System.out.println();
+    }
 }
