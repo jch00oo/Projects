@@ -16,6 +16,7 @@ public class Gitlet implements Serializable {
     private HashMap<String, String> tracked;// stores all tracked files, id as key and blob as value
     private String recentCommit; //tracks the most recent commit's id
     private Repository currBranch;
+    ArrayList<String> untrackedFiles = new ArrayList<>();
 
     //make and declare the directories
     private static String cd_gitlet = ".gitlet";
@@ -131,6 +132,12 @@ public class Gitlet implements Serializable {
      * from the head commit to initial commit.
      */
     public static void log() {
+        /**Your LOG implementation is overserializing which is likely leading to your note making the runtime requirements.
+         * I see that you save strings instead of pointers in your commit object, but the same thing goes for a
+         * repository obejct. You cannot just create a hashmap of strings to commits, then write the repo to disc,
+         * it is way to ineffiecent and likely destorying your runtime. Make sure you only write and read from disc
+         * when absoltuely needed.
+          */
         File repoFile = Utils.join(REPO_PATH);
         Repository currRepo = Utils.readObject(repoFile, Repository.class);
         Commit pointer = currRepo.head;
@@ -139,6 +146,8 @@ public class Gitlet implements Serializable {
             pointer = pointer.getParentCommit();
         }
         logHelper(pointer);
+
+
     }
 
     /* @param current pointer commit
@@ -178,8 +187,9 @@ public class Gitlet implements Serializable {
      * addition, unstage and delete from working directory.
      * If not tracked, unstage but do not delete from working directory.
      */
-    public static void rm(String fileName) {
+    public void rm(String fileName) {
         /* create booleans to check if file is tracked and/or staged. */
+        //need to move the head pointer to the prior file and resolve the infinite loop
         File stageFile = Utils.join(STAGE_PATH);
         Stage currStage = Utils.readObject(stageFile, Stage.class);
         boolean isStaged = currStage.getStagedToAdd().containsKey(fileName);
@@ -189,23 +199,26 @@ public class Gitlet implements Serializable {
         boolean isTracked = currRepo.getTracked().containsKey(fileName);
 
         if (!isStaged && !isTracked) {
-            System.out.println("No reason to remove the file.");
+            System.out.println("File does not exist.");
             System.exit(0);
         }
 
         /* file should be unstaged whether it's tracked or not. */
-        if (isStaged) {
+        else if (isStaged) {
             currStage.getStagedToAdd().remove(fileName);
         }
         /* staged for removal and/or delete from working directory. */
-        if (isTracked) {
+        else if (isTracked) {
+            //move this file to untracked, don't actually delete it otherwise big loop
             String idToRemove = currRepo.getTracked().get(fileName);
-            if (!currStage.getStagedToRemove().containsKey(fileName)) {
-                currStage.stageToRemove(fileName, idToRemove);
-            }
-            Utils.restrictedDelete(fileName);
+            untrackedFiles.add(idToRemove);
+        } else{
+            Utils.message("No need to remove file.");
+            throw new GitletException();
         }
-        currStage.addStage();
+//on the bright side it doesn't infinite loop anymore
+        //it's not looping anymore but when staged + removed, it doesn't update that in status
+//when committed and removed it's supposed to just go to untracked files, not 100% delete + this causes File DNE error
     }
 
     public void rmBranch (String branchName) {
@@ -229,7 +242,7 @@ public class Gitlet implements Serializable {
     /* Prints out all branches' names with * by the master branch, staged files,
      * removed files, modified files that have not been staged, and untracked files.
      */
-    public static void status() {
+    public void status() {
         File repoFile = Utils.join(REPO_PATH);
         Repository currRepo = Utils.readObject(repoFile, Repository.class);
 
@@ -321,7 +334,6 @@ public class Gitlet implements Serializable {
 
         /***/
         List<String> allFiles = Utils.plainFilenamesIn(GEN_PATH);
-        ArrayList<String> untrackedFiles = new ArrayList<>();
         for (String file : allFiles) {
             if (!(currStage.getStagedToAdd().containsKey(file)) && !(currRepo.getTracked().containsKey(file))) {
                 untrackedFiles.add(file);
@@ -345,10 +357,6 @@ public class Gitlet implements Serializable {
     }
 
     public static void find(String message){
-        /**File repoFile3 = Utils.join(REPO_PATH);
-        Repository currRepo = Utils.readObject(repoFile3, Repository.class);
-        HashMap<String,Commit> pointer = currRepo.getAllCommits(); .getAllCommits isn't working??? **/
-        //temp fix is to use files and folders
         File repoFile = Utils.join(REPO_PATH);
         Repository currRepo = Utils.readObject(repoFile, Repository.class);
         Commit found;
@@ -510,66 +518,6 @@ public class Gitlet implements Serializable {
             currStage.addStage();
         }
     }
-    /**new reset using the repository method
-    public static void reset_new(String fileLetter){ //user enters shortened sha1 name
-        File repoFile4 = Utils.join(REPO_PATH);
-        Repository currRepo = Utils.readObject(repoFile4, Repository.class);
-        ArrayList<Commit> curr= currRepo.getcurrbranchcommit();
-        File stageFile = Utils.join(STAGE_PATH);
-        Stage currStage = Utils.readObject(stageFile, Stage.class);
-        ArrayList<String> allUntracked = currRepo.getUntracked(currStage.getStagedToAdd());
-        for (Commit commit:curr){
-            if (commit.getFullId(fileLetter)){
-                if(allUntracked==null){
-                    System.out.println("There is an untracked file in the way; delete it, or add and commit it first.");
-                    System.exit(0);
-                } else {
-                    fileLetter=commit.getId();//if starts with the entered 5 letter string, is the same thing
-                    currRepo.newHead(commit);//moves the head
-                    currStage.clearStage();
-                }
-            }
-            else{
-                System.out.println(Utils.error("No commit with that id exists."));
-                System.exit(0);
-            }
-        }
-    } **/
-    /**public static void checkout(String [] args){
-        try{
-            String fileName;
-            if (args[0]=="--"&&args.length==2){
-                //first case revert to original and make pointer go back to head
-                Commit curr = Utils.readObject(Utils.join(REPO_PATH),Commit.class);
-                HashMap<String,String> fileContents= curr.getContent();
-                if (fileContents.containsKey(args[1])){
-                    //just overwrite the file no need to move head will just stay here
-                    File copied= new File(args[1]);
-                    Utils.writeContents(copied,curr.getContent()); //dubious code
-                }else{
-                    throw Utils.error("File does not exist in that commit.");
-                }
-            }
-            else if(args[1]=="--"&&args.length==3){
-                //probably fix this code
-                Commit curr = Utils.readObject(Utils.join(REPO_PATH),Commit.class);
-                HashMap<String,String> fileContents= curr.getContent();
-                if (fileContents.containsKey(args[2])){
-                    //just overwrite the file no need to move head
-                    File copied= new File(args[2]);
-                    Utils.writeContents(copied,curr.getContent());
-                }else{
-                    throw Utils.error("File does not exist in that commit.");
-                }
-            }else {
-                //were multiple files in a commit. end of the command, overwrite everything. If tracked, deleted, clear stage.
-                Commit curr = Utils.readObject(Utils.join(REPO_PATH),Commit.class);
-                HashMap<String,String> fileContents= curr.getContent();
-                //definitely must fix the rest
-            }
-        } catch(Exception e){
-            System.out.println(Utils.error("No checkout command like that exists."));
-        }
-    }**/
+
 }
 
