@@ -143,13 +143,15 @@ public class Gitlet implements Serializable {
      * from the head commit to initial commit.
      */
     public static void log() {
-        File repoFile = Utils.join(REPO_PATH);
+        System.out.println("hello");
+        return;
+        /**File repoFile = Utils.join(REPO_PATH);
         Repository currRepo = Utils.readObject(repoFile, Repository.class);
         Commit pointer = currRepo.head;
         while (pointer !=null) {
             logHelper(pointer);
             pointer = pointer.getParentCommit(currRepo);
-        }
+        }**/
     }
 
     /* @param current pointer commit
