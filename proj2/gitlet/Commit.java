@@ -30,7 +30,7 @@ public class Commit implements Serializable {
 //        timeStamp = new Date(0);
         content = new HashMap<>();
 //        id = Utils.sha1(content.toString(), parentCommit, commitMessage, timeStamp);
-        id= Utils.sha1(content.keySet().toArray())+timeStamp; //https://stackoverflow.com/questions/1090556/java-how-to-convert-hashmapstring-object-to-array
+        id= Utils.sha1(content.keySet().toArray()+timeStamp); //https://stackoverflow.com/questions/1090556/java-how-to-convert-hashmapstring-object-to-array
 //        id = makeId();
         parentCommit = null;
     }
@@ -58,9 +58,8 @@ public class Commit implements Serializable {
         SimpleDateFormat dateFormat = new SimpleDateFormat("E MMM dd HH:mm:ss yyyy Z");
         this.timeStamp = dateFormat.format(currDate);
 //        this.id = Utils.sha1(content.toString(), parentCommit, commitMessage, timeStamp); /** questionable **/
-        id= Utils.sha1(content.keySet().toArray())+timeStamp; //needs unique factor like datestamp- thank you Marcus
+        id= Utils.sha1(content.keySet().toArray()+timeStamp); //needs unique factor like datestamp incorporated in
 //        id = makeId()
-        System.out.println(id);
     }
 
     public String getId() {
