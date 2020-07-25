@@ -103,7 +103,7 @@ public class Gitlet implements Serializable {
         File toAdd = new File(fileName);
         if (!(toAdd.exists())) {
             System.out.println("File does not exist.");
-            System.exit(0);
+            return;
         } else {
             File fileInRepo = Utils.join(REPO_PATH);
             Repository currRepo = Utils.readObject(fileInRepo, Repository.class);
