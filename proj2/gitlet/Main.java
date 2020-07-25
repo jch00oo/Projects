@@ -157,7 +157,7 @@ public class Main implements Serializable {
     }
 
     public static void checkoutHelper(String[] args) {
-        if (args.length == 2 && args[0].equals("--")) {
+        if (args.length == 2) {
             try {
                 command.checkout3(args[1]);
             } catch (GitletException error) {
@@ -169,7 +169,7 @@ public class Main implements Serializable {
             } catch (GitletException g) {
                 Utils.message(g.getMessage());
             }
-        } else if (args.length == 1) {
+        } else if (args.length == 4 && args[2].equals("--")) {
             try {
                 command.checkout2(args[1], args[3]);
             } catch (GitletException g) {
