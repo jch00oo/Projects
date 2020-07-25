@@ -109,11 +109,24 @@ public class Commit implements Serializable {
         Utils.writeObject(commitFile, this);
     }
 
+//    /* Prints out commit hashID, date, and commit message in order
+//     * from the head commit to initial commit.
+//     */
+//    public void log() {
+//        Commit pointer = this;
+//        while (! pointer.getParentCommitId().equals("")) {
+//            pointer.firstLogHelper();
+//            pointer = getParentCommit();
+//        }
+//        firstLogHelper();
+//        System.exit(0);
+//    }
+
     public void firstLogHelper() {
         System.out.println("===");
         System.out.println("commit " + this.getId());
         System.out.println("Date: " + this.getTimeStamp());
-        System.out.println(this.getCommitMessage());
+        System.out.println(getCommitMessage());
         System.out.println();
     }
 }

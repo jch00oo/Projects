@@ -91,6 +91,43 @@ public class Repository implements Serializable {
         Utils.writeObject(repoFile, this);
     }
 
+//    /* Prints out commit hashID, date, and commit message in order
+//     * from the head commit to initial commit.
+//     */
+//    public static void log() {
+//        Commit pointer = getHead(); /** fix **/
+//        while (! pointer.getParentCommitId().equals("")) {
+//            System.out.println(pointer.getParentCommitId());
+////            pointer.firstLogHelper();
+//            pointer = pointer.getParentCommit(currRepo);
+//        }
+////        pointer.firstLogHelper();
+//        System.exit(0);
+//    }
+
+
+
+    /* @param current pointer commit
+     * Helper method for log() that takes in a Commit object and prints out
+     * its information in format.
+     */
+//    public static void logHelper(Commit curr) {
+//        System.out.println("===");
+//        System.out.println("commit " + curr.getId());
+//        System.out.println("Date: " + curr.getTimeStamp());
+//        System.out.println(curr.getCommitMessage());
+//        System.out.println();
+
+//        if (curr.getParentCommitId().equals("")) {
+//            System.exit(0);
+//        } else {
+//            File repoFile = Utils.join(REPO_PATH);
+//            Repository currRepo = Utils.readObject(repoFile, Repository.class);
+//            Commit temp = curr.getParentCommit(currRepo);
+//            logHelper(temp);
+//        }
+
+
 //    /**
 //     * edit this -- take in all staged files to add to next commit
 //     **/
