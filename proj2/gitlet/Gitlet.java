@@ -493,8 +493,7 @@ public class Gitlet {
 
             for (String fileName : filesInWD) {
                 if (lastCommit.getContent().containsKey(fileName) && !currRepo.getTracked().containsKey(fileName)) {
-                    System.out.println("There is an untracked file in the way; delete it, or add and commit it first.");
-                    System.exit(0);
+                    throw Utils.error("There is an untracked file in the way;" +" delete it, or add and commit it first.");
                 }
             }
 
@@ -553,4 +552,3 @@ public class Gitlet {
         }
     }**/
 }
-
