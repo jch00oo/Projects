@@ -103,7 +103,7 @@ public class Gitlet implements Serializable {
         File toAdd = new File(fileName);
         if (!(toAdd.exists())) {
             System.out.println("File does not exist.");
-            return;
+            System.exit(0);
         } else {
             File fileInRepo = Utils.join(REPO_PATH);
             Repository currRepo = Utils.readObject(fileInRepo, Repository.class);
@@ -356,7 +356,7 @@ public class Gitlet implements Serializable {
         System.out.println();
     }
 
-    public static void global(){
+    public static void global(){ //doesn't have to be in order, screw hashmap
         File allcommitsfolder = Utils.join(COMMIT_PATH);
         File [] eacommit= allcommitsfolder.listFiles(); //https://www.geeksforgeeks.org/file-listfiles-method-in-java-with-examples/
         for (File i : eacommit){
@@ -365,6 +365,10 @@ public class Gitlet implements Serializable {
     }
 
     public static void find(String message){
+        /**File repoFile3 = Utils.join(REPO_PATH);
+         Repository currRepo = Utils.readObject(repoFile3, Repository.class);
+         HashMap<String,Commit> pointer = currRepo.getAllCommits(); .getAllCommits isn't working??? **/
+        //temp fix is to use files and folders
         File repoFile = Utils.join(REPO_PATH);
         Repository currRepo = Utils.readObject(repoFile, Repository.class);
         Commit found;
