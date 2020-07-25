@@ -74,13 +74,6 @@ public class Repository implements Serializable {
         return "";
     }
 
-
-    static Repository readRepo() {
-        File repoFile = Utils.join(REPO_PATH);
-        Repository repo = Utils.readObject(repoFile, Repository.class);
-        return repo;
-    }
-
     public void addRepo() {
         File repoFile = Utils.join(REPO_PATH);
         Utils.writeObject(repoFile, this);

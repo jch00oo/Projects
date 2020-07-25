@@ -39,35 +39,22 @@ public class Gitlet {
             System.out.println("A Gitlet version-control system already exists in the current directory.");
             System.exit(0);
         } else {
-//            gitlet.mkdir();
-//
-//            Repository repo = new Repository();
-//            File inrepo = Utils.join(REPO_PATH);
-//            Utils.writeObject(inrepo, repo);
-//
-//            Stage stage = new Stage();
-//            File instage = Utils.join(STAGE_PATH);
-//            Utils.writeObject(instage, stage);
-//
-//            File inblob = Utils.join(BLOB_PATH);
-//            inblob.mkdir();
-//
-//            File incommitting = Utils.join(COMMIT_PATH);
-//            incommitting.mkdir();
-//            repo.getHead().addCommit();
-//        }
             gitlet.mkdir();
-            Repository newRepo = new Repository();
-            Stage newStage = new Stage();
-            File repo = Utils.join(Repository.REPO_PATH);
-            Utils.writeObject(repo, newRepo);
-            File stage = Utils.join(Stage.STAGE_PATH);
-            Utils.writeObject(stage, newStage);
-            File blobs = Utils.join(Blob.BLOB_PATH);
-            blobs.mkdir();
-            File commits = Utils.join(Commit.COMMIT_PATH);
-            commits.mkdir();
-            newRepo.getHead().addCommit();
+
+            Repository repo = new Repository();
+            File inrepo = Utils.join(REPO_PATH);
+            Utils.writeObject(inrepo, repo);
+
+            Stage stage = new Stage();
+            File instage = Utils.join(STAGE_PATH);
+            Utils.writeObject(instage, stage);
+
+            File inblob = Utils.join(BLOB_PATH);
+            inblob.mkdir();
+
+            File incommitting = Utils.join(COMMIT_PATH);
+            incommitting.mkdir();
+            repo.getHead().addCommit();
         }
     }
 
@@ -81,9 +68,11 @@ public class Gitlet {
             System.out.println("File does not exist.");
             System.exit(0);
         } else {
-            Repository currRepo = Repository.readRepo();
+            File repoFile = Utils.join(REPO_PATH);
+            Repository currRepo = Utils.readObject(repoFile, Repository.class);
             HashMap<String, String> headContent = currRepo.getTracked();
-            Stage currStage = Stage.readStage();
+            File stageFile = Utils.join(STAGE_PATH);
+            Stage currStage = Utils.readObject(stageFile, Stage.class);
 
             Blob blobToAdd = new Blob(fileName);
 
@@ -105,11 +94,13 @@ public class Gitlet {
      * Commit files in staging area to the repository.
      */
     public void commit(String commitMessage) throws GitletException {
-        Repository currRepo = Repository.readRepo();
+        File repoFile = Utils.join(REPO_PATH);
+        Repository currRepo = Utils.readObject(repoFile, Repository.class);
         Commit head = currRepo.getHead();
         HashMap<String, String> headBlob = currRepo.getTracked();
 
-        Stage currStage = Stage.readStage();
+        File stageFile = Utils.join(STAGE_PATH);
+        Stage currStage = Utils.readObject(stageFile, Stage.class);
         HashMap<String, String> stagedToAdd = currStage.getStagedToAdd();
         HashMap<String, String> stagedToRemove = currStage.getStagedToRemove();
 
@@ -127,7 +118,7 @@ public class Gitlet {
             newBlob.put(addedFileName, stagedToAdd.get(addedFileName));
         }
         for (String removedFileName : stagedToRemove.keySet()) {
-            newBlob.put(removedFileName, stagedToAdd.get(removedFileName));
+            newBlob.remove(removedFileName);
         }
         currStage.clearStage();
         currStage.addStage();
@@ -147,26 +138,6 @@ public class Gitlet {
         }
         logHelper2(pointer);
     }
-
-//    /* Prints out commit hashID, date, and commit message in order
-//     * from the head commit to initial commit.
-//     */
-//    public void log() {
-//        File repoFile = Utils.join(REPO_PATH);
-//        Repository currRepo = Utils.readObject(repoFile, Repository.class);
-//        File commitFile = Utils.join(COMMIT_PATH);
-//        Commit allIg = Utils.readObject(commitFile, Commit.class);
-//        String id = allIg.getId();
-//
-//        File commitFile2 = Utils.join(COMMIT_PATH, id);
-//        Commit pointer = Utils.readObject(commitFile2, Commit.class);
-//
-//        while (! pointer.getParentCommitId().equals("")) {
-//            pointer.firstLogHelper();
-//            pointer = pointer.getParentCommit(currRepo);
-//        }
-//        pointer.firstLogHelper();
-//    }
 
     /* @param current pointer commit
      * Helper method for log() that takes in a Commit object and prints out
@@ -522,7 +493,8 @@ public class Gitlet {
 
             for (String fileName : filesInWD) {
                 if (lastCommit.getContent().containsKey(fileName) && !currRepo.getTracked().containsKey(fileName)) {
-                    throw Utils.error("There is an untracked file in the way;" + "delete it, or add and commit it first.");
+                    System.out.println("There is an untracked file in the way; delete it, or add and commit it first.");
+                    System.exit(0);
                 }
             }
 

@@ -36,12 +36,6 @@ public class Stage implements Serializable {
         stagedToRemove.remove(fileName);
     }
 
-    static Stage readStage() {
-        File stageFile = Utils.join(STAGE_PATH);
-        Stage stage = Utils.readObject(stageFile, Stage.class);
-        return stage;
-    }
-
     void addStage() {
         File stageFile = Utils.join(STAGE_PATH);
         Utils.writeObject(stageFile, this);

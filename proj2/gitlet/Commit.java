@@ -51,12 +51,6 @@ public class Commit implements Serializable {
         return parentCommit;
     }
 
-    static Commit readCommit(String id) {
-        File commitfile = Utils.join(COMMIT_PATH, id);
-        Commit commit = Utils.readObject(commitfile, Commit.class);
-        return commit;
-    }
-
     void addCommit() {
         File commitFile = Utils.join(COMMIT_PATH, getId());
         Utils.writeObject(commitFile, this);
