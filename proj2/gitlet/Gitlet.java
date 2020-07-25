@@ -5,30 +5,30 @@ import java.io.*;
 import java.util.Formatter;
 import java.util.Arrays;
 
-public class Gitlet implements Serializable {
+public class Gitlet {
 
-    private File startergit;
-    private File stage;
-    HashMap<String, String> branchHistory;// branch name as key, id of current branch as value
+//    private File startergit;
+//    private File stage;
+//    HashMap<String, String> branchHistory;// branch name as key, id of current branch as value
+//    //make and declare the directories
+
+//    private HashMap<String, Commit> commitHistory; //stores all the commits, id as key and Commit as value
+//    private HashMap<String, String> tracked;// stores all tracked files, id as key and blob as value
+//    private String recentCommit; //tracks the most recent commit's id
+//    private Repository currBranch;
+//    ArrayList<String> untrackedFiles = new ArrayList<>();
+
     //make and declare the directories
+//    private static String cd_gitlet = ".gitlet";
+//    private static String cd_stage = ".gitlet/.stage";
+//    private static String commitPath = ".gitlet/.commit";
+//    private static String workingPath = System.getProperty("user.dir");
 
-    private HashMap<String, Commit> commitHistory; //stores all the commits, id as key and Commit as value
-    private HashMap<String, String> tracked;// stores all tracked files, id as key and blob as value
-    private String recentCommit; //tracks the most recent commit's id
-    private Repository currBranch;
-    ArrayList<String> untrackedFiles = new ArrayList<>();
-
-    //make and declare the directories
-    private static String cd_gitlet = ".gitlet";
-    private static String cd_stage = ".gitlet/.stage";
-    private static String commitPath = ".gitlet/.commit";
-    private static String workingPath = System.getProperty("user.dir");
-
-    static final File REPO_PATH = Utils.join(workingPath, ".gitlet", "repo");
-    static final File STAGE_PATH = Utils.join(workingPath, ".gitlet", "stage");
-    static final File BLOB_PATH = Utils.join(workingPath, ".gitlet", "blobs");
-    static final File COMMIT_PATH = Utils.join(workingPath, ".gitlet", "commits");
-    static final File GEN_PATH = Utils.join(workingPath);
+    static final File REPO_PATH = Utils.join(System.getProperty("user.dir"), ".gitlet", "repo");
+    static final File STAGE_PATH = Utils.join(System.getProperty("user.dir"), ".gitlet", "stage");
+    static final File BLOB_PATH = Utils.join(System.getProperty("user.dir"), ".gitlet", "blobs");
+    static final File COMMIT_PATH = Utils.join(System.getProperty("user.dir"), ".gitlet", "commits");
+    static final File GEN_PATH = Utils.join(System.getProperty("user.dir"));
 
     /* Initialize the version-control system. Create directories, master branch,
      * and initiate initial commit. */
@@ -39,41 +39,81 @@ public class Gitlet implements Serializable {
             System.out.println("A Gitlet version-control system already exists in the current directory.");
             System.exit(0);
         } else {
+//            gitlet.mkdir();
+//
+//            Repository repo = new Repository();
+//            File inrepo = Utils.join(REPO_PATH);
+//            Utils.writeObject(inrepo, repo);
+//
+//            Stage stage = new Stage();
+//            File instage = Utils.join(STAGE_PATH);
+//            Utils.writeObject(instage, stage);
+//
+//            File inblob = Utils.join(BLOB_PATH);
+//            inblob.mkdir();
+//
+//            File incommitting = Utils.join(COMMIT_PATH);
+//            incommitting.mkdir();
+//            repo.getHead().addCommit();
+//        }
             gitlet.mkdir();
+            Repository newRepo = new Repository();
+            Stage newStage = new Stage();
+            File repo = Utils.join(Repository.REPO_PATH);
+            Utils.writeObject(repo, newRepo);
+            File stage = Utils.join(Stage.STAGE_PATH);
+            Utils.writeObject(stage, newStage);
+            File blobs = Utils.join(Blob.BLOB_PATH);
+            blobs.mkdir();
+            File commits = Utils.join(Commit.COMMIT_PATH);
+            commits.mkdir();
+            newRepo.getHead().addCommit();
+        }
+    }
 
-            Repository repo = new Repository();
-            File inrepo = Utils.join(REPO_PATH);
-            Utils.writeObject(inrepo, repo);
+    /* @param fileName;
+     * Stage current file in the working directory to be tracked
+     * to add to the next commit. Throw error if file with such name doesn't exist.
+     */
+    public void add(String fileName) throws GitletException {
+        File toAdd = new File(fileName);
+        if (!toAdd.exists()) {
+            System.out.println("File does not exist.");
+            System.exit(0);
+        } else {
+            Repository currRepo = Repository.readRepo();
+            HashMap<String, String> headContent = currRepo.getTracked();
+            Stage currStage = Stage.readStage();
 
-            Stage stage = new Stage();
-            File instage = Utils.join(STAGE_PATH);
-            Utils.writeObject(instage, stage);
+            Blob blobToAdd = new Blob(fileName);
 
-            File inblob = Utils.join(BLOB_PATH);
-            inblob.mkdir();
-
-            File incommitting = Utils.join(COMMIT_PATH);
-            incommitting.mkdir();
-            repo.getHead().addCommit();
+            if (currStage.getStagedToRemove().containsKey(fileName)) {
+                currStage.deleteFromRemove(fileName);
+            } else if (headContent.containsKey(fileName) && headContent.get(fileName).equals(blobToAdd.getBlobId())) {
+                if (currStage.getStagedToAdd().containsKey(fileName)) {
+                    currStage.deleteFromAdd(fileName);
+                }
+            } else {
+                currStage.stageToAdd(fileName, blobToAdd.getBlobId());
+                blobToAdd.trackBlob();
+            }
+            currStage.addStage();
         }
     }
 
     /* @param commit message
      * Commit files in staging area to the repository.
      */
-    public void commit(String commitMessage) {
-        File repoFile = Utils.join(REPO_PATH);
-        Repository currRepo = Utils.readObject(repoFile, Repository.class);
-        File stageFile = Utils.join(STAGE_PATH);
-        Stage currStage = Utils.readObject(stageFile, Stage.class);
-
-        HashMap<String, String> headBlob = currRepo.getTracked();
+    public void commit(String commitMessage) throws GitletException {
+        Repository currRepo = Repository.readRepo();
         Commit head = currRepo.getHead();
+        HashMap<String, String> headBlob = currRepo.getTracked();
+
+        Stage currStage = Stage.readStage();
         HashMap<String, String> stagedToAdd = currStage.getStagedToAdd();
         HashMap<String, String> stagedToRemove = currStage.getStagedToRemove();
-        HashMap<String, String> newBlob = new HashMap<>(headBlob);
 
-        if (commitMessage.equals("")) {
+        if (commitMessage.isEmpty()) {
             System.out.println("Please enter a commit message.");
             System.exit(0);
         }
@@ -81,57 +121,46 @@ public class Gitlet implements Serializable {
             System.out.println("No changes added to the commit.");
             System.exit(0);
         }
+
+        HashMap<String, String> newBlob = new HashMap<>(headBlob);
         for (String addedFileName : stagedToAdd.keySet()) {
             newBlob.put(addedFileName, stagedToAdd.get(addedFileName));
         }
         for (String removedFileName : stagedToRemove.keySet()) {
-            newBlob.put(removedFileName, stagedToRemove.get(removedFileName));
+            newBlob.put(removedFileName, stagedToAdd.get(removedFileName));
         }
         currStage.clearStage();
         currStage.addStage();
         Commit newCommit = new Commit(commitMessage, head, newBlob);
         newCommit.addCommit();
-        currRepo.newHead(newCommit);
+        currRepo.updateHead(newCommit);
         currRepo.addRepo();
     }
 
-    /* @param fileName;
-     * Stage current file in the working directory to be tracked
-     * to add to the next commit. Throw error if file with such name doesn't exist.
-     */
-    public static void add(String fileName) {
-        File toAdd = new File(fileName);
-        if (!(toAdd.exists())) {
-            System.out.println("File does not exist.");
-            System.exit(0);
-        } else {
-            File fileInRepo = Utils.join(REPO_PATH);
-            Repository currRepo = Utils.readObject(fileInRepo, Repository.class);
-            File fileInStage = Utils.join(STAGE_PATH);
-            Stage currStage = Utils.readObject(fileInStage, Stage.class);
-
-            HashMap<String, String> headContent = currRepo.getTracked();
-            Blob blobToAdd = new Blob(fileName);
-
-            if (currStage.getStagedToRemove().containsKey(fileName)) {
-                currStage.getStagedToRemove().remove(fileName);
-            } else if (headContent.containsKey(fileName) && headContent.get(fileName).equals(blobToAdd.getBlobId())) {
-                if (currStage.getStagedToAdd().containsKey(fileName)) {
-                    currStage.getStagedToAdd().remove(fileName);
-                }
-            } else {
-                currStage.stageToAdd(fileName, blobToAdd.getBlobId());
-                blobToAdd.trackBlob();
-            }
-            File toStageFile = Utils.join(STAGE_PATH);
-            Utils.writeObject(toStageFile, currStage);
+    public void log() {
+        File repoFile = Utils.join(REPO_PATH);
+        Repository currRepo = Utils.readObject(repoFile, Repository.class);
+        Commit pointer = currRepo.getHead();
+        while (!pointer.getParentCommitId().equals("")) {
+            logHelper2(pointer);
+            pointer = pointer.getParentCommit(currRepo);
         }
+        logHelper2(pointer);
     }
 
+//    /* Prints out commit hashID, date, and commit message in order
+//     * from the head commit to initial commit.
+//     */
 //    public void log() {
 //        File repoFile = Utils.join(REPO_PATH);
 //        Repository currRepo = Utils.readObject(repoFile, Repository.class);
-//        Commit pointer = currRepo.head;
+//        File commitFile = Utils.join(COMMIT_PATH);
+//        Commit allIg = Utils.readObject(commitFile, Commit.class);
+//        String id = allIg.getId();
+//
+//        File commitFile2 = Utils.join(COMMIT_PATH, id);
+//        Commit pointer = Utils.readObject(commitFile2, Commit.class);
+//
 //        while (! pointer.getParentCommitId().equals("")) {
 //            pointer.firstLogHelper();
 //            pointer = pointer.getParentCommit(currRepo);
@@ -139,26 +168,11 @@ public class Gitlet implements Serializable {
 //        pointer.firstLogHelper();
 //    }
 
-    /* Prints out commit hashID, date, and commit message in order
-     * from the head commit to initial commit.
-     */
-    public static void log() {
-        File repoFile = Utils.join(REPO_PATH);
-        Repository currRepo = Utils.readObject(repoFile, Repository.class);
-        Commit pointer = currRepo.head;
-        while (! pointer.getParentCommitId().equals("")) {
-            pointer.firstLogHelper();
-            pointer = pointer.getParentCommit(currRepo);
-        }
-        pointer.firstLogHelper();
-        System.exit(0);
-    }
-
     /* @param current pointer commit
      * Helper method for log() that takes in a Commit object and prints out
      * its information in format.
      */
-    public static void logHelper(Commit curr) {
+    public static void logHelper2(Commit curr) {
         System.out.println("===");
         System.out.println("commit " + curr.getId());
         System.out.println("Date: " + curr.getTimeStamp());
@@ -180,7 +194,7 @@ public class Gitlet implements Serializable {
      * current head. Does NOT switch to a new branch, it merely creates a pointer.
      */
     public static void branch(String branchName) {
-        File repoFile = Utils.join(REPO_PATH);
+        File repoFile = Utils.join(Repository.REPO_PATH);
         Repository currRepo = Utils.readObject(repoFile, Repository.class);
         /* store all branches by branch name and id in hash map. */
         HashMap<String, String> allBranches = currRepo.getBranches();
@@ -202,11 +216,11 @@ public class Gitlet implements Serializable {
      */
     public static void rm(String fileName) {
         /* create booleans to check if file is tracked and/or staged. */
-        File stageFile = Utils.join(STAGE_PATH);
+        File stageFile = Utils.join(Stage.STAGE_PATH);
         Stage currStage = Utils.readObject(stageFile, Stage.class);
         boolean isStaged = currStage.getStagedToAdd().containsKey(fileName);
 
-        File repoFile = Utils.join(REPO_PATH);
+        File repoFile = Utils.join(Repository.REPO_PATH);
         Repository currRepo = Utils.readObject(repoFile, Repository.class);
         boolean isTracked = currRepo.getTracked().containsKey(fileName);
 
@@ -220,7 +234,7 @@ public class Gitlet implements Serializable {
             currStage.getStagedToAdd().remove(fileName);
         }
         /* staged for removal and/or delete from working directory. */
-        else if (isTracked) {
+        if (isTracked) {
             String idToRemove = currRepo.getTracked().get(fileName);
             if (!currStage.getStagedToRemove().containsKey(fileName)) {
                 currStage.stageToRemove(fileName, idToRemove);
@@ -231,7 +245,7 @@ public class Gitlet implements Serializable {
     }
 
     public void rmBranch (String branchName) {
-        File repoFile = Utils.join(REPO_PATH);
+        File repoFile = Utils.join(Repository.REPO_PATH);
         Repository currRepo = Utils.readObject(repoFile, Repository.class);
 
         HashMap<String, String> branches = currRepo.getBranches();
@@ -252,10 +266,10 @@ public class Gitlet implements Serializable {
      * removed files, modified files that have not been staged, and untracked files.
      */
     public static void status() {
-        File repoFile = Utils.join(REPO_PATH);
+        File repoFile = Utils.join(Repository.REPO_PATH);
         Repository currRepo = Utils.readObject(repoFile, Repository.class);
 
-        File stageFile = Utils.join(STAGE_PATH);
+        File stageFile = Utils.join(Stage.STAGE_PATH);
         Stage currStage = Utils.readObject(stageFile, Stage.class);
 
         System.out.println("=== Branches ===");
@@ -359,10 +373,10 @@ public class Gitlet implements Serializable {
     }
 
     public static void global(){ //doesn't have to be in order, screw hashmap
-        File allcommitsfolder = Utils.join(COMMIT_PATH);
+        File allcommitsfolder = Utils.join(Commit.COMMIT_PATH);
         File [] eacommit= allcommitsfolder.listFiles(); //https://www.geeksforgeeks.org/file-listfiles-method-in-java-with-examples/
         for (File i : eacommit){
-            logHelper(Utils.readObject(i,Commit.class));
+            logHelper2(Utils.readObject(i,Commit.class));
         }
     }
 
@@ -371,7 +385,7 @@ public class Gitlet implements Serializable {
         Repository currRepo = Utils.readObject(repoFile3, Repository.class);
         HashMap<String,Commit> pointer = currRepo.getAllCommits(); .getAllCommits isn't working??? **/
         //temp fix is to use files and folders
-        File repoFile = Utils.join(REPO_PATH);
+        File repoFile = Utils.join(Repository.REPO_PATH);
         Repository currRepo = Utils.readObject(repoFile, Repository.class);
         Commit found;
         Formatter uh = new Formatter();
@@ -381,7 +395,7 @@ public class Gitlet implements Serializable {
         boolean exists = false;
 
         for (String commitId: currRepo.getAllCommitsIds()) {
-            File allcommitsfolder = Utils.join(COMMIT_PATH, commitId);
+            File allcommitsfolder = Utils.join(Commit.COMMIT_PATH, commitId);
             found = Utils.readObject(allcommitsfolder, Commit.class);
             if (found.getCommitMessage().equals(message)) {
                 exists = true;
@@ -406,7 +420,7 @@ public class Gitlet implements Serializable {
      * @param file name
      */
     public void checkout1 (String fileName) {
-        File repoFile = Utils.join(REPO_PATH);
+        File repoFile = Utils.join(Repository.REPO_PATH);
         Repository currRepo = Utils.readObject(repoFile, Repository.class);
         String headCommitId = currRepo.getHead().getId();
         checkout2(headCommitId, fileName);
@@ -416,7 +430,7 @@ public class Gitlet implements Serializable {
      * @param commit id and file name
      */
     public void checkout2 (String id, String fileName) {
-        File repoFile = Utils.join(REPO_PATH);
+        File repoFile = Utils.join(Repository.REPO_PATH);
         Repository currRepo = Utils.readObject(repoFile, Repository.class);
         String fullId = currRepo.getFullId(id);
 
@@ -424,7 +438,7 @@ public class Gitlet implements Serializable {
             System.out.println("No commit with that id exists.");
             System.exit(0);
         } else {
-            File commitFile = Utils.join(COMMIT_PATH, fullId);
+            File commitFile = Utils.join(Commit.COMMIT_PATH, fullId);
             Commit currCommit = Utils.readObject(commitFile, Commit.class);
 
             boolean found = currCommit.getContent().containsKey(fileName);
@@ -443,10 +457,10 @@ public class Gitlet implements Serializable {
      * @param branch name
      */
     public void checkout3 (String branchName) throws GitletException {
-        File repoFile = Utils.join(REPO_PATH);
+        File repoFile = Utils.join(Repository.REPO_PATH);
         Repository currRepo = Utils.readObject(repoFile, Repository.class);
 
-        File stageFile = Utils.join(STAGE_PATH);
+        File stageFile = Utils.join(Stage.STAGE_PATH);
         Stage currStage = Utils.readObject(stageFile, Stage.class);
 
         if (!currRepo.getBranches().containsKey(branchName)) {
@@ -457,7 +471,7 @@ public class Gitlet implements Serializable {
             System.exit(0);
         } else {
             String branchCommitId = currRepo.getBranches().get(branchName);
-            File commitFile = Utils.join(COMMIT_PATH, branchCommitId);
+            File commitFile = Utils.join(Commit.COMMIT_PATH, branchCommitId);
             Commit branchHeadCommit = Utils.readObject(commitFile, Commit.class);
 
             /** modify rest of this method **/
@@ -492,17 +506,17 @@ public class Gitlet implements Serializable {
     }
 
     public static void reset(String commitId) throws GitletException { //user enters shortened sha1 name
-        File repoFile4 = Utils.join(REPO_PATH);
+        File repoFile4 = Utils.join(Repository.REPO_PATH);
         Repository currRepo = Utils.readObject(repoFile4, Repository.class);
 
         if (!currRepo.getAllCommitsIds().contains(currRepo.getFullId(commitId))) {
             System.out.println("No commit with that id exists.");
             System.exit(0);
         } else {
-            File stageFile = Utils.join(STAGE_PATH);
+            File stageFile = Utils.join(Stage.STAGE_PATH);
             Stage currStage = Utils.readObject(stageFile, Stage.class);
             String fullId = currRepo.getFullId(commitId);
-            File lastCommitFile = Utils.join(COMMIT_PATH, fullId);
+            File lastCommitFile = Utils.join(Commit.COMMIT_PATH, fullId);
             Commit lastCommit = Utils.readObject(lastCommitFile, Commit.class);
             List<String> filesInWD = Utils.plainFilenamesIn(GEN_PATH);
 
@@ -522,7 +536,8 @@ public class Gitlet implements Serializable {
                 String fileId = lastCommit.getContent().get(lastTracked);
                 Blob.blobCheckoutHelper(fileId, lastTracked);
             }
-            currRepo.repoResetHelper(lastCommit);
+            /* resetHead */
+            currRepo.resetHead(lastCommit);
             currStage.clearStage();
             currRepo.addRepo();
             currStage.addStage();

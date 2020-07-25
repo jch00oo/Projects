@@ -17,9 +17,6 @@ import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 import java.util.Formatter;
 import java.util.List;
-import java.util.TimeZone;
-import java.util.Date;
-import java.text.SimpleDateFormat;
 
 
 /** Assorted utilities.
@@ -79,19 +76,6 @@ class Utils {
         }
     }
 
-    static Object deserialize(String fileName, File parent) {
-        Gitlet obj;
-        File inFile = new File(parent, fileName);
-        try {
-            ObjectInputStream inp = new ObjectInputStream(new FileInputStream(inFile));
-            obj = (Gitlet) inp.readObject();
-            inp.close();
-        } catch (IOException | ClassNotFoundException excp) {
-            throw new Error("IO Error or Class Not Find");
-        }
-        return obj;
-    }
-
     /** Deletes the file named FILE if it exists and is not a directory.
      *  Returns true if FILE was deleted, and false otherwise.  Refuses
      *  to delete FILE and throws IllegalArgumentException unless the
@@ -131,10 +115,10 @@ class Utils {
         try {
             if (file.isDirectory()) {
                 throw
-                    new IllegalArgumentException("cannot overwrite directory");
+                        new IllegalArgumentException("cannot overwrite directory");
             }
             BufferedOutputStream str =
-                new BufferedOutputStream(Files.newOutputStream(file.toPath()));
+                    new BufferedOutputStream(Files.newOutputStream(file.toPath()));
             for (Object obj : contents) {
                 if (obj instanceof byte[]) {
                     str.write((byte[]) obj);
@@ -154,12 +138,12 @@ class Utils {
                                                  Class<T> expectedClass) {
         try {
             ObjectInputStream in =
-                new ObjectInputStream(new FileInputStream(file));
+                    new ObjectInputStream(new FileInputStream(file));
             T result = expectedClass.cast(in.readObject());
             in.close();
             return result;
         } catch (IOException | ClassCastException
-                 | ClassNotFoundException excp) {
+                | ClassNotFoundException excp) {
             throw new IllegalArgumentException(excp.getMessage());
         }
     }
@@ -173,12 +157,12 @@ class Utils {
 
     /** Filter out all but plain files. */
     private static final FilenameFilter PLAIN_FILES =
-        new FilenameFilter() {
-            @Override
-            public boolean accept(File dir, String name) {
-                return new File(dir, name).isFile();
-            }
-        };
+            new FilenameFilter() {
+                @Override
+                public boolean accept(File dir, String name) {
+                    return new File(dir, name).isFile();
+                }
+            };
 
     /** Returns a list of the names of all plain files in the directory DIR, in
      *  lexicographic order as Java Strings.  Returns null if DIR does
@@ -203,15 +187,15 @@ class Utils {
     /* OTHER FILE UTILITIES */
 
     /** Return the concatentation of FIRST and OTHERS into a File designator,
-     *  analogous to the {@link java.nio.file.Paths.#get(String, String[])}
+     *  analogous to the {@link java .nio.file.Paths.#get(String, String[])}
      *  method. */
     static File join(String first, String... others) {
         return Paths.get(first, others).toFile();
     }
 
     /** Return the concatentation of FIRST and OTHERS into a File designator,
-     *  analogous to the {@link java.nio.file.Paths.#get(String, String[])}
-     *  method. **/
+     *  analogous to the {@link java .nio.file.Paths.#get(String, String[])}
+     *  method. */
     static File join(File first, String... others) {
         return Paths.get(first.getPath(), others).toFile();
     }
@@ -232,12 +216,13 @@ class Utils {
         }
     }
 
+
+
     /* MESSAGES AND ERROR REPORTING */
 
     /** Return a GitletException whose message is composed from MSG and ARGS as
      *  for the String.format method. */
     static GitletException error(String msg, Object... args) {
-
         return new GitletException(String.format(msg, args));
     }
 
@@ -247,4 +232,16 @@ class Utils {
         System.out.printf(msg, args);
         System.out.println();
     }
+
+    /** FUNCTIONS */
+
+    /** Represents a function from T1 -> T2.  The apply method contains the
+     *  code of the function.  The 'foreach' method applies the function to all
+     *  items of an Iterable.  This is an interim class to allow use of Java 7
+     *  with Java 8-like constructs.  */
+    abstract static class Function<T1, T2> {
+        /** Returns the value of this function on X. */
+        abstract T2 apply(T1 x);
+    }
+
 }

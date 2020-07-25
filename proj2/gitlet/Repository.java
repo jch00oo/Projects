@@ -2,23 +2,13 @@ package gitlet;
 
 import java.io.File;
 import java.io.Serializable;
-import java.util.*;
-
-import static gitlet.Gitlet.REPO_PATH;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
 
 public class Repository implements Serializable {
-
-    /* branch name and id */
-    HashMap<String, String> branches;
-    Commit head;
-    String currBranch;
-//    HashMap<String, Commit> allCommits;
-    ArrayList<Commit> allCommitscurrbranch;
-    HashSet<String> allTheCommits;
-
-    private HashMap<String, Commit> trackCommits;
-    private static String workingPath = System.getProperty("user.dir");
-    static final File GEN_PATH = Utils.join(workingPath);
 
     /*init new repo */
     public Repository() {
@@ -31,6 +21,7 @@ public class Repository implements Serializable {
 //        allCommits = new HashMap<>();
 //        allCommits.put(head.getId(), head); //dubious code, but I needed to get a string,commit Map
     }
+
 
     public Commit getHead() {
         return head;
@@ -58,11 +49,77 @@ public class Repository implements Serializable {
         return head.getContent();
     }
 
-    void repoResetHelper(Commit last) {
-        head = last;
-        String lastId = last.getId();
-        branches.put(getCurrBranch(), lastId);
+    /**
+     * edit this
+     **/
+    public ArrayList<String> getUntracked(HashMap<String, String> stagedFiles) {
+        List<String> allFiles = Utils.plainFilenamesIn(GEN_PATH);
+        ArrayList<String> untrackedFiles = new ArrayList<>();
+        for (String file : allFiles) {
+            if (!(stagedFiles.containsKey(file)) && !(getTracked().containsKey(file))) {
+                untrackedFiles.add(file);
+            }
+        }
+        Collections.sort(untrackedFiles);
+        return untrackedFiles;
     }
+
+    String getFullId(String abbrId) {
+        HashSet<String> allCommitIds = getAllCommitsIds();
+        for (String id: allCommitIds) {
+            if (id.startsWith(abbrId)) {
+                return id;
+            }
+        }
+        return "";
+    }
+
+
+    static Repository readRepo() {
+        File repoFile = Utils.join(REPO_PATH);
+        Repository repo = Utils.readObject(repoFile, Repository.class);
+        return repo;
+    }
+
+    public void addRepo() {
+        File repoFile = Utils.join(REPO_PATH);
+        Utils.writeObject(repoFile, this);
+    }
+
+    void updateHead(Commit latest) {
+        head = latest;
+        branches.put(currBranch, latest.getId());
+        allTheCommits.add(latest.getId());
+    }
+
+    void newBranch(String name, Commit head) {
+        this.head = head;
+        currBranch = name;
+    }
+
+    void resetHead(Commit previous) {
+        head = previous;
+        String prevID = previous.getId();
+        branches.put(getCurrBranch(), prevID);
+    }
+
+    void fetchCommit(String id) {
+        allTheCommits.add(id);
+    }
+
+    /* branch name and id */
+    private HashMap<String, String> branches;
+    private Commit head;
+    private String currBranch;
+    //    HashMap<String, Commit> allCommits;
+    ArrayList<Commit> allCommitscurrbranch;
+    private HashSet<String> allTheCommits;
+
+    private HashMap<String, Commit> trackCommits;
+    private static String workingPath = System.getProperty("user.dir");
+    static final File GEN_PATH = Utils.join(workingPath);
+
+    static final File REPO_PATH = Utils.join(System.getProperty("user.dir"), ".gitlet", "repo");
 
     /**
      * add method to get modified files, deleted files, untracked files
@@ -75,21 +132,6 @@ public class Repository implements Serializable {
 //        //allCommits.add(curr.getId()); I had to change to Hashmap
 //    }
 
-    public void newHead(Commit curr) {
-        head = curr;
-        branches.put(currBranch, curr.getId());
-        allTheCommits.add(curr.getId());
-    }
-
-    public void newBranch(String name, Commit head) {
-        this.head = head;
-        currBranch = name;
-    }
-
-    public void addRepo() {
-        File repoFile = Utils.join(REPO_PATH);
-        Utils.writeObject(repoFile, this);
-    }
 
 //    /* Prints out commit hashID, date, and commit message in order
 //     * from the head commit to initial commit.
@@ -176,30 +218,5 @@ public class Repository implements Serializable {
 //        }
 //        return deleted;
 //    }
-
-    String getFullId(String abbrId) {
-        HashSet<String> allCommitIds = getAllCommitsIds();
-        for (String id: allCommitIds) {
-            if (id.startsWith(abbrId)) {
-                return id;
-            }
-        }
-        return "";
-    }
-
-    /**
-     * edit this
-     **/
-    public ArrayList<String> getUntracked(HashMap<String, String> stagedFiles) {
-        List<String> allFiles = Utils.plainFilenamesIn(GEN_PATH);
-        ArrayList<String> untrackedFiles = new ArrayList<>();
-        for (String file : allFiles) {
-            if (!(stagedFiles.containsKey(file)) && !(getTracked().containsKey(file))) {
-                untrackedFiles.add(file);
-            }
-        }
-        Collections.sort(untrackedFiles);
-        return untrackedFiles;
-    }
 }
 
