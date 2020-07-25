@@ -59,8 +59,8 @@ public class Main implements Serializable {
                     globalLogHelper(args);
                     break;
                 case "reset":
-                   resetHelper(args);
-                   break;
+                    resetHelper(args);
+                    break;
                 case "checkout":
                     checkoutHelper(args);
                     break;
@@ -191,8 +191,7 @@ public class Main implements Serializable {
 
     public static void resetHelper(String[] args) {
         if (args.length != 2) {
-            System.out.println("Incorrect operands.");
-            System.exit(0);
+            Utils.message("Incorrect operands.");
         } else {
             try {
                 command.reset(args[1]);

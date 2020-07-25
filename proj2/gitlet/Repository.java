@@ -12,7 +12,7 @@ public class Repository implements Serializable {
     HashMap<String, String> branches;
     Commit head;
     String currBranch;
-//    HashMap<String, Commit> allCommits;
+    //    HashMap<String, Commit> allCommits;
     ArrayList<Commit> allCommitscurrbranch;
     HashSet<String> allTheCommits;
 
@@ -165,4 +165,3 @@ public class Repository implements Serializable {
         return untrackedFiles;
     }
 }
-
