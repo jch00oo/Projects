@@ -31,7 +31,6 @@ public class Commit implements Serializable {
         content = new HashMap<>();
 //        id = Utils.sha1(content.toString(), parentCommit, commitMessage, timeStamp);
         id= Utils.sha1(content.keySet().toArray()+timeStamp); //https://stackoverflow.com/questions/1090556/java-how-to-convert-hashmapstring-object-to-array
-//        id = makeId();
         parentCommit = null;
     }
 
@@ -44,10 +43,10 @@ public class Commit implements Serializable {
         return copiedCommit;
     }
 
-    private String makeId() {
+    /**private String makeId() {
         byte[] converted = Utils.serialize(this);
         return Utils.sha1((Object) converted);
-    }
+    }**/
 
     /* normal commits */
     public Commit(String commitMessage, Commit parentCommit, HashMap<String, String> content) {
@@ -59,7 +58,7 @@ public class Commit implements Serializable {
         this.timeStamp = dateFormat.format(currDate);
 //        this.id = Utils.sha1(content.toString(), parentCommit, commitMessage, timeStamp); /** questionable **/
         id= Utils.sha1(content.keySet().toArray()+timeStamp); //needs unique factor like datestamp incorporated in
-//        id = makeId()
+
     }
 
     public String getId() {

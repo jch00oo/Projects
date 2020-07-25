@@ -356,7 +356,7 @@ public class Gitlet implements Serializable {
         System.out.println();
     }
 
-    public static void global(){ //doesn't have to be in order, screw hashmap
+    public static void global(){
         File allcommitsfolder = Utils.join(COMMIT_PATH);
         File [] eacommit= allcommitsfolder.listFiles(); //https://www.geeksforgeeks.org/file-listfiles-method-in-java-with-examples/
         for (File i : eacommit){
@@ -365,10 +365,6 @@ public class Gitlet implements Serializable {
     }
 
     public static void find(String message){
-        /**File repoFile3 = Utils.join(REPO_PATH);
-         Repository currRepo = Utils.readObject(repoFile3, Repository.class);
-         HashMap<String,Commit> pointer = currRepo.getAllCommits(); .getAllCommits isn't working??? **/
-        //temp fix is to use files and folders
         File repoFile = Utils.join(REPO_PATH);
         Repository currRepo = Utils.readObject(repoFile, Repository.class);
         Commit found;

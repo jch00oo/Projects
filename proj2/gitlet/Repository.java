@@ -29,7 +29,7 @@ public class Repository implements Serializable {
         allTheCommits = new HashSet<>();
         allTheCommits.add(head.getId());
 //        allCommits = new HashMap<>();
-//        allCommits.put(head.getId(), head); //dubious code, but I needed to get a string,commit Map
+//        allCommits.put(head.getId(), head);
     }
 
     public Commit getHead() {
@@ -147,7 +147,7 @@ public class Repository implements Serializable {
                 return id;
             }
         }
-        return "";
+        return null;
     }
 
     /**
