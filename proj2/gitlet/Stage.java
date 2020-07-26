@@ -6,6 +6,13 @@ import java.util.HashMap;
 
 public class Stage implements Serializable {
 
+
+    static final File STAGE_PATH = Utils.join(System.getProperty("user.dir"), ".gitlet", "stage");
+
+    /* file name, id */
+    private HashMap<String, String> stagedToAdd;
+    private HashMap<String, String> stagedToRemove;
+
     /* init stage */
     public Stage() {
         stagedToAdd = new HashMap<>();
@@ -45,11 +52,5 @@ public class Stage implements Serializable {
         stagedToAdd.clear();
         stagedToRemove.clear();
     }
-
-    static final File STAGE_PATH = Utils.join(System.getProperty("user.dir"), ".gitlet", "stage");
-
-    /* file name, id */
-    private HashMap<String, String> stagedToAdd;
-    private HashMap<String, String> stagedToRemove;
 
 }

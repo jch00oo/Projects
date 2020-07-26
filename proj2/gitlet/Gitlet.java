@@ -7,22 +7,11 @@ import java.util.Arrays;
 
 public class Gitlet {
 
-//    private File startergit;
-//    private File stage;
-//    HashMap<String, String> branchHistory;// branch name as key, id of current branch as value
-//    //make and declare the directories
-
-//    private HashMap<String, Commit> commitHistory; //stores all the commits, id as key and Commit as value
-//    private HashMap<String, String> tracked;// stores all tracked files, id as key and blob as value
-//    private String recentCommit; //tracks the most recent commit's id
-//    private Repository currBranch;
-//    ArrayList<String> untrackedFiles = new ArrayList<>();
-
     //make and declare the directories
-//    private static String cd_gitlet = ".gitlet";
-//    private static String cd_stage = ".gitlet/.stage";
-//    private static String commitPath = ".gitlet/.commit";
-//    private static String workingPath = System.getProperty("user.dir");
+    private static String cd_gitlet = ".gitlet";
+    private static String cd_stage = ".gitlet/.stage";
+    private static String commitPath = ".gitlet/.commit";
+    private static String workingPath = System.getProperty("user.dir");
 
     static final File REPO_PATH = Utils.join(System.getProperty("user.dir"), ".gitlet", "repo");
     static final File STAGE_PATH = Utils.join(System.getProperty("user.dir"), ".gitlet", "stage");
@@ -62,7 +51,7 @@ public class Gitlet {
      * Stage current file in the working directory to be tracked
      * to add to the next commit. Throw error if file with such name doesn't exist.
      */
-    public void add(String fileName) throws GitletException {
+    public void add(String fileName) {
         File toAdd = new File(fileName);
         if (!toAdd.exists()) {
             System.out.println("File does not exist.");
@@ -93,7 +82,7 @@ public class Gitlet {
     /* @param commit message
      * Commit files in staging area to the repository.
      */
-    public void commit(String commitMessage) throws GitletException {
+    public void commit(String commitMessage) {
         File repoFile = Utils.join(REPO_PATH);
         Repository currRepo = Utils.readObject(repoFile, Repository.class);
         Commit head = currRepo.getHead();
@@ -122,9 +111,11 @@ public class Gitlet {
         }
         currStage.clearStage();
         currStage.addStage();
+
         Commit newCommit = new Commit(commitMessage, head, newBlob);
         newCommit.addCommit();
-        currRepo.updateHead(newCommit);
+
+        currRepo.commitHelper1(newCommit);
         currRepo.addRepo();
     }
 
@@ -149,15 +140,6 @@ public class Gitlet {
         System.out.println("Date: " + curr.getTimeStamp());
         System.out.println(curr.getCommitMessage());
         System.out.println();
-
-//        if (curr.getParentCommitId().equals("")) {
-//            System.exit(0);
-//        } else {
-//            File repoFile = Utils.join(REPO_PATH);
-//            Repository currRepo = Utils.readObject(repoFile, Repository.class);
-//            Commit temp = curr.getParentCommit(currRepo);
-//            logHelper(temp);
-//        }
     }
 
     /* @param branch name
@@ -248,7 +230,8 @@ public class Gitlet {
         Object[] branchNames = currRepo.getBranches().keySet().toArray();
         Arrays.sort(branchNames);
         for (Object branch: branchNames) {
-            if (currRepo.getCurrBranch().equals(branch)) {
+            boolean isMaster = currRepo.getCurrBranch().equals(branch);
+            if (isMaster) {
                 branch = "*" + branch;
             }
             System.out.println(branch);
@@ -282,21 +265,22 @@ public class Gitlet {
 
         /* loop through file names */
         for (String file : stagedFileNames) {
-            isStaged = currStage.getStagedToAdd().containsKey(file);
-            isTracked = currRepo.getTracked().containsKey(file);
+            boolean staged = currStage.getStagedToAdd().containsKey(file);
+            boolean tracked = currRepo.getTracked().containsKey(file);
 
-            if (!isStaged && isTracked) {
+            if (!staged && tracked) {
                 String wd = new Blob(file).getBlobId();
                 if (!currRepo.getTracked().get(file).equals(wd)) {
                     modified.add(file + " (modified)");
                 }
-            } else if (isStaged) {
+            } else if (staged) {
                 String wd = new Blob(file).getBlobId();
                 if (!currStage.getStagedToAdd().get(file).equals(wd)) {
                     modified.add(file + " (modified)");
                 }
             }
         }
+
         /***/
         List<String> allPresent = Utils.plainFilenamesIn(GEN_PATH);
         ArrayList<String> deleted = new ArrayList<>();
@@ -306,19 +290,26 @@ public class Gitlet {
             }
         }
         for (String tracked : currRepo.getTracked().keySet()) {
-            if (!currStage.getStagedToRemove().containsKey(tracked)
-                    && !allPresent.contains(tracked)) {
+            boolean hasBeenStRm = currStage.getStagedToRemove().containsKey(tracked);
+            boolean presentInFile = allPresent.contains(tracked);
+            if (!hasBeenStRm
+                    && !presentInFile) {
                 deleted.add(tracked + " (deleted)");
             }
         }
         /***/
 
+        /**
+         Object[] allStaged = currStage.getStagedToAdd().keySet().toArray();
+         Arrays.sort(allStaged);
+         **/
+
         notStaged.addAll(modified);
         notStaged.addAll(deleted);
 
-        ArrayList<String> notStagedList = new ArrayList<>(notStaged);
-        Collections.sort(notStagedList);
-        for (String modifiedFile: notStagedList) {
+        Object[] notStagedArray = notStaged.toArray();
+        Arrays.sort(notStagedArray);
+        for (Object modifiedFile: notStagedArray) {
             System.out.println(modifiedFile);
         }
         System.out.println();
@@ -359,10 +350,7 @@ public class Gitlet {
         File repoFile = Utils.join(Repository.REPO_PATH);
         Repository currRepo = Utils.readObject(repoFile, Repository.class);
         Commit found;
-        Formatter uh = new Formatter();
 
-//        File allcommitsfolder = Utils.join(COMMIT_PATH);
-//        File[] eacommit= allcommitsfolder.listFiles();
         boolean exists = false;
 
         for (String commitId: currRepo.getAllCommitsIds()) {
@@ -373,14 +361,7 @@ public class Gitlet {
                 System.out.println(found.getId());
             }
         }
-//            Commit j=Utils.readObject(i,Commit.class);
-//            if (j.getCommitMessage().equals(message)){
-//                exists=true;
-//                System.out.println(j.getId());
-//            }
-//            else{
-//                exists=false;
-//            }
+
         if (exists == false){
             System.out.println("Found no commit with that message.");
             System.exit(0);
@@ -404,8 +385,9 @@ public class Gitlet {
         File repoFile = Utils.join(Repository.REPO_PATH);
         Repository currRepo = Utils.readObject(repoFile, Repository.class);
         String fullId = currRepo.getFullId(id);
+        boolean commitExists = currRepo.getAllCommitsIds().contains(fullId);
 
-        if (!currRepo.getAllCommitsIds().contains(fullId)) {
+        if (!commitExists) {
             System.out.println("No commit with that id exists.");
             System.exit(0);
         } else {
@@ -413,7 +395,6 @@ public class Gitlet {
             Commit currCommit = Utils.readObject(commitFile, Commit.class);
 
             boolean found = currCommit.getContent().containsKey(fileName);
-
             if (!found) {
                 System.out.println("File does not exist in that commit.");
                 System.exit(0);
@@ -427,60 +408,64 @@ public class Gitlet {
     /* Case 3:
      * @param branch name
      */
-    public void checkout3 (String branchName) throws GitletException {
+    public void checkout3 (String branchName) {
         File repoFile = Utils.join(Repository.REPO_PATH);
         Repository currRepo = Utils.readObject(repoFile, Repository.class);
+        boolean exists = currRepo.getBranches().containsKey(branchName);
+        boolean isCurrent = currRepo.getCurrBranch().equals(branchName);
 
-        File stageFile = Utils.join(Stage.STAGE_PATH);
-        Stage currStage = Utils.readObject(stageFile, Stage.class);
-
-        if (!currRepo.getBranches().containsKey(branchName)) {
-            System.out.println("No such branch exists.");
-            System.exit(0);
-        } else if (currRepo.getCurrBranch().equals(branchName)) {
+        if (isCurrent) {
             System.out.println("No need to checkout the current branch.");
             System.exit(0);
-        } else {
+        } else if (!(isCurrent) && exists){
+            File stageFile = Utils.join(Stage.STAGE_PATH);
+            Stage currStage = Utils.readObject(stageFile, Stage.class);
+
             String branchCommitId = currRepo.getBranches().get(branchName);
             File commitFile = Utils.join(Commit.COMMIT_PATH, branchCommitId);
             Commit branchHeadCommit = Utils.readObject(commitFile, Commit.class);
 
-            /** modify rest of this method **/
-            HashMap<String, String> prevTracked = branchHeadCommit.getContent();
-            HashMap<String, String> currTracked = currRepo.getTracked();
+            HashMap<String, String> prev = branchHeadCommit.getContent();
+            HashMap<String, String> curr = currRepo.getTracked();
             List<String> workingFiles = Utils.plainFilenamesIn(GEN_PATH);
 
             for (String working : workingFiles) {
-                if (prevTracked.containsKey(working)
-                        && !currRepo.getTracked().containsKey(working)) {
-                    System.out.println("There is an untracked file in the way; delete it or add it first.");
+                boolean isTracked = currRepo.getTracked().containsKey(working);
+                if (prev.containsKey(working)
+                        && !isTracked) {
+                    System.out.println("There is an untracked file in the way; delete it, or add and commit it first.");
                     System.exit(0);
                 }
             }
 
-            for (String tracked : currTracked.keySet()) {
-                if (!prevTracked.containsKey(tracked)
+            for (String tracked : curr.keySet()) {
+                if (!prev.containsKey(tracked)
                         && workingFiles.contains(tracked)) {
                     Utils.restrictedDelete(tracked);
                 }
             }
-            for (String prev : prevTracked.keySet()) {
-                String blobID = prevTracked.get(prev);
-                Blob.blobCheckoutHelper(blobID, prev);
+
+            for (String prevFile : prev.keySet()) {
+                String blobID = prev.get(prevFile);
+                Blob.blobCheckoutHelper(blobID, prevFile);
             }
 
-            currRepo.newBranch(branchName, branchHeadCommit);
+            currRepo.checkout3Helper(branchName, branchHeadCommit);
             currStage.clearStage();
             currRepo.addRepo();
             currStage.addStage();
+        } else {
+            System.out.println("No such branch exists.");
+            System.exit(0);
         }
     }
 
-    public static void reset(String commitId) throws GitletException { //user enters shortened sha1 name
-        File repoFile4 = Utils.join(Repository.REPO_PATH);
-        Repository currRepo = Utils.readObject(repoFile4, Repository.class);
+    public static void reset(String commitId) { //user enters shortened sha1 name
+        File repoFile = Utils.join(Repository.REPO_PATH);
+        Repository currRepo = Utils.readObject(repoFile, Repository.class);
+        boolean exists = currRepo.getAllCommitsIds().contains(currRepo.getFullId(commitId));
 
-        if (!currRepo.getAllCommitsIds().contains(currRepo.getFullId(commitId))) {
+        if (!exists) {
             System.out.println("No commit with that id exists.");
             System.exit(0);
         } else {
@@ -492,13 +477,18 @@ public class Gitlet {
             List<String> filesInWD = Utils.plainFilenamesIn(GEN_PATH);
 
             for (String fileName : filesInWD) {
-                if (lastCommit.getContent().containsKey(fileName) && !currRepo.getTracked().containsKey(fileName)) {
-                    throw Utils.error("There is an untracked file in the way;" +" delete it, or add and commit it first.");
+                boolean tracked = currRepo.getTracked().containsKey(fileName);
+                boolean lastExists = lastCommit.getContent().containsKey(fileName);
+                if (lastExists && !tracked) {
+                    System.out.println("There is an untracked file in the way; delete it, or add and commit it first.");
+                    System.exit(0);
                 }
             }
 
             for (String trackedFile : currRepo.getTracked().keySet()) {
-                if (!lastCommit.getContent().containsKey(trackedFile) && filesInWD.contains(trackedFile)) {
+                boolean lastExists2 = lastCommit.getContent().containsKey(trackedFile);
+                boolean inWD = filesInWD.contains(trackedFile);
+                if (!lastExists2 && inWD) {
                     Utils.restrictedDelete(trackedFile);
                 }
             }
@@ -507,48 +497,10 @@ public class Gitlet {
                 String fileId = lastCommit.getContent().get(lastTracked);
                 Blob.blobCheckoutHelper(fileId, lastTracked);
             }
-            /* resetHead */
-            currRepo.resetHead(lastCommit);
+            currRepo.resetHelper1(lastCommit);
             currStage.clearStage();
             currRepo.addRepo();
             currStage.addStage();
         }
     }
-
-    /**public static void checkout(String [] args){
-        try{
-            String fileName;
-            if (args[0]=="--"&&args.length==2){
-                //first case revert to original and make pointer go back to head
-                Commit curr = Utils.readObject(Utils.join(REPO_PATH),Commit.class);
-                HashMap<String,String> fileContents= curr.getContent();
-                if (fileContents.containsKey(args[1])){
-                    //just overwrite the file no need to move head will just stay here
-                    File copied= new File(args[1]);
-                    Utils.writeContents(copied,curr.getContent()); //dubious code
-                }else{
-                    throw Utils.error("File does not exist in that commit.");
-                }
-            }
-            else if(args[1]=="--"&&args.length==3){
-                //probably fix this code
-                Commit curr = Utils.readObject(Utils.join(REPO_PATH),Commit.class);
-                HashMap<String,String> fileContents= curr.getContent();
-                if (fileContents.containsKey(args[2])){
-                    //just overwrite the file no need to move head
-                    File copied= new File(args[2]);
-                    Utils.writeContents(copied,curr.getContent());
-                }else{
-                    throw Utils.error("File does not exist in that commit.");
-                }
-            }else {
-                //were multiple files in a commit. end of the command, overwrite everything. If tracked, deleted, clear stage.
-                Commit curr = Utils.readObject(Utils.join(REPO_PATH),Commit.class);
-                HashMap<String,String> fileContents= curr.getContent();
-                //definitely must fix the rest
-            }
-        } catch(Exception e){
-            System.out.println(Utils.error("No checkout command like that exists."));
-        }
-    }**/
 }

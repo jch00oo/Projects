@@ -32,7 +32,7 @@ public class Main implements Serializable {
         } else {
             switch (args[0]) {
                 case "init":
-                    initHelper(args);
+                    init();
                     break;
                 case "add":
                     addHelper(args);
@@ -76,17 +76,17 @@ public class Main implements Serializable {
         }
     }
 
-    public static void initHelper(String[] args) {
-        if (args.length != 1) {
-            Utils.message("Incorrect operands.");
-        } else {
-            try {
-                command.init();
-            } catch (GitletException error) {
-                Utils.message(error.getMessage());
-            }
-        }
-    }
+//    public static void initHelper(String[] args) {
+//        if (args.length != 1) {
+//            Utils.message("Incorrect operands.");
+//        } else {
+//            try {
+//                command.init();
+//            } catch (GitletException error) {
+//                Utils.message(error.getMessage());
+//            }
+//        }
+//    }
 
     public static void addHelper(String[] args) { /* our add takes in one String */
         if (args.length != 2) {
