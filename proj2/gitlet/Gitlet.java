@@ -7,6 +7,13 @@ import java.util.Arrays;
 
 public class Gitlet {
 
+    //@source https://www.atlassian.com/git/tutorials/setting-up-a-repository
+    // ^ for information on how real git works
+    //@source http://szhang7.github.io/java/2013/08/29/java-handbook/
+    //@source https://stackoverflow.com/questions/27409718/java-reading-multiple-objects-from-a-file-as-they-were-in-an-array
+    // ^ both for using system.getproperty("user.dir"), utils.join, and utils.readobject to read & obtain object from files
+
+
     //make and declare the directories
     private static String cd_gitlet = ".gitlet";
     private static String cd_stage = ".gitlet/.stage";
@@ -119,6 +126,8 @@ public class Gitlet {
         currRepo.addRepo();
     }
 
+    /* Prints out information about commits in the current branch in given format.
+     */
     public void log() {
         File repoFile = Utils.join(REPO_PATH);
         Repository currRepo = Utils.readObject(repoFile, Repository.class);
@@ -197,6 +206,9 @@ public class Gitlet {
         currStage.addStage();
     }
 
+    /* @param branch name
+    * Check if input branch exists or is the current branch; if not either, remove the branch.
+     */
     public void rmBranch (String branchName) {
         File repoFile = Utils.join(Repository.REPO_PATH);
         Repository currRepo = Utils.readObject(repoFile, Repository.class);
@@ -299,11 +311,6 @@ public class Gitlet {
         }
         /***/
 
-        /**
-         Object[] allStaged = currStage.getStagedToAdd().keySet().toArray();
-         Arrays.sort(allStaged);
-         **/
-
         notStaged.addAll(modified);
         notStaged.addAll(deleted);
 
@@ -334,6 +341,8 @@ public class Gitlet {
         System.out.println();
     }
 
+    /* Similar to log, except printing out every single commit made.
+     */
     public static void global(){ //doesn't have to be in order, screw hashmap
         File allcommitsfolder = Utils.join(Commit.COMMIT_PATH);
         File [] eacommit= allcommitsfolder.listFiles(); //https://www.geeksforgeeks.org/file-listfiles-method-in-java-with-examples/
@@ -342,6 +351,9 @@ public class Gitlet {
         }
     }
 
+    /* @param commit message
+    * Prints out the commit id(s) of the commit(s) with that corresponding commit message.
+     */
     public static void find(String message){
         /**File repoFile3 = Utils.join(REPO_PATH);
         Repository currRepo = Utils.readObject(repoFile3, Repository.class);
@@ -370,6 +382,8 @@ public class Gitlet {
 
     /* Case 1:
      * @param file name
+     * Same thing as checkout 2, except take in file name. Just find id using the head commit
+     * and use checkout 2.
      */
     public void checkout1 (String fileName) {
         File repoFile = Utils.join(Repository.REPO_PATH);
@@ -380,6 +394,9 @@ public class Gitlet {
 
     /* Case 2:
      * @param commit id and file name
+     * Check if commit and file exist; if they do, then take file version with given
+     * id, and overwrite file version in working directory if it exists with the
+     * given version. Do not stage.
      */
     public void checkout2 (String id, String fileName) {
         File repoFile = Utils.join(Repository.REPO_PATH);
@@ -407,6 +424,9 @@ public class Gitlet {
 
     /* Case 3:
      * @param branch name
+     * Check if it's current branch and if working file is untracked; if not, take files in head commit
+     * of given branch and overwrite file versions in current working directory with given
+     * version.
      */
     public void checkout3 (String branchName) {
         File repoFile = Utils.join(Repository.REPO_PATH);
@@ -460,6 +480,10 @@ public class Gitlet {
         }
     }
 
+    /* @param commit id
+    * Checkout file tracked by given commit, remove tracked file not in that given commit,
+    * and move head pointer. Pretty similar to checkout. Need to check abbreviated id.
+     */
     public static void reset(String commitId) { //user enters shortened sha1 name
         File repoFile = Utils.join(Repository.REPO_PATH);
         Repository currRepo = Utils.readObject(repoFile, Repository.class);
@@ -502,5 +526,38 @@ public class Gitlet {
             currRepo.addRepo();
             currStage.addStage();
         }
+    }
+
+    /* @param branch name
+    * Merge files from given branch into current branch. Started with implementing the failure cases.
+     */
+    public void merge(String branchName) {
+        File repoFile = Utils.join(REPO_PATH);
+        Repository currRepo = Utils.readObject(repoFile, Repository.class);
+
+        File stageFile = Utils.join(STAGE_PATH);
+        Stage currStage = Utils.readObject(stageFile, Stage.class);
+
+        /* things to check */
+        boolean exists = currRepo.getBranches().containsKey(branchName);
+        boolean isCurrent = currRepo.getCurrBranch().equals(branchName);
+        boolean uncommittedChanges = !currStage.getStagedToAdd().isEmpty() || !currStage.getStagedToRemove().isEmpty();
+        boolean isAncestor;
+        boolean fastForwarded;
+
+        if (!exists) {
+            System.out.println("A branch with that name does not exist.");
+            System.exit(0);
+        }
+        if (isCurrent) {
+            System.out.println("Cannot merge a branch with itself.");
+            System.exit(0);
+        }
+        if (uncommittedChanges) {
+            System.out.println("You have uncommitted changes.");
+        }
+
+        String newId = currRepo.getBranches().get(branchName);
+        String currId = currRepo.getHead().getId();
     }
 }

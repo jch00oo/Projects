@@ -15,17 +15,18 @@ public class Commit implements Serializable {
     private String commitMessage;
     private String timeStamp;
     private String parentCommit;
-    /* name of file and id */
     private HashMap<String, String> content;
 
-    /* initializing instance variables and maybe initial commit? */
+    /* initial commit */
     public Commit() {
         commitMessage = "initial commit";
         SimpleDateFormat dateFormat = new SimpleDateFormat("EEE MMM d HH:mm:ss yyyy Z");
         timeStamp = dateFormat.format(0);
         content = new HashMap<>();
         parentCommit = "";
-        id = Utils.sha1(content.toString(), parentCommit, commitMessage, timeStamp); //https://stackoverflow.com/questions/1090556/java-how-to-convert-hashmapstring-object-to-array
+        id = Utils.sha1(content.toString(), parentCommit, commitMessage, timeStamp);
+        // @source https://stackoverflow.com/questions/1090556/java-how-to-convert-hashmapstring-object-to-array
+
     }
 
     /* normal commits */
@@ -59,6 +60,8 @@ public class Commit implements Serializable {
         return parentCommit;
     }
 
+    // Writes object into commit file and adds it.
+    //@source https://stackoverflow.com/questions/17293991/how-to-write-and-read-java-serialized-objects-into-a-file
     void addCommit() {
         File commitFile = Utils.join(COMMIT_PATH, getId());
         Utils.writeObject(commitFile, this);
@@ -75,6 +78,8 @@ public class Commit implements Serializable {
         return parentCommitNew;
     }
 
+    // @param: repository of commits
+    // Returns the actual commit object of the parent commit.
     Commit getParentCommit(Repository repo) {
         Commit currParent = null;
         HashSet<String> allCommits = repo.getAllCommitsIds();

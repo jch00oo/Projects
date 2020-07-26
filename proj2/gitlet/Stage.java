@@ -13,7 +13,7 @@ public class Stage implements Serializable {
     private HashMap<String, String> stagedToAdd;
     private HashMap<String, String> stagedToRemove;
 
-    /* init stage */
+    /* initial stage */
     public Stage() {
         stagedToAdd = new HashMap<>();
         stagedToRemove = new HashMap<>();
@@ -43,11 +43,14 @@ public class Stage implements Serializable {
         stagedToRemove.remove(fileName);
     }
 
+    // Write object into stage file and adds it.
+    //@source https://stackoverflow.com/questions/17293991/how-to-write-and-read-java-serialized-objects-into-a-file
     void addStage() {
         File stageFile = Utils.join(STAGE_PATH);
         Utils.writeObject(stageFile, this);
     }
 
+    // Clears the staging area; called after commits.
     void clearStage() {
         stagedToAdd.clear();
         stagedToRemove.clear();

@@ -14,7 +14,7 @@ public class Repository implements Serializable {
     private HashMap<String, String> branches;
     private Commit head;
     private String currBranch;
-    //    HashMap<String, Commit> allCommits;
+    HashMap<String, Commit> allCommits;
     ArrayList<Commit> allCommitscurrbranch;
     private HashSet<String> allTheCommits;
 
@@ -68,22 +68,30 @@ public class Repository implements Serializable {
         return "";
     }
 
+    // Writes object into repo file and adds it.
+    //@source https://stackoverflow.com/questions/17293991/how-to-write-and-read-java-serialized-objects-into-a-file
     public void addRepo() {
         File repoFile = Utils.join(REPO_PATH);
         Utils.writeObject(repoFile, this);
     }
 
+    // @param: newly made commit
+    // Change the head commit pointer to the newly made commit, and add it to the list of commits.
     void commitHelper1(Commit newCommit) {
         head = newCommit;
         branches.put(currBranch, newCommit.getId());
         allTheCommits.add(newCommit.getId());
     }
 
+    // @param: name of branch, head Commit
+    // Change head commit pointer and branch name when the third case of checkout is run.
     void checkout3Helper(String name, Commit head) {
         this.head = head;
         currBranch = name;
     }
 
+    // @param: previous commit
+    // Change head commit pointer, and use commit id of input previous commit.
     void resetHelper1(Commit previous) {
         head = previous;
         String prevID = previous.getId();

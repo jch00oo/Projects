@@ -33,6 +33,9 @@ public class Blob implements Serializable {
         Utils.writeContents(blobsFile, this.getContents());
     }
 
+    // @param: file id, file name
+    // Read blob content from previous commit and write it to current/new file.
+    // Used for checkout.
     static void blobCheckoutHelper (String id, String fileName) {
         File find = Utils.join(fileName);
         File from =Utils.join(BLOB_PATH, id);
