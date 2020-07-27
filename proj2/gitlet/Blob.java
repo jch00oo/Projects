@@ -1,51 +1,50 @@
 package gitlet;
 
-import java.util.*;
 import java.io.*;
 
-import static gitlet.Gitlet.BLOB_PATH;
+
 
 //make a new Blob class for this code to create a Blob
 //does serializable work like this
 public class Blob implements Serializable {
-    private byte[] fileContents;
-    private Boolean tracked;
-    private String fileName;
-    private String id;
 
-    public Blob(String fileName) {
-        File currFile = new File(fileName);
-        if (currFile.exists()){
+    public Blob(String fileName2) {
+        File currFile = new File(fileName2);
+        if (currFile.isFile()){
+            fileName = fileName2;
             fileContents = Utils.readContents(currFile);
-            tracked = true;
-            this.fileName = fileName;
-            id = Utils.sha1(fileContents);
-        } else {
-            System.out.println(Utils.error("File does not exist.").getMessage());
+            byte[] name = this.fileName.getBytes();
+            id = Utils.sha1(name, fileContents);
         }
     }
 
-    public byte[] getContents() {
+    byte[] getContents() {
         return fileContents;
     }
 
-    public String getFileName() {
+    String getFileName() {
         return fileName;
     }
 
-    public String getBlobId() {
+    String getBlobId() {
         return id;
     }
 
-    public void trackBlob() {
+    void trackBlob() {
         File blobsFile = Utils.join(BLOB_PATH, this.getBlobId());
         Utils.writeContents(blobsFile, this.getContents());
     }
 
     static void blobCheckoutHelper (String id, String fileName) {
         File find = Utils.join(fileName);
-        File from =Utils.join(Gitlet.BLOB_PATH, id);
+        File from =Utils.join(BLOB_PATH, id);
         String content = Utils.readContentsAsString(from);
         Utils.writeContents(find, content);
     }
+
+    static final File BLOB_PATH = Utils.join(System.getProperty("user.dir"), ".gitlet", "blobs");
+
+    private byte[] fileContents;
+    private String fileName;
+    private String id;
 }

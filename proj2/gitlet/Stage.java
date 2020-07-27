@@ -1,20 +1,10 @@
 package gitlet;
 
-//To clear the stage faster and more efficiently.
-
 import java.io.File;
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
-
-import static gitlet.Gitlet.STAGE_PATH;
 
 public class Stage implements Serializable {
-
-    /* file name, id */
-    private HashMap<String, String> stagedToAdd;
-    private HashMap<String, String> stagedToRemove;
 
     /* init stage */
     public Stage() {
@@ -22,30 +12,50 @@ public class Stage implements Serializable {
         stagedToRemove = new HashMap<>();
     }
 
-    public HashMap<String, String> getStagedToAdd(){
+    HashMap<String, String> getStagedToAdd(){
         return stagedToAdd;
     }
 
-    public HashMap<String, String> getStagedToRemove(){
+    HashMap<String, String> getStagedToRemove(){
         return stagedToRemove;
     }
 
-    public void stageToAdd(String fileName, String id) {
+    void stageToAdd(String fileName, String id) {
         stagedToAdd.put(fileName, id);
     }
 
-    public void stageToRemove(String fileName, String id) {
+    void stageToRemove(String fileName, String id) {
         stagedToRemove.put(fileName, id);
     }
 
-    public void clearStage() {
+    void deleteFromAdd(String fileName) {
+        stagedToAdd.remove(fileName);
+    }
+
+    void deleteFromRemove(String fileName) {
+        stagedToRemove.remove(fileName);
+    }
+
+    static Stage readStage() {
+        File stageFile = Utils.join(STAGE_PATH);
+        Stage stage = Utils.readObject(stageFile, Stage.class);
+        return stage;
+    }
+
+    void addStage() {
+        File stageFile = Utils.join(STAGE_PATH);
+        Utils.writeObject(stageFile, this);
+    }
+
+    void clearStage() {
         stagedToAdd.clear();
         stagedToRemove.clear();
     }
 
-    public void addStage() {
-        File stageFile = Utils.join(STAGE_PATH);
-        Utils.writeObject(stageFile, this);
-    }
+    static final File STAGE_PATH = Utils.join(System.getProperty("user.dir"), ".gitlet", "stage");
+
+    /* file name, id */
+    private HashMap<String, String> stagedToAdd;
+    private HashMap<String, String> stagedToRemove;
 
 }

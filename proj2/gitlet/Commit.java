@@ -1,88 +1,68 @@
+
 package gitlet;
 
 import java.io.File;
 import java.io.Serializable;
-import java.util.HashMap;
-import java.time.LocalDate;
-import java.util.Calendar;
-import java.util.Set;
+import java.text.Format;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Formatter;
 import java.util.*;
 
 public class Commit implements Serializable {
-
-    private static String workingPath = System.getProperty("user.dir");
-    private static final File COMMIT_PATH = Utils.join(workingPath, ".gitlet", "commits");
-    String id;
-    String commitMessage;
-    String timeStamp;
-    String parentCommit;
-    /* name of file and id */
-    HashMap<String, String> content;
 
     /* initializing instance variables and maybe initial commit? */
     public Commit() {
         commitMessage = "initial commit";
         SimpleDateFormat dateFormat = new SimpleDateFormat("EEE MMM d HH:mm:ss yyyy Z");
         timeStamp = dateFormat.format(0);
-//        timeStamp = new Date(0);
         content = new HashMap<>();
-//        id = Utils.sha1(content.toString(), parentCommit, commitMessage, timeStamp);
-        id= Utils.sha1(content.keySet().toArray()); //https://stackoverflow.com/questions/1090556/java-how-to-convert-hashmapstring-object-to-array
-//        id = makeId();
         parentCommit = "";
-    }
-
-    public Commit copyCommit(Commit copiedCommit) {
-        copiedCommit.id = this.id;
-        copiedCommit.commitMessage = this.commitMessage;
-        copiedCommit.timeStamp = this.timeStamp;
-        copiedCommit.parentCommit = this.parentCommit;
-        copiedCommit.content = this.content;
-        return copiedCommit;
-    }
-
-    private String makeId() {
-        byte[] converted = Utils.serialize(this);
-        return Utils.sha1((Object) converted);
+        id= Utils.sha1(content.toString(), parentCommit, commitMessage, timeStamp); //https://stackoverflow.com/questions/1090556/java-how-to-convert-hashmapstring-object-to-array
     }
 
     /* normal commits */
-    public Commit(String commitMessage, Commit parentCommit, HashMap<String, String> content) {
-        this.commitMessage = commitMessage;
-        this.parentCommit = parentCommit.getId();
-        this.content = content;
+    public Commit(String message, Commit parent, HashMap<String, String> newContent) {
+        commitMessage = message;
+        parentCommit = parent.getId();
+        content = newContent;
         Date currDate = new Date();
         SimpleDateFormat dateFormat = new SimpleDateFormat("E MMM dd HH:mm:ss yyyy Z");
-        this.timeStamp = dateFormat.format(currDate);
-//        this.id = Utils.sha1(content.toString(), parentCommit, commitMessage, timeStamp); /** questionable **/
-        id= Utils.sha1(content.keySet().toArray());
-//        id = makeId();
+        timeStamp = dateFormat.format(currDate);
+        id= Utils.sha1(content.toString(), parentCommit, commitMessage, timeStamp);
+
     }
 
-    public String getId() {
+    String getId() {
         return id;
     }
 
-    public String getTimeStamp() {
+    String getTimeStamp() {
         return timeStamp;
     }
 
-    public String getCommitMessage() {
+    String getCommitMessage() {
         return commitMessage;
     }
 
-    public HashMap<String, String> getContent() {
+    HashMap<String, String> getContent() {
         return content;
     }
 
-    public String getParentCommitId() {
+    String getParentCommitId() {
         return parentCommit;
     }
 
-    public Commit getParentCommit(Repository repo) {
+    static Commit readCommit(String id) {
+        File commitfile = Utils.join(COMMIT_PATH, id);
+        Commit commit = Utils.readObject(commitfile, Commit.class);
+        return commit;
+    }
+
+    void addCommit() {
+        File commitFile = Utils.join(COMMIT_PATH, getId());
+        Utils.writeObject(commitFile, this);
+    }
+
+    Commit getParentCommit(Repository repo) {
         Commit currParent = null;
         HashSet<String> allCommits = repo.getAllCommitsIds();
         if (getParentCommitId().equals("")) {
@@ -93,27 +73,27 @@ public class Commit implements Serializable {
             currParent = Utils.readObject(parentFile, Commit.class);
         }
         return currParent;
-//        Commit parentCommitNew = null;
-//        if (getParentCommitId().equals("")) {
-//            return null;
-//        }
-//        else {
-//            File parentFile = Utils.join(COMMIT_PATH, getParentCommitId());
-//            parentCommitNew = Utils.readObject(parentFile, Commit.class);
-//        }
-//        return parentCommitNew;
     }
 
-    public void addCommit() {
-        File commitFile = Utils.join(COMMIT_PATH, getId());
-        Utils.writeObject(commitFile, this);
+    /** Return specific format of commit information. */
+    @Override
+    public String toString() {
+        Formatter out = new Formatter();
+        Format dateFormat = new SimpleDateFormat("EEE MMM d HH:mm:ss yyyy Z");
+        out.format("===\n");
+        out.format("commit %s\n", getId());
+        out.format("Date: %s\n", dateFormat.format(getTimeStamp()));
+        out.format("%s\n", getCommitMessage());
+        return out.toString();
     }
 
-    public void firstLogHelper() {
-        System.out.println("===");
-        System.out.println("commit " + this.getId());
-        System.out.println("Date: " + this.getTimeStamp());
-        System.out.println(this.getCommitMessage());
-        System.out.println();
-    }
+    private static String workingPath = System.getProperty("user.dir");
+    static final File COMMIT_PATH = Utils.join(System.getProperty("user.dir"), ".gitlet", "commits");
+
+    private String id;
+    private String commitMessage;
+    private String timeStamp;
+    private String parentCommit;
+    /* name of file and id */
+    private HashMap<String, String> content;
 }
