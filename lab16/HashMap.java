@@ -1,0 +1,189 @@
+import java.util.LinkedList;
+
+public class HashMap<K, V> implements Map61BL<K, V> {
+
+    /* TODO: Instance variables here */
+    LinkedList[] map;
+    int size;
+    double loadFactor = 0.75;
+    int capacity;
+
+    public HashMap() {
+        map = new LinkedList[16];
+        for (int i = 0; i < map.length; i ++) {
+            map[i] = new LinkedList<Entry>();
+        }
+        size = 0; /* might need to change */
+        capacity = 16;
+        loadFactor = 0.75;
+    }
+
+    public HashMap (int initialCapacity) {
+        map = new LinkedList[initialCapacity];
+        for (int i = 0; i < map.length; i ++) {
+            map[i] = new LinkedList<Entry>();
+        }
+        size = 0;
+        this.capacity = initialCapacity;
+    }
+
+    public HashMap (int initialCapacity, double loadFactor) {
+        size = 0;
+        map = new LinkedList[initialCapacity];
+        for (int i = 0; i < map.length; i ++) {
+            map[i] = new LinkedList<Entry>();
+        }
+        this.loadFactor = loadFactor;
+        capacity = initialCapacity;
+    }
+
+    /* Returns the number of items contained in this map. */
+    public int size() {
+        return size;
+    }
+
+    /* Returns true if the map contains the KEY. */
+    public boolean containsKey(K key) {
+//        int index = Math.floorMod(hash(key), map.length);
+//        for (int i = 0; i < map[index].size(); i++) {
+//        }
+//        return map[hash(key)].contains(key);
+        LinkedList<Entry> letter = map[hash(key)];
+        if (letter != null) {
+            for (int i = 0; i < letter.size(); i++) {
+                if (letter.get(i).key.equals(key)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    /* Returns the value for the specified KEY. If KEY is not found, return
+       null. */
+    public V get(K key) {
+        if (containsKey(key)) {
+//            int index = Math.floorMod(hash(key), map.length);
+            LinkedList<Entry> letter = map[hash(key)];
+            for (int i = 0; i < letter.size(); i++) {
+                if (letter.get(i).key.equals(key)) {
+                    return (V) letter.get(i).value;
+                }
+            }
+        }
+        return null;
+    }
+
+    public void resize() { /* copy elements?? */
+        int oldLength = map.length;
+        LinkedList[] newMap = new LinkedList[oldLength * 2];
+        System.arraycopy(map, 0, newMap, 0, map.length);
+        map = newMap;
+        for (int i = oldLength; i < map.length; i ++) {
+            map[i] = new LinkedList<Entry>();
+        }
+        capacity = capacity * 2;
+    }
+
+    /* Puts a (KEY, VALUE) pair into this map. If the KEY already exists in the
+       SimpleNameMap, replace the current corresponding value with VALUE. */
+    public void put(K key, V value) {
+
+        if (containsKey(key)) {
+            LinkedList<Entry> letter = map[hash(key)];
+            for (int i = 0; i < letter.size(); i++) {
+                if (letter.get(i).key.equals(key)) {
+                    letter.get(i).value = value;
+                }
+            }
+        } else {
+            map[hash(key)].add(new Entry(key, value)); /** possible **/
+            size++;
+        }
+
+        double thisLoadFactor = ((double) size) / ((double) map.length);
+        if (thisLoadFactor > loadFactor) {
+            resize();
+        }
+    }
+
+
+    /* Removes a single entry, KEY, from this table and return the VALUE if
+       successful or NULL otherwise. */
+    public V remove(K key) {
+        if (containsKey(key)) {
+            V returnedValue = null;
+            LinkedList<Entry> letter = map[hash(key)];
+            for (int i = 0; i < letter.size(); i ++) {
+                if (letter.get(i).key.equals(key)) {
+                    returnedValue = (V) letter.get(i).value;
+                    letter.remove(letter.get(i));
+                    size --;
+                }
+            }
+            return returnedValue;
+        }
+        return null;
+    }
+
+    public int hash(K key) {
+        return Math.floorMod(key.hashCode(), map.length);
+    }
+
+    public void clear() {
+        map = new LinkedList[capacity];
+        for (int i = 0; i < map.length; i ++) {
+            map[i] = new LinkedList<Entry>();
+        }
+        size = 0;
+    }
+
+    public int capacity() {
+        return capacity;
+    }
+
+    public boolean remove(K key, V value) {
+        if (containsKey(key)) {
+            LinkedList<Entry> letter = map[hash(key)];
+            for (int i = 0; i < letter.size(); i ++) {
+                if (letter.get(i).key.equals(key)) {
+                    letter.remove(letter.get(i));
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    private static class Entry<K, V> {
+
+        private K key;
+        private V value;
+
+        Entry(K key, V value) {
+            this.key = key;
+            this.value = value;
+        }
+
+        /* Returns true if this key matches with the OTHER's key. */
+        public boolean keyEquals(Entry other) {
+            return key.equals(other.key);
+        }
+
+        /* Returns true if both the KEY and the VALUE match. */
+        @Override
+        public boolean equals(Object other) {
+            return (other instanceof Entry
+                    && key.equals(((Entry) other).key)
+                    && value.equals(((Entry) other).value));
+        }
+
+        @Override
+        public int hashCode() {
+            return super.hashCode();
+        }
+    }
+
+}
+
+

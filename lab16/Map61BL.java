@@ -1,7 +1,8 @@
   
 import java.util.Iterator;
 
-public interface Map61BL<K, V> extends Iterable<K> {
+public interface Map61BL<K, V> {
+//    extends Iterable<K>
 
     /* Removes all of the mappings from this map. */
     void clear();
@@ -26,6 +27,6 @@ public interface Map61BL<K, V> extends Iterable<K> {
     /* Returns the number of key-value pairs in this map. */
     int size();
 
-    /* Returns an Iterator over the keys in this map. */
-    Iterator<K> iterator();
+//    /* Returns an Iterator over the keys in this map. */
+//    Iterator<K> iterator();
 }
