@@ -163,38 +163,37 @@ public class HashMap<K, V> implements Map61BL<K, V> {
         return false;
     }
 
-    public Iterator<K> iterator() {
-        return new HashIterator();
+    public Iterator<K> iterator() throws UnsupportedOperationException{
+        throw new UnsupportedOperationException();
     }
 
-    private class HashIterator implements Iterator<K> {
+//    private class HashMapIterator<K> implements Iterator<K> {
+//
+//        int m;
+//        int l;
+//
+//        public HashMapIterator() {
+//            m = 0;
+//            l = 0;
+//        }
+//
+//        public K next() {
+//            LinkedList<Entry> letter = map[m];
+//            K nextKey = (K) letter.get(l).key;
+//            l ++;
+//            if (l >= map[m].size()) {
+//                l = 0;
+//                m ++;
+//            }
+//            return nextKey;
+//        }
+//
+//        public boolean hasNext() {
+//            return (size != 0 && m < map.length);
+//        }
+//    }
 
-        private int k = 0;
-        private int v = 0;
-
-        public K next() {
-            if (hasNext()) {
-                if (map[k] != null) {
-                    if (v < map[k].size()) {
-                        v ++;
-                        Entry<K, V> uh = (Entry) map[k].get(v-1);
-                        return uh.key;
-                    } else {
-                        v = 0;
-                        k ++;
-                        return next();
-                    }
-                }
-            }
-            return null;
-        }
-
-        public boolean hasNext() {
-            return k < size();
-        }
-    }
-
-    private static class Entry<K, V> {
+    private class Entry<K, V> {
 
         private K key;
         private V value;
