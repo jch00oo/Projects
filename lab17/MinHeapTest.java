@@ -22,17 +22,31 @@ public class MinHeapTest {
         //f      h
     }
 
+//    @Test
+//    public void test2(){ //find min, remove it, new min-check bubbleUP
+//        MinHeap<Integer> h = new MinHeap<>();
+//        h.insert(9);
+//        h.insert(2);
+//        h.insert(0);
+//        h.insert(11);
+//        h.insert(3);
+//        assertTrue(h.findMin().equals(0));
+//        assertTrue(h.removeMin().equals(0));
+//        assertTrue(h.findMin().equals(2));
+//    }
+
     @Test
     public void test2(){ //find min, remove it, new min-check bubbleUP
-        MinHeap<String> h = new MinHeap<>();
-        h.insert("f");
-        h.insert("h");
-        h.insert("d");
-        h.insert("b");
-        h.insert("c");
-        assertEquals(h.findMin(), "b");
-        assertEquals(h.removeMin(), "b");
-        assertEquals(h.findMin(), "c");
+        MinHeap<Character> h = new MinHeap<>();
+        h.insert('f');
+        h.insert('h');
+        h.insert('d');
+        h.insert('b');
+        h.insert('c');
+        assertTrue(h.findMin().equals('b'));
+        assertTrue(h.removeMin().equals('b'));
+        assertTrue(h.findMin().equals('c'));
+//        h.toString();
     }
 
     @Test
