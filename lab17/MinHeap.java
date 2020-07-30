@@ -254,7 +254,7 @@ public class MinHeap<E extends Comparable<E>> {
        be checked using .equals(), not ==. */
     public boolean contains(E element) {
         for (int i = 0; i < contents.size(); i ++) {
-            if (contents.get(i).equals(element) {
+            if (contents.get(i).equals(element)) {
                 return true;
             }
         }
