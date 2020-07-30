@@ -163,10 +163,12 @@ private int getMaxIndex(int index1, int index2) {
                 smaller=getRightOf(index); //children+grandchildren
                 if (index-smaller>0) {
                     swap(index, smaller);
+                    index=smaller;
                 }
             }else{
                 if (index-smaller>0) {
                     swap(index, smaller);
+                    index=smaller;
                 }
             }
         }
@@ -194,7 +196,6 @@ private int getMaxIndex(int index1, int index2) {
         } else {
             return;
         }
-
     }
 
     /* Returns the number of elements in the MinHeap. */

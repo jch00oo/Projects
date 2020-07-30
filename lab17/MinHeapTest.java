@@ -78,4 +78,16 @@ public class MinHeapTest {
         h.update('c');
     }
 
+    @Test
+    public void test7(){
+        MinHeap<Character> h = new MinHeap<>();
+        h.insert('f');
+        h.insert('h');
+        h.insert('d');
+        h.insert('b');
+        h.insert('c');
+        h.contains('c');
+        h.update('c');
+    }
+
 }
