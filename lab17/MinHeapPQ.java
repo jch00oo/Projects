@@ -32,8 +32,9 @@ public class MinHeapPQ<T> implements PriorityQueue<T> {
         if (min == null) {
             return null;
         } else {
+            T toRemove = min.item;
             heap.removeMin();
-            return min.item;
+            return toRemove;
         }
     }
 
