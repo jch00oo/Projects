@@ -11,6 +11,20 @@ import java.util.List;
 
 public class Repository implements Serializable {
 
+    /* branch name and id */
+    private HashMap<String, String> branches;
+    private Commit head;
+    private String currBranch;
+    HashMap<String, Commit> allCommits;
+    ArrayList<Commit> allCommitscurrbranch;
+    private HashSet<String> allTheCommits;
+
+    private HashMap<String, Commit> trackCommits;
+    private static String workingPath = System.getProperty("user.dir");
+    static final File GEN_PATH = Utils.join(workingPath);
+
+    static final File REPO_PATH = Utils.join(System.getProperty("user.dir"), ".gitlet", "repo");
+
     /*init new repo */
     public Repository() {
         head = new Commit();
@@ -19,8 +33,6 @@ public class Repository implements Serializable {
         branches.put(currBranch, head.getId());
         allTheCommits = new HashSet<>();
         allTheCommits.add(head.getId());
-//        allCommits = new HashMap<>();
-//        allCommits.put(head.getId(), head); //dubious code, but I needed to get a string,commit Map
     }
 
 
@@ -36,9 +48,6 @@ public class Repository implements Serializable {
         return allCommitscurrbranch;
     }
 
-//    public HashMap<String, Commit> getAllCommits() {
-//        return allCommits;
-//    }
 
     public HashSet<String> getAllCommitsIds() { return allTheCommits; }
 
@@ -48,21 +57,6 @@ public class Repository implements Serializable {
 
     public HashMap<String, String> getTracked() {
         return head.getContent();
-    }
-
-    /**
-     * edit this
-     **/
-    public ArrayList<String> getUntracked(HashMap<String, String> stagedFiles) {
-        List<String> allFiles = Utils.plainFilenamesIn(GEN_PATH);
-        ArrayList<String> untrackedFiles = new ArrayList<>();
-        for (String file : allFiles) {
-            if (!(stagedFiles.containsKey(file)) && !(getTracked().containsKey(file))) {
-                untrackedFiles.add(file);
-            }
-        }
-        Collections.sort(untrackedFiles);
-        return untrackedFiles;
     }
 
     String getFullId(String abbrId) {
@@ -75,6 +69,7 @@ public class Repository implements Serializable {
         return "";
     }
 
+<<<<<<< HEAD
 
     static Repository readRepo() {
         File repoFile = Utils.join(REPO_PATH);
@@ -82,27 +77,38 @@ public class Repository implements Serializable {
         return repo;
     }
 
+=======
+    // Writes object into repo file and adds it.
+    //@source https://stackoverflow.com/questions/17293991/how-to-write-and-read-java-serialized-objects-into-a-file
+>>>>>>> 65f8bbaa54ad6c929b16ed3a3af7b4455e0f161b
     public void addRepo() {
         File repoFile = Utils.join(REPO_PATH);
         Utils.writeObject(repoFile, this);
     }
 
-    void updateHead(Commit latest) {
-        head = latest;
-        branches.put(currBranch, latest.getId());
-        allTheCommits.add(latest.getId());
+    // @param: newly made commit
+    // Change the head commit pointer to the newly made commit, and add it to the list of commits.
+    void commitHelper1(Commit newCommit) {
+        head = newCommit;
+        branches.put(currBranch, newCommit.getId());
+        allTheCommits.add(newCommit.getId());
     }
 
-    void newBranch(String name, Commit head) {
+    // @param: name of branch, head Commit
+    // Change head commit pointer and branch name when the third case of checkout is run.
+    void checkout3Helper(String name, Commit head) {
         this.head = head;
         currBranch = name;
     }
 
-    void resetHead(Commit previous) {
+    // @param: previous commit
+    // Change head commit pointer, and use commit id of input previous commit.
+    void resetHelper1(Commit previous) {
         head = previous;
         String prevID = previous.getId();
         branches.put(getCurrBranch(), prevID);
     }
+<<<<<<< HEAD
 
     void fetchCommit(String id) {
         allTheCommits.add(id);
@@ -123,3 +129,6 @@ public class Repository implements Serializable {
     static final File REPO_PATH = Utils.join(System.getProperty("user.dir"), ".gitlet", "repo");
 
 }
+=======
+}
+>>>>>>> 65f8bbaa54ad6c929b16ed3a3af7b4455e0f161b

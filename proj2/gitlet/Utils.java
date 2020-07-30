@@ -18,6 +18,9 @@ import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 import java.util.Formatter;
 import java.util.List;
+import java.util.TimeZone;
+import java.util.Date;
+import java.text.SimpleDateFormat;
 
 
 /** Assorted utilities.
@@ -188,15 +191,15 @@ class Utils {
     /* OTHER FILE UTILITIES */
 
     /** Return the concatentation of FIRST and OTHERS into a File designator,
-     *  analogous to the {@link java .nio.file.Paths.#get(String, String[])}
+     *  analogous to the {@link java.nio.file.Paths.#get(String, String[])}
      *  method. */
     static File join(String first, String... others) {
         return Paths.get(first, others).toFile();
     }
 
     /** Return the concatentation of FIRST and OTHERS into a File designator,
-     *  analogous to the {@link java .nio.file.Paths.#get(String, String[])}
-     *  method. */
+     *  analogous to the {@link java.nio.file.Paths.#get(String, String[])}
+     *  method. **/
     static File join(File first, String... others) {
         return Paths.get(first.getPath(), others).toFile();
     }
@@ -217,13 +220,12 @@ class Utils {
         }
     }
 
-
-
     /* MESSAGES AND ERROR REPORTING */
 
     /** Return a GitletException whose message is composed from MSG and ARGS as
      *  for the String.format method. */
     static GitletException error(String msg, Object... args) {
+
         return new GitletException(String.format(msg, args));
     }
 
@@ -233,6 +235,7 @@ class Utils {
         System.out.printf(msg, args);
         System.out.println();
     }
+<<<<<<< HEAD
 
     /** FUNCTIONS */
 
@@ -245,4 +248,6 @@ class Utils {
         abstract T2 apply(T1 x);
     }
 
+=======
+>>>>>>> 65f8bbaa54ad6c929b16ed3a3af7b4455e0f161b
 }

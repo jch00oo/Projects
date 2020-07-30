@@ -6,7 +6,14 @@ import java.util.HashMap;
 
 public class Stage implements Serializable {
 
-    /* init stage */
+
+    static final File STAGE_PATH = Utils.join(System.getProperty("user.dir"), ".gitlet", "stage");
+
+    /* file name, id */
+    private HashMap<String, String> stagedToAdd;
+    private HashMap<String, String> stagedToRemove;
+
+    /* initial stage */
     public Stage() {
         stagedToAdd = new HashMap<>();
         stagedToRemove = new HashMap<>();
@@ -36,26 +43,26 @@ public class Stage implements Serializable {
         stagedToRemove.remove(fileName);
     }
 
+<<<<<<< HEAD
     static Stage readStage() {
         File stageFile = Utils.join(STAGE_PATH);
         Stage stage = Utils.readObject(stageFile, Stage.class);
         return stage;
     }
 
+=======
+    // Write object into stage file and adds it.
+    //@source https://stackoverflow.com/questions/17293991/how-to-write-and-read-java-serialized-objects-into-a-file
+>>>>>>> 65f8bbaa54ad6c929b16ed3a3af7b4455e0f161b
     void addStage() {
         File stageFile = Utils.join(STAGE_PATH);
         Utils.writeObject(stageFile, this);
     }
 
+    // Clears the staging area; called after commits.
     void clearStage() {
         stagedToAdd.clear();
         stagedToRemove.clear();
     }
-
-    static final File STAGE_PATH = Utils.join(System.getProperty("user.dir"), ".gitlet", "stage");
-
-    /* file name, id */
-    private HashMap<String, String> stagedToAdd;
-    private HashMap<String, String> stagedToRemove;
 
 }

@@ -64,6 +64,60 @@ public class HashMap<K, V> implements Map61BL<K, V> {
         for (Entry e : keyArray[index]) {
             if (e.key.equals(key)) {
                 return true;
+    /* TODO: Instance variables here */
+    LinkedList[] map;
+    int size;
+    double loadFactor = 0.75;
+    int capacity;
+
+    public HashMap() {
+        map = new LinkedList[16];
+        for (int i = 0; i < map.length; i ++) {
+            map[i] = new LinkedList<Entry>();
+        }
+        size = 0; /* might need to change */
+        capacity = 16;
+        loadFactor = 0.75;
+    }
+
+    public HashMap (int initialCapacity) {
+        map = new LinkedList[initialCapacity];
+        for (int i = 0; i < map.length; i ++) {
+            map[i] = new LinkedList<Entry>();
+        }
+        size = 0;
+        this.capacity = initialCapacity;
+    }
+
+    public HashMap (int initialCapacity, double loadFactor) {
+        size = 0;
+        map = new LinkedList[initialCapacity];
+        for (int i = 0; i < map.length; i ++) {
+            map[i] = new LinkedList<Entry>();
+        }
+        this.loadFactor = loadFactor;
+        capacity = initialCapacity;
+    }
+
+    @Override
+    /* Returns the number of items contained in this map. */
+    public int size() {
+        return size;
+    }
+
+    @Override
+    /* Returns true if the map contains the KEY. */
+    public boolean containsKey(K key) {
+//        int index = Math.floorMod(hash(key), map.length);
+//        for (int i = 0; i < map[index].size(); i++) {
+//        }
+//        return map[hash(key)].contains(key);
+        LinkedList<Entry> letter = map[hash(key)];
+        if (letter != null) {
+            for (int i = 0; i < letter.size(); i++) {
+                if (letter.get(i).key.equals(key)) {
+                    return true;
+                }
             }
         }
         return false;
@@ -77,6 +131,17 @@ public class HashMap<K, V> implements Map61BL<K, V> {
         for (Entry e : keyArray[index]) {
             if (e.key.equals(key)) {
                 return (V) e.value;
+    @Override
+    /* Returns the value for the specified KEY. If KEY is not found, return
+       null. */
+    public V get(K key) {
+        if (containsKey(key)) {
+//            int index = Math.floorMod(hash(key), map.length);
+            LinkedList<Entry> letter = map[hash(key)];
+            for (int i = 0; i < letter.size(); i++) {
+                if (letter.get(i).key.equals(key)) {
+                    return (V) letter.get(i).value;
+                }
             }
         }
         return null;
@@ -209,6 +274,122 @@ public class HashMap<K, V> implements Map61BL<K, V> {
 
 
     static class Entry<K, V> {
+    public void resize() { /* copy elements?? */
+        int oldLength = map.length;
+        LinkedList[] newMap = new LinkedList[oldLength * 2];
+        System.arraycopy(map, 0, newMap, 0, map.length);
+        map = newMap;
+        for (int i = oldLength; i < map.length; i ++) {
+            map[i] = new LinkedList<Entry>();
+        }
+        capacity = capacity * 2;
+    }
+
+    @Override
+    /* Puts a (KEY, VALUE) pair into this map. If the KEY already exists in the
+       SimpleNameMap, replace the current corresponding value with VALUE. */
+    public void put(K key, V value) {
+
+        if (containsKey(key)) {
+            LinkedList<Entry> letter = map[hash(key)];
+            for (int i = 0; i < letter.size(); i++) {
+                if (letter.get(i).key.equals(key)) {
+                    letter.get(i).value = value;
+                }
+            }
+        } else {
+            map[hash(key)].add(new Entry(key, value)); /** possible **/
+            size++;
+        }
+
+        double thisLoadFactor = ((double) size) / ((double) map.length);
+        if (thisLoadFactor > loadFactor) {
+            resize();
+        }
+    }
+
+
+    @Override
+    /* Removes a single entry, KEY, from this table and return the VALUE if
+       successful or NULL otherwise. */
+    public V remove(K key) {
+        if (containsKey(key)) {
+            V returnedValue = null;
+            LinkedList<Entry> letter = map[hash(key)];
+            for (int i = 0; i < letter.size(); i ++) {
+                if (letter.get(i).key.equals(key)) {
+                    returnedValue = (V) letter.get(i).value;
+                    letter.remove(letter.get(i));
+                    size --;
+                }
+            }
+            return returnedValue;
+        }
+        return null;
+    }
+
+    public int hash(K key) {
+        return Math.floorMod(key.hashCode(), map.length);
+    }
+
+    @Override
+    public void clear() {
+        map = new LinkedList[capacity];
+        for (int i = 0; i < map.length; i ++) {
+            map[i] = new LinkedList<Entry>();
+        }
+        size = 0;
+    }
+
+    public int capacity() {
+        return capacity;
+    }
+
+    @Override
+    public boolean remove(K key, V value) {
+        if (containsKey(key)) {
+            LinkedList<Entry> letter = map[hash(key)];
+            for (int i = 0; i < letter.size(); i ++) {
+                if (letter.get(i).key.equals(key)) {
+                    letter.remove(letter.get(i));
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    public Iterator<K> iterator() throws UnsupportedOperationException{
+        throw new UnsupportedOperationException();
+    }
+
+//    private class HashMapIterator<K> implements Iterator<K> {
+//
+//        int m;
+//        int l;
+//
+//        public HashMapIterator() {
+//            m = 0;
+//            l = 0;
+//        }
+//
+//        public K next() {
+//            LinkedList<Entry> letter = map[m];
+//            K nextKey = (K) letter.get(l).key;
+//            l ++;
+//            if (l >= map[m].size()) {
+//                l = 0;
+//                m ++;
+//            }
+//            return nextKey;
+//        }
+//
+//        public boolean hasNext() {
+//            return (size != 0 && m < map.length);
+//        }
+//    }
+
+    private class Entry<K, V> {
 
         private K key;
         private V value;
