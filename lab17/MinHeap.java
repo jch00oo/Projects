@@ -210,12 +210,7 @@ public class MinHeap<E extends Comparable<E>> {
     /* Returns true if ELEMENT is contained in the MinHeap. Item equality should
        be checked using .equals(), not ==. */
     public boolean contains(E element) {
-        for (int i = 0; i < contents.size(); i ++ ) {
-            if (contents.get(i).equals(element)) {
-                return true;
-            }
-        }
-        return false;
+        return contents.contains(element);
     }
 }
 
