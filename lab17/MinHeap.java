@@ -118,27 +118,26 @@ public class MinHeap<E extends Comparable<E>> {
         }
     }
 
-private int getMaxIndex(int index1, int index2) {
-    if (contents.get(index1) == null) {
-        return index2;
+    private int getMaxIndex(int index1, int index2) {
+        if (contents.get(index1) == null) {
+            return index2;
+        }
+
+        if (contents.get(index2) == null) {
+            return index1;
+        }
+
+        if (contents.get(index1).compareTo(contents.get(index2)) > 0) {
+            return index1;
+        }
+
+        if (contents.get(index2).compareTo(contents.get(index1)) > 0) {
+            return index2;
+        } else {
+            return 0;
+        }
     }
 
-    if (contents.get(index2) == null) {
-        return index1;
-    }
-
-    if (contents.get(index1).compareTo(contents.get(index2)) > 0) {
-        return index1;
-    }
-
-    if (contents.get(index2).compareTo(contents.get(index1)) > 0) {
-        return index2;
-    } else {
-        return 0;
-    }
-}
-
-    /** not sure **/
     /* Bubbles down the element currently at index INDEX. */
     private void bubbleDown(int index) {
         if (index >= contents.size() || contents.get(index) == null) {
@@ -156,8 +155,6 @@ private int getMaxIndex(int index1, int index2) {
             return;
         }
         // when item is smaller than left and right; (just do else return;)
-        // when larger than left but not right (or right DNE) *done*
-        // when larger than right but not left (or left DNE) *done*
         // when larger than both *done*
         if (hasLeft && hasRight && contents.get(index).compareTo(contents.get(getLeftOf(index))) > 0 && contents.get(index).compareTo(contents.get(getRightOf(index))) > 0) {
             int toSwap;
@@ -167,17 +164,20 @@ private int getMaxIndex(int index1, int index2) {
                 toSwap = getRightOf(index);
             }
             swap(toSwap, index);
-            bubbleDown(toSwap);
-        } else if (hasLeft && contents.get(index).compareTo(contents.get(getLeftOf(index))) > 0 && ((contents.get(index).compareTo(contents.get(getRightOf(index))) <= 0) || !hasRight)) {
+            bubbleDown(getMaxIndex(index, getParentOf(index))); /** questionable */
+        }         // when larger than left but not right (or right DNE) *done*
+        else if (hasLeft && contents.get(index).compareTo(contents.get(getLeftOf(index))) > 0 && ((contents.get(index).compareTo(contents.get(getRightOf(index))) <= 0) || !hasRight)) {
             swap(getLeftOf(index), index);
-            bubbleDown(getLeftOf(index));
-        } else if (hasRight && contents.get(index).compareTo(contents.get(getRightOf(index))) > 0 && ((contents.get(index).compareTo(contents.get(getLeftOf(index))) <= 0) || !hasLeft)) {
+            bubbleDown(getMaxIndex(index, getParentOf(index)));
+//            bubbleDown(getLeftOf(index));
+        }         // when larger than right but not left (or left DNE) *done*
+        else if (hasRight && contents.get(index).compareTo(contents.get(getRightOf(index))) > 0 && ((contents.get(index).compareTo(contents.get(getLeftOf(index))) <= 0) || !hasLeft)) {
             swap(getRightOf(index), index);
-            bubbleDown(getRightOf(index));
+            bubbleDown(getMaxIndex(index, getParentOf(index)));
+//            bubbleDown(getRightOf(index));
         } else {
             return;
         }
-
     }
 
     /* Returns the number of elements in the MinHeap. */
@@ -189,8 +189,9 @@ private int getMaxIndex(int index1, int index2) {
        throw an IllegalArgumentException.*/
     public void insert(E element) {
         if (!contains(element)) {
-            setElement(size() + 1, element);
-            bubbleUp(size() + 1);
+            setElement(contents.size(), element);
+            bubbleUp(contents.size() - 1);
+            size++;
         } else {
             throw new IllegalArgumentException();
         }
@@ -205,6 +206,7 @@ private int getMaxIndex(int index1, int index2) {
             swap(1, contents.size() - 1);
             contents.remove(contents.size() - 1);
             bubbleDown(1);
+            size--;
             return minimum;
         }
     }
@@ -234,4 +236,3 @@ private int getMaxIndex(int index1, int index2) {
         return contents.contains(element);
     }
 }
-
