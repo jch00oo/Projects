@@ -1,3 +1,5 @@
+import java.util.NoSuchElementException;
+
 /* A PriorityQueue class that uses a min heap to maintain ordering. */
 public class MinHeapPQ<T> implements PriorityQueue<T> {
 
@@ -9,12 +11,14 @@ public class MinHeapPQ<T> implements PriorityQueue<T> {
         heap = new MinHeap<PriorityItem>();
     }
 
+    /** fix */
     /* Returns the item with the smallest priority value, but does not remove it
        from the MinHeapPQ. */
     public T peek() {
-        return heap.findMin().item;
+        return heap.findMin().item();
     }
 
+    /** fix */
     /* Inserts ITEM with the priority value PRIORITYVALUE into the MinHeapPQ. If
        ITEM is already in the MinHeapPQ, throw an IllegalArgumentException. */
     public void insert(T item, double priorityValue) {
@@ -25,31 +29,33 @@ public class MinHeapPQ<T> implements PriorityQueue<T> {
         heap.insert(toInsert);
     }
 
+    /** fix */
     /* Returns the item with the highest priority (smallest priority value), and
        removes it from the MinHeapPQ. */
     public T poll() {
-        PriorityItem min = heap.findMin();
-        if (min == null) {
-            return null;
-        } else {
-            heap.removeMin();
-            return min.item;
-        }
+        return heap.removeMin().item();
     }
 
+    /** fix */
     /* Changes the PriorityItem with item ITEM to have priority value
        PRIORITYVALUE. Assume the items in the MinHeapPQ are all unique. If ITEM
        is not in the MinHeapPQ, throw a NoSuchElementException. */
     public void changePriority(T item, double priorityValue) {
         PriorityItem newItem = new PriorityItem(item, priorityValue);
-        heap.update(newItem);
+        if (contains(item)) {
+            heap.update(newItem);
+        } else {
+            throw new NoSuchElementException();
+        }
     }
 
+    /** fix */
     /* Returns the number of items in the MinHeapPQ. */
     public int size() {
         return heap.size();
     }
 
+    /** fix */
     /* Returns true if ITEM is stored in our MinHeapPQ. Note: Any priority value
        for this dummy PriorityItem would work. */
     public boolean contains(T item) {

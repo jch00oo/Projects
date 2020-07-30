@@ -14,7 +14,6 @@ public class MinHeap<E extends Comparable<E>> {
     public MinHeap() {
         contents = new ArrayList<>();
         contents.add(null);
-        size = 0;
     }
 
     /* Returns the element at index INDEX, and null if it is out of bounds. */
@@ -77,31 +76,27 @@ public class MinHeap<E extends Comparable<E>> {
 
     /* Returns the index of the right child of the element at index INDEX. */
     private int getRightOf(int index) {
-        return (2 * index) + 1;
+        return index * 2 + 1;
     }
 
     /* Returns the index of the parent of the element at index INDEX. */
     private int getParentOf(int index) {
-        if (index / 2 == 0) {
-            return -1;
-        }
         return index / 2;
     }
 
     /* Returns the index of the smaller element. At least one index has a
        non-null element. If the elements are equal, return either index. */
     private int min(int index1, int index2) {
-        if (contents.get(index1) == null) {
+        if (getElement(index1) == null) {
             return index2;
         }
-        if (contents.get(index2) == null) {
+        if (getElement(index2) == null) {
             return index1;
         }
-        if (contents.get(index1).compareTo(contents.get(index2)) < 0) {
+        if (getElement(index1).compareTo(getElement(index2)) < 0) {
             return index1;
-        } else {
-            return index2;
         }
+        return index2;
     }
 
     /* Returns but does not remove the smallest element in the MinHeap. */
@@ -111,32 +106,17 @@ public class MinHeap<E extends Comparable<E>> {
 
     /* Bubbles up the element currently at index INDEX. */
     private void bubbleUp(int index) {
-        if (index <= 1) {
-            return;
-        }
-        if (contents.get(index).compareTo(contents.get(getParentOf(index))) < 0) {
-            swap(index, getParentOf(index));
-            bubbleUp(index / 2);
-        }
-    }
-
-    private int getMaxIndex(int index1, int index2) {
-        if (contents.get(index1) == null) {
-            return index2;
-        }
-
-        if (contents.get(index2) == null) {
-            return index1;
-        }
-
-        if (contents.get(index1).compareTo(contents.get(index2)) > 0) {
-            return index1;
-        }
-
-        if (contents.get(index2).compareTo(contents.get(index1)) > 0) {
-            return index2;
-        } else {
-            return 0;
+//        if (index <= 1) {
+//            return;
+//        }
+        int highI = getParentOf(index);
+//        if (contents.get(index).compareTo(contents.get(getParentOf(index))) < 0) {
+//            swap(index, getParentOf(index));
+//            bubbleUp(index / 2);
+//        }
+        if (getElement(highI) != null && min(index, highI) == index) {
+            swap(index, highI);
+            bubbleUp(highI);
         }
     }
 
@@ -185,16 +165,20 @@ public class MinHeap<E extends Comparable<E>> {
 
     /* Returns the number of elements in the MinHeap. */
     public int size() {
-        return contents.size() - 1;
+//        return contents.size() - 1;
+        return size;
     }
 
     /* Inserts ELEMENT into the MinHeap. If ELEMENT is already in the MinHeap,
        throw an IllegalArgumentException.*/
     public void insert(E element) {
         if (!contains(element)) {
-            setElement(contents.size(), element);
-            bubbleUp(contents.size() - 1);
+//            setElement(contents.size(), element);
+//            bubbleUp(contents.size() - 1);
+//            size++;
+            contents.add(element);
             size++;
+            bubbleUp(size);
         } else {
             throw new IllegalArgumentException();
         }
@@ -202,16 +186,12 @@ public class MinHeap<E extends Comparable<E>> {
 
     /* Returns and removes the smallest element in the MinHeap. */
     public E removeMin() {
-        if (contents == null) {
-            return null;
-        } else {
-            E minimum = this.findMin();
-            swap(1, contents.size() - 1);
-            contents.remove(contents.size() - 1);
-            bubbleDown(1);
-            size--;
-            return minimum;
-        }
+        E minimum = findMin();
+        swap(1, size);
+        contents.remove(size);
+        size--;
+        bubbleDown(1);
+        return minimum;
     }
 
     /* Replaces and updates the position of ELEMENT inside the MinHeap, which
@@ -220,11 +200,19 @@ public class MinHeap<E extends Comparable<E>> {
        should be checked using .equals(), not ==. */
     public void update(E element) {
         if (contains(element)) {
-            for (int i = 1; i < contents.size(); i++) {
-                if (this.getElement(i).equals(element)) {
-                    setElement(i, element);
-                    bubbleUp(i);
+//            for (int i = 1; i < contents.size(); i++) {
+//                if (this.getElement(i).equals(element)) {
+//                    setElement(i, element);
+//                    bubbleUp(i);
+//                    bubbleDown(i);
+//                }
+//            }
+            for (E each: contents) {
+                if (each != null && each.equals(element)) {
+                    int i = contents.indexOf(each);
+                    setElement(i, each);
                     bubbleDown(i);
+                    bubbleUp(i);
                 }
             }
         } else {
@@ -235,11 +223,19 @@ public class MinHeap<E extends Comparable<E>> {
     /* Returns true if ELEMENT is contained in the MinHeap. Item equality should
        be checked using .equals(), not ==. */
     public boolean contains(E element) {
-        for (int i = 0; i < contents.size(); i ++) {
-            if (contents.get(i).equals(element)) {
-                return true;
+//        for (int i = 0; i < contents.size(); i ++) {
+//            if (contents.get(i).equals(element)) {
+//                return true;
+//            }
+//        }
+//        return false;
+//    }
+//        return contents.contains(element);
+            for (E each : contents) {
+                if (each != null && element.equals(element)) {
+                    return true;
+                }
             }
+            return false;
         }
-        return false;
     }
-}
