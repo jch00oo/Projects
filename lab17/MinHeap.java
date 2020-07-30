@@ -118,6 +118,26 @@ public class MinHeap<E extends Comparable<E>> {
         }
     }
 
+private int getMaxIndex(int index1, int index2) {
+    if (contents.get(index1) == null) {
+        return index2;
+    }
+
+    if (contents.get(index2) == null) {
+        return index1;
+    }
+
+    if (contents.get(index1).compareTo(contents.get(index2)) > 0) {
+        return index1;
+    }
+
+    if (contents.get(index2).compareTo(contents.get(index1)) > 0) {
+        return index2;
+    } else {
+        return 0;
+    }
+}
+
     /* Bubbles down the element currently at index INDEX. */
     private void bubbleDown(int index) {
         if (index >= contents.size() || contents.get(index) == null) {
@@ -138,21 +158,48 @@ public class MinHeap<E extends Comparable<E>> {
         // when larger than left but not right (or right DNE) *done*
         // when larger than right but not left (or left DNE) *done*
         // when larger than both *done*
-        if (hasLeft && hasRight && contents.get(index).compareTo(contents.get(getLeftOf(index))) > 0 && contents.get(index).compareTo(contents.get(getRightOf(index))) > 0) {
-            int toSwap;
-            if (contents.get(getLeftOf(index)).compareTo(contents.get(getRightOf(index))) < 0) {
-                toSwap = getLeftOf(index);
-            } else {
-                toSwap = getRightOf(index);
-            }
-            swap(toSwap, index);
-            bubbleDown(toSwap);
-        } else if (hasLeft && contents.get(index).compareTo(contents.get(getLeftOf(index))) > 0 && ((contents.get(index).compareTo(contents.get(getRightOf(index))) <= 0) || !hasRight)) {
-            swap(getLeftOf(index), index);
-            bubbleDown(getLeftOf(index));
-        } else if (hasRight && contents.get(index).compareTo(contents.get(getRightOf(index))) > 0 && ((contents.get(index).compareTo(contents.get(getLeftOf(index))) <= 0) || !hasLeft)) {
-            swap(getRightOf(index), index);
-            bubbleDown(getRightOf(index));
+//        if (hasLeft && hasRight && contents.get(index).compareTo(contents.get(getLeftOf(index))) > 0 && contents.get(index).compareTo(contents.get(getRightOf(index))) > 0) {
+//            int toSwap;
+//            if (contents.get(getLeftOf(index)).compareTo(contents.get(getRightOf(index))) < 0) {
+//                toSwap = getLeftOf(index);
+//            } else {
+//                toSwap = getRightOf(index);
+//            }
+//            swap(toSwap, index);
+//            bubbleDown(toSwap);
+//        } else if (hasLeft && contents.get(index).compareTo(contents.get(getLeftOf(index))) > 0 && ((contents.get(index).compareTo(contents.get(getRightOf(index))) <= 0) || !hasRight)) {
+//            swap(getLeftOf(index), index);
+//            bubbleDown(getLeftOf(index));
+//        } else if (hasRight && contents.get(index).compareTo(contents.get(getRightOf(index))) > 0 && ((contents.get(index).compareTo(contents.get(getLeftOf(index))) <= 0) || !hasLeft)) {
+//            swap(getRightOf(index), index);
+//            bubbleDown(getRightOf(index));
+//        } else {
+//            return;
+//        }
+
+        if (hasLeft && hasRight
+                && contents.get(index).compareTo(contents.get(this.getLeftOf(index))) > 0
+                && contents.get(index).compareTo(contents.get(this.getRightOf(index))) > 0) {
+            swap(this.min(this.getLeftOf(index), this.getRightOf(index)), index);
+            bubbleDown(this.getMaxIndex(this.getLeftOf(index), this.getRightOf(index)));
+        } else if (hasLeft && hasRight
+                && contents.get(index).compareTo(contents.get(this.getLeftOf(index))) > 0
+                && contents.get(index).compareTo(contents.get(this.getRightOf(index))) <= 0) {
+            swap(this.getLeftOf(index), index);
+            bubbleDown(this.getLeftOf(index));
+        } else if (hasLeft && hasRight
+                && contents.get(index).compareTo(contents.get(this.getRightOf(index))) > 0
+                && contents.get(index).compareTo(contents.get(this.getLeftOf(index))) <= 0) {
+            swap(this.getRightOf(index), index);
+            bubbleDown(this.getRightOf(index));
+        } else if (hasLeft
+                && contents.get(index).compareTo(contents.get(this.getLeftOf(index))) > 0) {
+            swap(this.getLeftOf(index), index);
+            bubbleDown(this.getLeftOf(index));
+        } else if (hasRight
+                && contents.get(index).compareTo(contents.get(this.getRightOf(index))) > 0) {
+            swap(this.getRightOf(index), index);
+            bubbleDown(this.getRightOf(index));
         } else {
             return;
         }
@@ -207,6 +254,7 @@ public class MinHeap<E extends Comparable<E>> {
         }
     }
 
+    /** good **/
     /* Returns true if ELEMENT is contained in the MinHeap. Item equality should
        be checked using .equals(), not ==. */
     public boolean contains(E element) {
