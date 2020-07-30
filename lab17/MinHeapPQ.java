@@ -19,6 +19,9 @@ public class MinHeapPQ<T> implements PriorityQueue<T> {
        ITEM is already in the MinHeapPQ, throw an IllegalArgumentException. */
     public void insert(T item, double priorityValue) {
         PriorityItem toInsert = new PriorityItem(item, priorityValue);
+        if (heap.contains(toInsert)) {
+            throw new IllegalArgumentException();
+        }
         heap.insert(toInsert);
     }
 
@@ -50,7 +53,7 @@ public class MinHeapPQ<T> implements PriorityQueue<T> {
     /* Returns true if ITEM is stored in our MinHeapPQ. Note: Any priority value
        for this dummy PriorityItem would work. */
     public boolean contains(T item) {
-        return heap.contains(new PriorityItem(item, 0));
+        return heap.contains(new PriorityItem(item, 69));
     }
 
     @Override
@@ -114,4 +117,3 @@ public class MinHeapPQ<T> implements PriorityQueue<T> {
         }
     }
 }
-
