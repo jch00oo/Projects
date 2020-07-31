@@ -209,18 +209,17 @@ public class Graph implements Iterable<Integer> {
     private class TopologicalIterator implements Iterator<Integer> {
 
         private Stack<Integer> fringe;
-
         // TODO: Instance variables here!
-
 
         TopologicalIterator() {
             fringe = new Stack<Integer>();
             // TODO: YOUR CODE HERE
+            //whatthefuck
         }
 
         public boolean hasNext() {
             // TODO: YOUR CODE HERE
-            return false;
+            return !fringe.isEmpty();
         }
 
         public Integer next() {
@@ -229,6 +228,7 @@ public class Graph implements Iterable<Integer> {
         }
 
         public void remove() {
+
             throw new UnsupportedOperationException();
         }
 
