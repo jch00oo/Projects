@@ -53,7 +53,7 @@ public class Graph implements Iterable<Integer> {
         Iterator<Edge> thisedge= adjLists[from].iterator();
         while (thisedge.hasNext()){
             Edge curr= thisedge.next();
-            if(curr.==to){ //see if current = to how to reference
+            if(curr.to==to){
                 return true;
             }
         }
@@ -75,7 +75,13 @@ public class Graph implements Iterable<Integer> {
     /* Returns the number of incoming Edges for vertex V. */
     public int inDegree(int v) {
         // TODO: YOUR CODE HERE
-        return 0;
+        int count = 0;
+        for (int i = 0; i <= vertexCount; i++){
+            if (isAdjacent(i, v)) {
+                count = count + 1;
+            }
+        }
+        return count;
     }
 
     /* Returns an Iterator that outputs the vertices of the graph in topological
@@ -155,6 +161,15 @@ public class Graph implements Iterable<Integer> {
        START and STOP are in this graph. If START == STOP, returns true. */
     public boolean pathExists(int start, int stop) {
         // TODO: YOUR CODE HERE
+        if (start==stop) {
+            return true;
+        }
+        List<Integer> paths = dfs(start);
+        for (int i =0; i<paths.size();i++){
+            if (paths.get(i)==stop){
+                return true;
+            }
+        }
         return false;
     }
 
@@ -163,7 +178,23 @@ public class Graph implements Iterable<Integer> {
        List. If START == STOP, returns a List with START. */
     public List<Integer> path(int start, int stop) {
         // TODO: YOUR CODE HERE
-        return null;
+        ArrayList<Integer> past = new ArrayList<Integer>();
+        ArrayList<Integer> path = new ArrayList<Integer>();
+        Iterator<Integer> iter = new DFSIterator(start);
+
+        if (!pathExists(start,stop)){
+            return path;
+        }
+        while (iter.hasNext()){
+            if (iter.next()==stop){
+                break;
+            }else{
+                past.add(iter.next());
+            }
+        }
+        //path.add(stop); add last val
+        //make a loop to see if is a past key and is able to connect
+        return past; //just here for compiler purposes
     }
 
     public List<Integer> topologicalSort() {
@@ -180,6 +211,7 @@ public class Graph implements Iterable<Integer> {
         private Stack<Integer> fringe;
 
         // TODO: Instance variables here!
+
 
         TopologicalIterator() {
             fringe = new Stack<Integer>();
