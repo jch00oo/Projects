@@ -34,6 +34,7 @@ public class Graph implements Iterable<Integer> {
        weight WEIGHT. */
     public void addEdge(int v1, int v2, int weight) {
         // TODO: YOUR CODE HERE
+        adjLists[v1].add(new Edge(v1,v2,weight));
     }
 
     /* Adds an undirected Edge (V1, V2) to the graph with weight WEIGHT. If the
@@ -41,12 +42,21 @@ public class Graph implements Iterable<Integer> {
        weight WEIGHT. */
     public void addUndirectedEdge(int v1, int v2, int weight) {
         // TODO: YOUR CODE HERE
+        adjLists[v1].add(new Edge(v1,v2,weight));
+        adjLists[v2].add(new Edge(v2,v1,weight));
     }
 
     /* Returns true if there exists an Edge from vertex FROM to vertex TO.
        Returns false otherwise. */
     public boolean isAdjacent(int from, int to) {
         // TODO: YOUR CODE HERE
+        Iterator<Edge> thisedge= adjLists[from].iterator();
+        while (thisedge.hasNext()){
+            Edge curr= thisedge.next();
+            if(curr.==to){ //see if current = to how to reference
+                return true;
+            }
+        }
         return false;
     }
 
@@ -54,7 +64,13 @@ public class Graph implements Iterable<Integer> {
        exists in the graph. */
     public List<Integer> neighbors(int v) {
         // TODO: YOUR CODE HERE
-        return null;
+        List linkedneighbors = new LinkedList();
+        Iterator<Edge> thisedge=adjLists[v].iterator();
+        while(thisedge.hasNext()){
+            Edge curr=thisedge.next();
+            linkedneighbors.add(curr);
+        }
+        return linkedneighbors;
     }
     /* Returns the number of incoming Edges for vertex V. */
     public int inDegree(int v) {
