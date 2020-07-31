@@ -82,3 +82,4 @@ public class MinHeapTest {
 
 }
 //git errors
+//stackexchagne said git pull --tags -f
