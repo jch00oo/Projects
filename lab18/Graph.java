@@ -30,7 +30,7 @@ public class Graph implements Iterable<Integer> {
     public void addEdge(int v1, int v2, int weight) {
         // TODO: YOUR CODE HERE
         adjLists[v1].add(new Edge(v1,v2,weight));
-//        LinkedList<Edge> lst = adjLists[v1];
+        //        LinkedList<Edge> lst = adjLists[v1];
 //        for (Edge edge: lst) {
 //            if (edge.to == v2) {
 //                edge.weight = weight;
@@ -58,8 +58,6 @@ public class Graph implements Iterable<Integer> {
        weight WEIGHT. */
     public void addUndirectedEdge(int v1, int v2, int weight) {
         // TODO: YOUR CODE HERE
-//        addEdge(v1, v2, weight);
-//        addEdge(v2, v1, weight);
         adjLists[v1].add(new Edge(v1, v2, weight));
         adjLists[v2].add(new Edge(v2, v1, weight));
     }
@@ -68,6 +66,7 @@ public class Graph implements Iterable<Integer> {
        Returns false otherwise. */
     public boolean isAdjacent(int from, int to) {
         // TODO: YOUR CODE HERE
+
 //        LinkedList<Edge> lst = adjLists[from];
 //        for (Edge edge: lst) {
 //            if (edge.to == to) {
@@ -77,8 +76,8 @@ public class Graph implements Iterable<Integer> {
 //        return false;
         Iterator<Edge> edges = adjLists[from].iterator();
         while (edges.hasNext()) {
-            Edge e = edges.next();
-            if (e.to == to) {
+            Edge edge = edges.next();
+            if (edge.to == to) {
                 return true;
             }
         }
@@ -89,7 +88,7 @@ public class Graph implements Iterable<Integer> {
        exists in the graph. */
     public List<Integer> neighbors(int v) {
         // TODO: YOUR CODE HERE
-        List<Integer> lst = new ArrayList<>();
+        List<Integer> lst = new LinkedList<>();
         for (Edge edge: adjLists[v]) {
             lst.add(edge.to);
         }
@@ -100,7 +99,12 @@ public class Graph implements Iterable<Integer> {
         // TODO: YOUR CODE HERE
         int count = 0;
         for (int i = 0; i <= vertexCount; i++){
-//            if (neighbors(i).contains(v)) {
+            if (isAdjacent(v, i)) {
+                count ++;
+            }
+        }
+        return count;
+//        if (neighbors(i).contains(v)) {
 //                count = count + 1;
 //            }
 
@@ -109,11 +113,6 @@ public class Graph implements Iterable<Integer> {
 //                    count ++;
 //                }
 //            }
-            if (isAdjacent(v, i)) {
-                count ++;
-            }
-        }
-        return count;
     }
 
     /* Returns an Iterator that outputs the vertices of the graph in topological
@@ -197,6 +196,7 @@ public class Graph implements Iterable<Integer> {
             return true;
         }
         List<Integer> paths = dfs(start);
+
 //        for (int i =0; i<paths.size();i++){
 //            if (paths.get(i)==stop){
 //                return true;
@@ -211,11 +211,6 @@ public class Graph implements Iterable<Integer> {
             }
         }
         return false;
-//        }
-//        return false;
-
-//        List<Integer> curr = dfs(start);
-//        return start == stop || curr.contains(stop);
     }
 
 
@@ -223,10 +218,6 @@ public class Graph implements Iterable<Integer> {
        List. If START == STOP, returns a List with START. */
     public List<Integer> path(int start, int stop) {
         // TODO: YOUR CODE HERE
-//        ArrayList<Integer> past = new ArrayList<Integer>();
-//        ArrayList<Integer> path = new ArrayList<Integer>();
-//        Iterator<Integer> iter = new DFSIterator(start);
-
         List finalLst = new LinkedList<>();
         if (!pathExists(start,stop)){
             return finalLst;
@@ -258,74 +249,6 @@ public class Graph implements Iterable<Integer> {
         }
         Collections.reverse(finalLst);
         return finalLst;
-
-//        while (iter.hasNext()){
-//            if (iter.next()==stop){
-//                break;
-//            }else{
-//                past.add(iter.next());
-//            }
-//        }
-//        //path.add(stop); add last val
-//        //make a loop to see if is a past key and is able to connect
-//        return past; //just here for compiler purposes
-//    }
-//
-//        ArrayList<Integer> path = new ArrayList<>();
-//        if (!pathExists(start, stop)) {
-//            return new ArrayList<>();
-//        } else if (start == stop) {
-//            ArrayList<Integer> toReturn = new ArrayList<>();
-//            toReturn.add(start);
-//            return toReturn;
-//        } else {
-//            ArrayList<Integer> toReturn = new ArrayList<>();
-//            int curr = dfs(start).indexOf(stop);
-//            int pos = curr - 1;
-//            toReturn.add(0, stop);
-//            while (curr > 0) {
-//                int pathFrom = dfs(start).get(pos);
-//                int pathTo = dfs(start).get(curr);
-//                if (isAdjacent(pathFrom, pathTo)) {
-//                    toReturn.add(0, dfs(start).get(pos));
-//                    curr = pos;
-//                }
-//                pos--;
-//            }
-//            return toReturn;
-//        }
-
-//        List<Integer> result = new ArrayList<>();
-//        Iterator<Integer> iter = new DFSIterator(start);
-//        ArrayList<Integer> visited = new ArrayList<>();
-//        if (!pathExists(start, stop)) {
-//            return result;
-//        }
-//        while (iter.hasNext()) {
-//            Integer n = iter.next();
-//            if (!visited.contains(n)) {
-//                visited.add(n);
-//            }
-//            if (n == stop) {
-//                break;
-//            }
-//        }
-//        result.add(stop);
-//        while (true) {
-//            for (Integer before: visited) {
-//                if (isAdjacent(before, stop)
-//                        && visited.indexOf(before) < visited.indexOf(stop)) {
-//                    result.add(before);
-//                    stop = before;
-//                    break;
-//                }
-//            }
-//            if (stop == start) {
-//                break;
-//            }
-//        }
-//        Collections.reverse(result);
-//        return result;
     }
 
     public List<Integer> topologicalSort() {
@@ -375,17 +298,6 @@ public class Graph implements Iterable<Integer> {
                 }
             }
             return v;
-//            Integer result = fringe.pop();
-//            for (Edge e : adjLists[result]) {
-//                currentInDegree[e.to]--;
-//            }
-//            visited.add(result);
-//            for (int i = 0; i < vertexCount; i++) {
-//                if (!visited.contains(i) && !fringe.contains(i) && currentInDegree[i] == 0) {
-//                    fringe.push(i);
-//                }
-//            }
-//            return result;
         }
 
         public void remove() {
@@ -403,10 +315,6 @@ public class Graph implements Iterable<Integer> {
             this.from = from;
             this.to = to;
             this.weight = weight;
-        }
-
-        public int getTo() {
-            return this.to;
         }
 
         public String toString() {
