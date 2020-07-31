@@ -1,3 +1,4 @@
+
 package gitlet;
 
 import java.io.File;
@@ -37,7 +38,12 @@ public class Commit implements Serializable {
         Date currDate = new Date();
         SimpleDateFormat dateFormat = new SimpleDateFormat("E MMM dd HH:mm:ss yyyy Z");
         timeStamp = dateFormat.format(currDate);
+<<<<<<< HEAD
+        id= Utils.sha1(content.toString(), parentCommit, commitMessage, timeStamp);
+
+=======
         id = Utils.sha1(content.toString(), parentCommit, commitMessage, timeStamp);
+>>>>>>> 65f8bbaa54ad6c929b16ed3a3af7b4455e0f161b
     }
 
     String getId() {
@@ -60,8 +66,17 @@ public class Commit implements Serializable {
         return parentCommit;
     }
 
+<<<<<<< HEAD
+    static Commit readCommit(String id) {
+        File commitfile = Utils.join(COMMIT_PATH, id);
+        Commit commit = Utils.readObject(commitfile, Commit.class);
+        return commit;
+    }
+
+=======
     // Writes object into commit file and adds it.
     //@source https://stackoverflow.com/questions/17293991/how-to-write-and-read-java-serialized-objects-into-a-file
+>>>>>>> 65f8bbaa54ad6c929b16ed3a3af7b4455e0f161b
     void addCommit() {
         File commitFile = Utils.join(COMMIT_PATH, getId());
         Utils.writeObject(commitFile, this);
@@ -92,4 +107,29 @@ public class Commit implements Serializable {
         }
         return currParent;
     }
+<<<<<<< HEAD
+
+    /** Return specific format of commit information. */
+    @Override
+    public String toString() {
+        Formatter out = new Formatter();
+        Format dateFormat = new SimpleDateFormat("EEE MMM d HH:mm:ss yyyy Z");
+        out.format("===\n");
+        out.format("commit %s\n", getId());
+        out.format("Date: %s\n", dateFormat.format(getTimeStamp()));
+        out.format("%s\n", getCommitMessage());
+        return out.toString();
+    }
+
+    private static String workingPath = System.getProperty("user.dir");
+    static final File COMMIT_PATH = Utils.join(System.getProperty("user.dir"), ".gitlet", "commits");
+
+    private String id;
+    private String commitMessage;
+    private String timeStamp;
+    private String parentCommit;
+    /* name of file and id */
+    private HashMap<String, String> content;
+=======
+>>>>>>> 65f8bbaa54ad6c929b16ed3a3af7b4455e0f161b
 }

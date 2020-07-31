@@ -65,7 +65,6 @@ public class MinHeapPQ<T> implements PriorityQueue<T> {
     }
 
     /* A wrapper class that stores items and their associated priorities.
-
        Note: This class has a natural ordering that is inconsistent with
        equals. */
     public class PriorityItem implements Comparable<PriorityItem> {

@@ -235,4 +235,19 @@ class Utils {
         System.out.printf(msg, args);
         System.out.println();
     }
+<<<<<<< HEAD
+
+    /** FUNCTIONS */
+
+    /** Represents a function from T1 -> T2.  The apply method contains the
+     *  code of the function.  The 'foreach' method applies the function to all
+     *  items of an Iterable.  This is an interim class to allow use of Java 7
+     *  with Java 8-like constructs.  */
+    abstract static class Function<T1, T2> {
+        /** Returns the value of this function on X. */
+        abstract T2 apply(T1 x);
+    }
+
+=======
+>>>>>>> 65f8bbaa54ad6c929b16ed3a3af7b4455e0f161b
 }

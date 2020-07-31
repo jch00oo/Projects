@@ -1,3 +1,4 @@
+
 package gitlet;
 import java.util.*;
 import java.io.*;
@@ -14,12 +15,6 @@ public class Main implements Serializable {
     private static File gitlet = new File(".gitlet");
     private static Gitlet command = new Gitlet();
 
-    /**public void Gitlet() {
-     startergit= new File (cd_gitlet);
-     startergit.mkdir();
-     stage = new File (cd_stage);
-     stage.mkdir();
-     }**/
 
     public static void main(String[] args) {
         // FILL THIS IN
@@ -56,8 +51,8 @@ public class Main implements Serializable {
                     globalLogHelper(args);
                     break;
                 case "reset":
-                   resetHelper(args);
-                   break;
+                    resetHelper(args);
+                    break;
                 case "checkout":
                     checkoutHelper(args);
                     break;
@@ -67,7 +62,6 @@ public class Main implements Serializable {
                 case "find":
                     findHelper(args);
                     break;
-                //other cases to be added after the checkpoint
                 default: //else
                     System.out.println("No command with that name exists.");
                     break;
@@ -169,28 +163,28 @@ public class Main implements Serializable {
     }
 
     public static void checkoutHelper(String[] args) {
-             if (args.length == 3 && args[1].equals("--")) {
-                 try {
-                     command.checkout1(args[2]);
-                 } catch (GitletException g) {
-                     Utils.message(g.getMessage());
-                 }
-             } else if (args.length == 4 && args[2].equals("--")) {
-                 try {
-                     command.checkout2(args[1], args[3]);
-                 } catch (GitletException g) {
-                     Utils.message(g.getMessage());
-                 }
-             } else if (args.length == 2) {
-                 try {
-                     command.checkout3(args[1]);
-                 } catch (GitletException g) {
-                     Utils.message(g.getMessage());
-                 }
-             } else {
-                 Utils.message("Incorrect operands.");
-             }
-         }
+        if (args.length == 3 && args[1].equals("--")) {
+            try {
+                command.checkout1(args[2]);
+            } catch (GitletException g) {
+                Utils.message(g.getMessage());
+            }
+        } else if (args.length == 4 && args[2].equals("--")) {
+            try {
+                command.checkout2(args[1], args[3]);
+            } catch (GitletException g) {
+                Utils.message(g.getMessage());
+            }
+        } else if (args.length == 2) {
+            try {
+                command.checkout3(args[1]);
+            } catch (GitletException g) {
+                Utils.message(g.getMessage());
+            }
+        } else {
+            Utils.message("Incorrect operands.");
+        }
+    }
 
     public static void statusHelper(String[] args) {
         if (args.length != 1) {

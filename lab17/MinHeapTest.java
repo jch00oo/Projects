@@ -2,7 +2,6 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 
 public class MinHeapTest {
-    //stupid junit isn't running
     @Test
     public void test1() { //insert/remove test
         MinHeap<Character> h = new MinHeap<>();
@@ -13,6 +12,7 @@ public class MinHeapTest {
         h.insert('c');
         h.removeMin();
         h.removeMin();
+        h.toString();
         assertEquals(h.toString(),"\n        f\n" +
                 "    /\n" +
                 "d\n" +
@@ -22,33 +22,18 @@ public class MinHeapTest {
         //f      h
     }
 
-//    @Test
-//    public void test2(){ //find min, remove it, new min-check bubbleUP
-//        MinHeap<Integer> h = new MinHeap<>();
-//        h.insert(9);
-//        h.insert(2);
-//        h.insert(0);
-//        h.insert(11);
-//        h.insert(3);
-//        assertTrue(h.findMin().equals(0));
-//        assertTrue(h.removeMin().equals(0));
-//        assertTrue(h.findMin().equals(2));
-//    }
-
     @Test
-    public void test2(){ //find min, remove it, new min-check bubbleUP
-        MinHeap<Character> h = new MinHeap<>();
-        h.insert('f');
-        h.insert('h');
-        h.insert('d');
-        h.insert('b');
-        h.insert('c');
-        assertTrue(h.findMin().equals('b'));
-        assertTrue(h.removeMin().equals('b'));
-        assertTrue(h.findMin().equals('c'));
-//        h.toString();
+    public void test2() { //find min, remove it, new min-check bubbleUP
+        MinHeap<String> h = new MinHeap<>();
+        h.insert("f");
+        h.insert("h");
+        h.insert("d");
+        h.insert("b");
+        h.insert("c");
+        assertEquals(h.findMin(), "b");
+        assertEquals(h.removeMin(), "b");
+        assertEquals(h.findMin(), "c");
     }
-
     @Test
     public void test3(){
         MinHeap<Character> h = new MinHeap<>();
@@ -96,3 +81,5 @@ public class MinHeapTest {
     }
 
 }
+//git errors
+//stackexchagne said git pull --tags -f

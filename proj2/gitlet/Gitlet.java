@@ -7,6 +7,8 @@ import java.util.Arrays;
 
 public class Gitlet {
 
+<<<<<<< HEAD
+=======
     //@source https://www.atlassian.com/git/tutorials/setting-up-a-repository
     // ^ for information on how real git works
     //@source http://szhang7.github.io/java/2013/08/29/java-handbook/
@@ -19,6 +21,7 @@ public class Gitlet {
     private static String cd_stage = ".gitlet/.stage";
     private static String commitPath = ".gitlet/.commit";
     private static String workingPath = System.getProperty("user.dir");
+>>>>>>> 65f8bbaa54ad6c929b16ed3a3af7b4455e0f161b
 
     static final File REPO_PATH = Utils.join(System.getProperty("user.dir"), ".gitlet", "repo");
     static final File STAGE_PATH = Utils.join(System.getProperty("user.dir"), ".gitlet", "stage");
@@ -36,21 +39,17 @@ public class Gitlet {
             System.exit(0);
         } else {
             gitlet.mkdir();
-
-            Repository repo = new Repository();
-            File inrepo = Utils.join(REPO_PATH);
-            Utils.writeObject(inrepo, repo);
-
-            Stage stage = new Stage();
-            File instage = Utils.join(STAGE_PATH);
-            Utils.writeObject(instage, stage);
-
-            File inblob = Utils.join(BLOB_PATH);
-            inblob.mkdir();
-
-            File incommitting = Utils.join(COMMIT_PATH);
-            incommitting.mkdir();
-            repo.getHead().addCommit();
+            Repository newRepo = new Repository();
+            Stage newStage = new Stage();
+            File repo = Utils.join(Repository.REPO_PATH);
+            Utils.writeObject(repo, newRepo);
+            File stage = Utils.join(Stage.STAGE_PATH);
+            Utils.writeObject(stage, newStage);
+            File blobs = Utils.join(Blob.BLOB_PATH);
+            blobs.mkdir();
+            File commits = Utils.join(Commit.COMMIT_PATH);
+            commits.mkdir();
+            newRepo.getHead().addCommit();
         }
     }
 
@@ -64,11 +63,9 @@ public class Gitlet {
             System.out.println("File does not exist.");
             System.exit(0);
         } else {
-            File repoFile = Utils.join(REPO_PATH);
-            Repository currRepo = Utils.readObject(repoFile, Repository.class);
+            Repository currRepo = Repository.readRepo();
             HashMap<String, String> headContent = currRepo.getTracked();
-            File stageFile = Utils.join(STAGE_PATH);
-            Stage currStage = Utils.readObject(stageFile, Stage.class);
+            Stage currStage = Stage.readStage();
 
             Blob blobToAdd = new Blob(fileName);
 
@@ -89,14 +86,18 @@ public class Gitlet {
     /* @param commit message
      * Commit files in staging area to the repository.
      */
+<<<<<<< HEAD
+    public void commit(String commitMessage) throws GitletException {
+        Repository currRepo = Repository.readRepo();
+=======
     public void commit(String commitMessage) {
         File repoFile = Utils.join(REPO_PATH);
         Repository currRepo = Utils.readObject(repoFile, Repository.class);
+>>>>>>> 65f8bbaa54ad6c929b16ed3a3af7b4455e0f161b
         Commit head = currRepo.getHead();
         HashMap<String, String> headBlob = currRepo.getTracked();
 
-        File stageFile = Utils.join(STAGE_PATH);
-        Stage currStage = Utils.readObject(stageFile, Stage.class);
+        Stage currStage = Stage.readStage();
         HashMap<String, String> stagedToAdd = currStage.getStagedToAdd();
         HashMap<String, String> stagedToRemove = currStage.getStagedToRemove();
 
@@ -114,7 +115,7 @@ public class Gitlet {
             newBlob.put(addedFileName, stagedToAdd.get(addedFileName));
         }
         for (String removedFileName : stagedToRemove.keySet()) {
-            newBlob.remove(removedFileName);
+            newBlob.put(removedFileName, stagedToAdd.get(removedFileName));
         }
         currStage.clearStage();
         currStage.addStage();
@@ -149,6 +150,10 @@ public class Gitlet {
         System.out.println("Date: " + curr.getTimeStamp());
         System.out.println(curr.getCommitMessage());
         System.out.println();
+<<<<<<< HEAD
+
+=======
+>>>>>>> 65f8bbaa54ad6c929b16ed3a3af7b4455e0f161b
     }
 
     /* @param branch name
@@ -341,9 +346,13 @@ public class Gitlet {
         System.out.println();
     }
 
+<<<<<<< HEAD
+    public static void global(){
+=======
     /* Similar to log, except printing out every single commit made.
      */
     public static void global(){ //doesn't have to be in order, screw hashmap
+>>>>>>> 65f8bbaa54ad6c929b16ed3a3af7b4455e0f161b
         File allcommitsfolder = Utils.join(Commit.COMMIT_PATH);
         File [] eacommit= allcommitsfolder.listFiles(); //https://www.geeksforgeeks.org/file-listfiles-method-in-java-with-examples/
         for (File i : eacommit){
@@ -355,14 +364,14 @@ public class Gitlet {
     * Prints out the commit id(s) of the commit(s) with that corresponding commit message.
      */
     public static void find(String message){
-        /**File repoFile3 = Utils.join(REPO_PATH);
-        Repository currRepo = Utils.readObject(repoFile3, Repository.class);
-        HashMap<String,Commit> pointer = currRepo.getAllCommits(); .getAllCommits isn't working??? **/
-        //temp fix is to use files and folders
         File repoFile = Utils.join(Repository.REPO_PATH);
         Repository currRepo = Utils.readObject(repoFile, Repository.class);
         Commit found;
+<<<<<<< HEAD
+        Formatter uh = new Formatter();
+=======
 
+>>>>>>> 65f8bbaa54ad6c929b16ed3a3af7b4455e0f161b
         boolean exists = false;
 
         for (String commitId: currRepo.getAllCommitsIds()) {
@@ -373,7 +382,10 @@ public class Gitlet {
                 System.out.println(found.getId());
             }
         }
+<<<<<<< HEAD
+=======
 
+>>>>>>> 65f8bbaa54ad6c929b16ed3a3af7b4455e0f161b
         if (exists == false){
             System.out.println("Found no commit with that message.");
             System.exit(0);
@@ -501,11 +513,16 @@ public class Gitlet {
             List<String> filesInWD = Utils.plainFilenamesIn(GEN_PATH);
 
             for (String fileName : filesInWD) {
+<<<<<<< HEAD
+                if (lastCommit.getContent().containsKey(fileName) && !currRepo.getTracked().containsKey(fileName)) {
+                    throw Utils.error("There is an untracked file in the way;" + "delete it, or add and commit it first.");
+=======
                 boolean tracked = currRepo.getTracked().containsKey(fileName);
                 boolean lastExists = lastCommit.getContent().containsKey(fileName);
                 if (lastExists && !tracked) {
                     System.out.println("There is an untracked file in the way; delete it, or add and commit it first.");
                     System.exit(0);
+>>>>>>> 65f8bbaa54ad6c929b16ed3a3af7b4455e0f161b
                 }
             }
 
@@ -527,6 +544,8 @@ public class Gitlet {
             currStage.addStage();
         }
     }
+<<<<<<< HEAD
+=======
 
     /* @param branch name
     * Merge files from given branch into current branch. Started with implementing the failure cases.
@@ -560,4 +579,5 @@ public class Gitlet {
         String newId = currRepo.getBranches().get(branchName);
         String currId = currRepo.getHead().getId();
     }
+>>>>>>> 65f8bbaa54ad6c929b16ed3a3af7b4455e0f161b
 }

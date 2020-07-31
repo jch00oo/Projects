@@ -1,3 +1,4 @@
+
 package gitlet;
 
 import java.io.File;
@@ -68,8 +69,18 @@ public class Repository implements Serializable {
         return "";
     }
 
+<<<<<<< HEAD
+
+    static Repository readRepo() {
+        File repoFile = Utils.join(REPO_PATH);
+        Repository repo = Utils.readObject(repoFile, Repository.class);
+        return repo;
+    }
+
+=======
     // Writes object into repo file and adds it.
     //@source https://stackoverflow.com/questions/17293991/how-to-write-and-read-java-serialized-objects-into-a-file
+>>>>>>> 65f8bbaa54ad6c929b16ed3a3af7b4455e0f161b
     public void addRepo() {
         File repoFile = Utils.join(REPO_PATH);
         Utils.writeObject(repoFile, this);
@@ -97,4 +108,27 @@ public class Repository implements Serializable {
         String prevID = previous.getId();
         branches.put(getCurrBranch(), prevID);
     }
+<<<<<<< HEAD
+
+    void fetchCommit(String id) {
+        allTheCommits.add(id);
+    }
+
+    /* branch name and id */
+    private HashMap<String, String> branches;
+    private Commit head;
+    private String currBranch;
+    //    HashMap<String, Commit> allCommits;
+    ArrayList<Commit> allCommitscurrbranch;
+    private HashSet<String> allTheCommits;
+
+    private HashMap<String, Commit> trackCommits;
+    private static String workingPath = System.getProperty("user.dir");
+    static final File GEN_PATH = Utils.join(workingPath);
+
+    static final File REPO_PATH = Utils.join(System.getProperty("user.dir"), ".gitlet", "repo");
+
 }
+=======
+}
+>>>>>>> 65f8bbaa54ad6c929b16ed3a3af7b4455e0f161b

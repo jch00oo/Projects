@@ -43,8 +43,17 @@ public class Stage implements Serializable {
         stagedToRemove.remove(fileName);
     }
 
+<<<<<<< HEAD
+    static Stage readStage() {
+        File stageFile = Utils.join(STAGE_PATH);
+        Stage stage = Utils.readObject(stageFile, Stage.class);
+        return stage;
+    }
+
+=======
     // Write object into stage file and adds it.
     //@source https://stackoverflow.com/questions/17293991/how-to-write-and-read-java-serialized-objects-into-a-file
+>>>>>>> 65f8bbaa54ad6c929b16ed3a3af7b4455e0f161b
     void addStage() {
         File stageFile = Utils.join(STAGE_PATH);
         Utils.writeObject(stageFile, this);
