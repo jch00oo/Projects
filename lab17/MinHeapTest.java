@@ -13,10 +13,17 @@ public class MinHeapTest {
         h.removeMin();
         h.removeMin();
         h.toString();
+        assertEquals(h.toString(),"\n        f\n" +
+                "    /\n" +
+                "d\n" +
+                "    \\\n" +
+                "        h \n");
+        //   d
+        //f      h
     }
 
     @Test
-    public void test2(){ //find min, remove it, new min-check bubbleUP
+    public void test2() { //find min, remove it, new min-check bubbleUP
         MinHeap<String> h = new MinHeap<>();
         h.insert("f");
         h.insert("h");
@@ -27,7 +34,6 @@ public class MinHeapTest {
         assertEquals(h.removeMin(), "b");
         assertEquals(h.findMin(), "c");
     }
-
     @Test
     public void test3(){
         MinHeap<Character> h = new MinHeap<>();
