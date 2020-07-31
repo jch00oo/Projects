@@ -212,22 +212,10 @@ public class Graph implements Iterable<Integer> {
         return result;
     }
 
-    public ArrayList<Integer> pathExistsHelper(int start) {
-        ArrayList<Integer> toReturn = new ArrayList<Integer>();
-        Iterator<Integer> uh = new DFSIterator(start);
-        while (uh.hasNext()) {
-            toReturn.add(uh.next());
-        }
-        return toReturn;
-    }
-
     /* Returns true iff there exists a path from START to STOP. Assumes both
        START and STOP are in this graph. If START == STOP, returns true. */
     public boolean pathExists(int start, int stop) {
         // TODO: YOUR CODE HERE
-        ArrayList<Integer> finalList = pathExistsHelper(start);
-        return finalList.contains(stop);
-
 //        for (int i =0; i<paths.size();i++){
 //            if (paths.get(i)==stop){
 //                return true;
@@ -237,16 +225,16 @@ public class Graph implements Iterable<Integer> {
 
 //        for (int i : dfs(start)) {
 
-//        if (start==stop) {
-//            return true;
-//        }
-//        List<Integer> paths = dfs(start);
-//        for (Integer i : paths) {
-//            if (i == stop) {
-//                return true;
-//            }
-//        }
-//        return false;
+        if (start==stop) {
+            return true;
+        }
+        List<Integer> paths = dfs(start);
+        for (Integer i : paths) {
+            if (i == stop) {
+                return true;
+            }
+        }
+        return false;
     }
 
 
