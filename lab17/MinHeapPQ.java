@@ -1,3 +1,5 @@
+import java.util.NoSuchElementException;
+
 /* A PriorityQueue class that uses a min heap to maintain ordering. */
 public class MinHeapPQ<T> implements PriorityQueue<T> {
 
@@ -18,17 +20,17 @@ public class MinHeapPQ<T> implements PriorityQueue<T> {
     /* Inserts ITEM with the priority value PRIORITYVALUE into the MinHeapPQ. If
        ITEM is already in the MinHeapPQ, throw an IllegalArgumentException. */
     public void insert(T item, double priorityValue) {
-        PriorityItem toInsert = new PriorityItem(item, priorityValue);
-        if (heap.contains(toInsert)) {
+        if (contains(item)) {
             throw new IllegalArgumentException();
         }
+        PriorityItem toInsert = new PriorityItem(item, priorityValue);
         heap.insert(toInsert);
     }
 
     /* Returns the item with the highest priority (smallest priority value), and
        removes it from the MinHeapPQ. */
     public T poll() {
-        PriorityItem min = heap.findMin();
+//        PriorityItem min = heap.findMin();
         return heap.removeMin().item();
 //            return min.item;
     }
@@ -37,6 +39,11 @@ public class MinHeapPQ<T> implements PriorityQueue<T> {
        PRIORITYVALUE. Assume the items in the MinHeapPQ are all unique. If ITEM
        is not in the MinHeapPQ, throw a NoSuchElementException. */
     public void changePriority(T item, double priorityValue) {
+//        PriorityItem newItem = new PriorityItem(item, priorityValue);
+//        heap.update(newItem);
+        if (!contains(item)) {
+            throw new NoSuchElementException();
+        }
         PriorityItem newItem = new PriorityItem(item, priorityValue);
         heap.update(newItem);
     }
@@ -49,7 +56,7 @@ public class MinHeapPQ<T> implements PriorityQueue<T> {
     /* Returns true if ITEM is stored in our MinHeapPQ. Note: Any priority value
        for this dummy PriorityItem would work. */
     public boolean contains(T item) {
-        return heap.contains(new PriorityItem(item, 69));
+        return heap.contains(new PriorityItem(item, 0));
     }
 
     @Override
