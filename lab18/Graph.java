@@ -225,12 +225,8 @@ public class Graph implements Iterable<Integer> {
        START and STOP are in this graph. If START == STOP, returns true. */
     public boolean pathExists(int start, int stop) {
         // TODO: YOUR CODE HERE
-        ArrayList<Integer> allV = new ArrayList<Integer>();
-        Iterator<Integer> visit = new DFSIterator(start);
-        while (visit.hasNext()) {
-            allV.add(visit.next());
-        }
-        return allV.contains(stop);
+        ArrayList<Integer> finalList = pathExistsHelper(start);
+        return finalList.contains(stop);
 
 //        for (int i =0; i<paths.size();i++){
 //            if (paths.get(i)==stop){
@@ -251,9 +247,6 @@ public class Graph implements Iterable<Integer> {
 //            }
 //        }
 //        return false;
-
-//        ArrayList<Integer> all = pathExistsHelper(start);
-//        return all.contains(stop);
     }
 
 
