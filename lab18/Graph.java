@@ -245,19 +245,17 @@ public class Graph implements Iterable<Integer> {
     private class TopologicalIterator implements Iterator<Integer> {
 
         private Stack<Integer> fringe;
-        private HashSet<Integer> visited;
-        private int[] currentInDegree;
-        // TODO: Instance variables here!
+        private List<Integer> currentInDegree;
 
         TopologicalIterator() {
-            fringe = new Stack<Integer>();
             // TODO: YOUR CODE HERE
-            visited = new HashSet<Integer>();
-            currentInDegree = new int[vertexCount];
-            for (int i = 0; i < vertexCount; i ++) {
-                currentInDegree[i] = inDegree(i);
-                if (inDegree(i) == 0) {
-                    fringe.push(i);
+            fringe = new Stack<Integer>();
+            currentInDegree = new ArrayList<Integer>();
+            for (int k = 0; k < vertexCount; k++) {
+                currentInDegree.add(k,inDegree(k));
+                if (currentInDegree.get(k) == 0) {
+                    fringe.push(k);
+                    currentInDegree.set(k,1); // set the indegree of the vetex to be 1, in case we find it again
                 }
             }
         }
@@ -266,20 +264,22 @@ public class Graph implements Iterable<Integer> {
             // TODO: YOUR CODE HERE
             return !fringe.isEmpty();
         }
-//aahahh
+
         public Integer next() {
             // TODO: YOUR CODE HERE
-            Integer result = this.fringe.pop();
-            for (Edge edge: adjLists[result]) {
-                currentInDegree[edge.getTo()]--;
-            }
-            visited.add(result);
-            for (int i = 0; i < vertexCount; i ++) {
-                if (!fringe.contains(i) && !visited.contains(i) && currentInDegree[i] == 0) {
-                    fringe.push(i);
+            int current = fringe.pop();
+            for (int k = 0; k < vertexCount; k++) {
+                if (isAdjacent(current, k)) {
+                    currentInDegree.set(k,currentInDegree.get(k)-1);
                 }
             }
-            return result;
+            for (int k = 0; k < vertexCount; k++) {
+                if (currentInDegree.get(k) == 0) {
+                    fringe.push(k);
+                    currentInDegree.set(k,1);
+                }
+            }
+            return current;
         }
 
         public void remove() {
