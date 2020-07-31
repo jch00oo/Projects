@@ -12,7 +12,7 @@ public class MinHeapPQ<T> implements PriorityQueue<T> {
     /* Returns the item with the smallest priority value, but does not remove it
        from the MinHeapPQ. */
     public T peek() {
-        return heap.findMin().item;
+        return heap.findMin().item();
     }
 
     /* Inserts ITEM with the priority value PRIORITYVALUE into the MinHeapPQ. If
@@ -29,13 +29,8 @@ public class MinHeapPQ<T> implements PriorityQueue<T> {
        removes it from the MinHeapPQ. */
     public T poll() {
         PriorityItem min = heap.findMin();
-        if (min == null) {
-            return null;
-        } else {
-            T toRemove = min.item;
-            heap.removeMin();
-            return toRemove;
-        }
+        return heap.removeMin().item();
+//            return min.item;
     }
 
     /* Changes the PriorityItem with item ITEM to have priority value
@@ -63,7 +58,6 @@ public class MinHeapPQ<T> implements PriorityQueue<T> {
     }
 
     /* A wrapper class that stores items and their associated priorities.
-
        Note: This class has a natural ordering that is inconsistent with
        equals. */
     public class PriorityItem implements Comparable<PriorityItem> {

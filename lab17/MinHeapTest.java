@@ -2,7 +2,6 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 
 public class MinHeapTest {
-//stupid junit isn't running
     @Test
     public void test1() { //insert/remove test
         MinHeap<Character> h = new MinHeap<>();
@@ -14,22 +13,19 @@ public class MinHeapTest {
         h.removeMin();
         h.removeMin();
         h.toString();
-        //   d
-        //f      h
     }
 
     @Test
     public void test2(){ //find min, remove it, new min-check bubbleUP
-        MinHeap<Character> h = new MinHeap<>();
-        h.insert('f');
-        h.insert('h');
-        h.insert('d');
-        h.insert('b');
-        h.insert('c');
-        h.findMin();
-        h.removeMin();
-        h.findMin();
-        h.toString();
+        MinHeap<String> h = new MinHeap<>();
+        h.insert("f");
+        h.insert("h");
+        h.insert("d");
+        h.insert("b");
+        h.insert("c");
+        assertEquals(h.findMin(), "b");
+        assertEquals(h.removeMin(), "b");
+        assertEquals(h.findMin(), "c");
     }
 
     @Test
@@ -40,19 +36,19 @@ public class MinHeapTest {
         h.insert('d');
         h.insert('b');
         h.insert('c');
-        h.size();
+        assertEquals(h.size(), 5);
     }
 
     @Test
     public void test4(){ //
-        MinHeap<Character> h = new MinHeap<>();
-        h.insert('f');
-        h.insert('h');
-        h.insert('d');
-        h.insert('b');
-        h.insert('c');
-        h.removeMin();
-        h.contains('f');
+        MinHeap<String> h = new MinHeap<>();
+        h.insert("f");
+        h.insert("h");
+        h.insert("d");
+        h.insert("b");
+        h.insert("c");
+        assertEquals(h.removeMin(), "b");
+        assertTrue(h.contains("f"));
     }
 
     @Test
@@ -63,23 +59,11 @@ public class MinHeapTest {
         h.insert('d');
         h.insert('b');
         h.insert('c');
-        h.contains('k');
+        assertFalse(h.contains('k'));
     }
 
     @Test
     public void test6(){ //
-        MinHeap<Character> h = new MinHeap<>();
-        h.insert('f');
-        h.insert('h');
-        h.insert('d');
-        h.insert('b');
-        h.insert('c');
-        h.contains('c');
-        h.update('c');
-    }
-
-    @Test
-    public void test7(){
         MinHeap<Character> h = new MinHeap<>();
         h.insert('f');
         h.insert('h');
