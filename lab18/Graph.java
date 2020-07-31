@@ -271,7 +271,7 @@ public class Graph implements Iterable<Integer> {
             // TODO: YOUR CODE HERE
             Integer result = this.fringe.pop();
             for (Edge edge: adjLists[result]) {
-                currentInDegree[edge.to]--;
+                currentInDegree[edge.getTo()]--;
             }
             visited.add(result);
             for (int i = 0; i < vertexCount; i ++) {
@@ -283,10 +283,8 @@ public class Graph implements Iterable<Integer> {
         }
 
         public void remove() {
-
             throw new UnsupportedOperationException();
         }
-
     }
 
     private class Edge {
@@ -299,6 +297,10 @@ public class Graph implements Iterable<Integer> {
             this.from = from;
             this.to = to;
             this.weight = weight;
+        }
+
+        public int getTo() {
+            return this.to;
         }
 
         public String toString() {
