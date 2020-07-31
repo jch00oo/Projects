@@ -263,20 +263,29 @@ public class Graph implements Iterable<Integer> {
     private class TopologicalIterator implements Iterator<Integer> {
 
         private Stack<Integer> fringe;
-        private Integer[] inDegree;
-        private HashSet<Integer> visited;
+        private Integer[] currentInDegree;
+//        private HashSet<Integer> visited;
 
         TopologicalIterator() {
             fringe = new Stack<Integer>();
             // TODO: YOUR CODE HERE
-            visited = new HashSet<>();
-            inDegree = new Integer[vertexCount];
-            for (int i = 0; i < vertexCount; i++) {
-                inDegree[i] = inDegree(i);
-                if (inDegree(i) == 0) {
+            currentInDegree = new Integer[adjLists.length];
+            for (int i = 0; i < adjLists.length; i++) {
+                int curr = inDegree(i);
+                currentInDegree[i] = curr;
+                if (curr == 0) {
                     fringe.push(i);
                 }
             }
+//            visited = new HashSet<>();
+//            currentInDegree = new Integer[vertexCount];
+//            for (int i = 0; i < vertexCount; i++) {
+//                currentInDegree[i] = inDegree(i);
+//                if (inDegree(i) == 0) {
+//                    fringe.push(i);
+//                    visited.add(i);
+//                }
+//            }
         }
 
         public boolean hasNext() {
@@ -287,17 +296,24 @@ public class Graph implements Iterable<Integer> {
         public Integer next() {
             // TODO: YOUR CODE HERE
             Integer v = fringe.pop();
-            for (Edge e : adjLists[v]) {
-                inDegree[v] = inDegree[v] - 1;
-            }
-            visited.add(v);
-            for (int i = 0; i < vertexCount; i++) {
-                if (!visited.contains(v) && !fringe.contains(v)
-                        && inDegree[i] == 0) {
+            for (int i : neighbors(v)) {
+                currentInDegree[i] --;
+                if (currentInDegree[i] == 0) {
                     fringe.push(i);
                 }
             }
             return v;
+//            for (Edge e : adjLists[v]) {
+//                currentInDegree[v] = currentInDegree[v] - 1;
+//            }
+//            visited.add(v);
+//            for (int i = 0; i < vertexCount; i++) {
+//                if (!visited.contains(v) && !fringe.contains(v)
+//                        && currentInDegree[i] == 0) {
+//                    fringe.push(i);
+//                }
+//            }
+//            return v;
         }
 
         public void remove() {
