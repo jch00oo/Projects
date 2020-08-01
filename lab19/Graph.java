@@ -346,29 +346,77 @@ public class Graph implements Iterable<Integer> {
     public List<Integer> shortestPath(int start, int stop) {
         // TODO: YOUR CODE HERE
         //use a comparator ???
-        HashMap<Integer, Integer> distance = new HashMap<>();//track of distances
-        ArrayList<Integer> visited = new ArrayList<>(); //visited places
-        PriorityQueue<Integer> fringe = new PriorityQueue<>(); //queue
-        for (int i = 0; i < vertexCount; i++) {
-            distance.put(i, 100000);//close enough to infinity
+//        HashMap<Integer, Integer> distance = new HashMap<>();//track of distances
+//        ArrayList<Integer> visited = new ArrayList<>(); //visited places
+//        PriorityQueue<Integer> fringe = new PriorityQueue<>(); //queue
+//        for (int i = 0; i < vertexCount; i++) {
+//            distance.put(i, 100000);//close enough to infinity
+//        }
+//        distance.put(start, 0);
+//        fringe.add(start); //add start vertex to fringe
+//        while (!fringe.isEmpty()) { //while fringe isn't empty
+//            visited.add(fringe.poll()); //poll off from fringe and add to visited to keep track of
+//            for (int i : visited) {
+//                LinkedList<Edge> next = adjLists[visited.to()]; //visited is an edge tho
+//                int smaller = getEdge(visited.get(i), next).weight + distance.get(visited);
+//                if (distance.get(next) > smaller) {//update to smaller distance
+//                    distance.put(i, smaller);
+//                    //but now what do i do with it
+//                }
+//                if (!visited.contains(next) && !fringe.contains(next)) {
+//                    fringe.add(next);
+//                }
+//            }
+//        }
+//        return visited; //will not ocmpile
+
+        LinkedList<Integer> toReturn = new LinkedList<>();
+        if (start == stop || !pathExists(start, stop)) {
+            toReturn.add(start);
+            return toReturn;
+        } else if (!pathExists(start, stop)) {
+            toReturn.add(stop);
+            return toReturn;
         }
-        distance.put(start, 0);
-        fringe.add(start); //add start vertex to fringe
-        while (!fringe.isEmpty()) { //while fringe isn't empty
-            visited.add(fringe.poll()); //poll off from fringe and add to visited to keep track of
-            for (int i : visited) {
-                LinkedList<Edge> next = adjLists[visited.to()]; //visited is an edge tho
-                int smaller = getEdge(visited.get(i), next).weight + distance.get(visited);
-                if (distance.get(next) > smaller) {//update to smaller distance
-                    distance.put(i, smaller);
-                    //but now what do i do with it
-                }
-                if (!visited.contains(next) && !fringe.contains(next)) {
-                    fringe.add(next);
+
+        HashMap<Integer, Integer> distance = new HashMap<>();
+        HashMap<Integer, Integer> preV = new HashMap<>();
+        List<Integer> allNode = dfs(start);
+
+        PriorityQueue<Integer> queue = new
+                PriorityQueue<>((o1, o2) -> (distance.get(o1) - distance.get(o2)));
+        for (int i = 0; i < vertexCount; i++) {
+            if (i == start) {
+                distance.put(i, 0);
+            } else {
+                distance.put(i, 10000000);
+            }
+        }
+        queue.add(start);
+
+        HashSet<Integer> visited = new HashSet<>();
+        while (!queue.isEmpty()) {
+            Integer currV = queue.poll();
+            if (!visited.contains(currV)) {
+                visited.add(currV);
+                for (Edge edge : adjLists[currV]) {
+                    queue.add(edge.to);
+                    if (distance.get(edge.to) > distance.get(currV) + edge.weight) {
+                        distance.put(edge.to, distance.get(currV) + edge.weight);
+                        preV.put(edge.to, currV);
+                    }
                 }
             }
         }
-        return visited; //will not ocmpile
+        int pre = preV.get(stop);
+        toReturn.add(stop);
+        while (pre != start) {
+            toReturn.add(pre);
+            pre = preV.get(pre);
+        }
+        toReturn.add(start);
+        Collections.reverse(toReturn);
+        return toReturn;
     }
 
     public Edge getEdge(int u, int v) {
