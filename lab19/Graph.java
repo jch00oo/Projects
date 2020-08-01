@@ -371,6 +371,10 @@ public class Graph implements Iterable<Integer> {
 //        return visited; //will not ocmpile
 
         LinkedList<Integer> toReturn = new LinkedList<>();
+        HashMap<Integer, Integer> distance = new HashMap<>();
+        HashMap<Integer, Integer> preV = new HashMap<>();
+        List<Integer> allNode = dfs(start);
+
         if (start == stop || !pathExists(start, stop)) {
             toReturn.add(start);
             return toReturn;
@@ -379,12 +383,7 @@ public class Graph implements Iterable<Integer> {
             return toReturn;
         }
 
-        HashMap<Integer, Integer> distance = new HashMap<>();
-        HashMap<Integer, Integer> preV = new HashMap<>();
-        List<Integer> allNode = dfs(start);
-
-        PriorityQueue<Integer> queue = new
-                PriorityQueue<>((o1, o2) -> (distance.get(o1) - distance.get(o2)));
+        PriorityQueue<Integer> queue = new PriorityQueue<>((o1, o2) -> (distance.get(o1) - distance.get(o2)));
         for (int i = 0; i < vertexCount; i++) {
             if (i == start) {
                 distance.put(i, 0);
@@ -408,8 +407,10 @@ public class Graph implements Iterable<Integer> {
                 }
             }
         }
+
         int pre = preV.get(stop);
         toReturn.add(stop);
+        
         while (pre != start) {
             toReturn.add(pre);
             pre = preV.get(pre);
