@@ -375,10 +375,10 @@ public class Graph implements Iterable<Integer> {
         HashMap<Integer, Integer> preV = new HashMap<>();
         List<Integer> allNode = dfs(start);
 
-        if (start == stop || !pathExists(start, stop)) {
+        if (start == stop || !(pathExists(start, stop))) {
             toReturn.add(start);
             return toReturn;
-        } else if (!pathExists(start, stop)) {
+        } else if (!(pathExists(start, stop))) {
             toReturn.add(stop);
             return toReturn;
         }
@@ -394,9 +394,9 @@ public class Graph implements Iterable<Integer> {
         queue.add(start);
 
         HashSet<Integer> visited = new HashSet<>();
-        while (!queue.isEmpty()) {
+        while (!(queue.isEmpty())) {
             Integer currV = queue.poll();
-            if (!visited.contains(currV)) {
+            if (!(visited.contains(currV))) {
                 visited.add(currV);
                 for (Edge edge : adjLists[currV]) {
                     queue.add(edge.to);
@@ -410,7 +410,7 @@ public class Graph implements Iterable<Integer> {
 
         int pre = preV.get(stop);
         toReturn.add(stop);
-        
+
         while (pre != start) {
             toReturn.add(pre);
             pre = preV.get(pre);
