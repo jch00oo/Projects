@@ -1,4 +1,3 @@
-
 import java.util.*;
 
 public class Graph implements Iterable<Integer> {
@@ -30,8 +29,7 @@ public class Graph implements Iterable<Integer> {
        weight WEIGHT. */
     public void addEdge(int v1, int v2, int weight) {
         // TODO: YOUR CODE HERE
-        Edge toAdd = new Edge(v1, v2, weight);
-        adjLists[v1].add(toAdd);
+        adjLists[v1].add(new Edge(v1, v2, weight));
 //        adjLists[v1].add(new Edge(v1,v2,weight));
 
         //        LinkedList<Edge> lst = adjLists[v1];
@@ -84,15 +82,6 @@ public class Graph implements Iterable<Integer> {
 //            }
 //        }
 //        return false;
-
-//        Iterator<Edge> edges = adjLists[from].iterator();
-//        while (edges.hasNext()) {
-//            Edge edge = edges.next();
-//            if (edge.to == to) {
-//                return true;
-//            }
-//        }
-//        return false;
     }
 
     /* Returns a list of all the vertices u such that the Edge (V, u)
@@ -108,7 +97,7 @@ public class Graph implements Iterable<Integer> {
 //        for (Edge edge: adjLists[v]) {
 //            lst.add(edge.to);
 //        }
-//        return lst;
+//        return lst; oops
     }
 
     /* Returns the number of incoming Edges for vertex V. */
@@ -224,7 +213,16 @@ public class Graph implements Iterable<Integer> {
 //        return false;
 
 //        for (int i : dfs(start)) {
-
+//        if (start==stop) {
+//            return true;
+//        }
+//        List<Integer> paths = dfs(start);
+//        for (Integer i : paths) {
+//            if (i == stop) {
+//                return true;
+//            }
+//        }
+//        return false;
         if (start==stop) {
             return true;
         }
@@ -235,6 +233,7 @@ public class Graph implements Iterable<Integer> {
             }
         }
         return false;
+
     }
 
 
@@ -242,62 +241,70 @@ public class Graph implements Iterable<Integer> {
        List. If START == STOP, returns a List with START. */
     public List<Integer> path(int start, int stop) {
         // TODO: YOUR CODE HERE
-        if (!pathExists(start, stop)) {
-            return new ArrayList<Integer>();
-        }
-        ArrayList<Integer> result = new ArrayList<>();
-        Iterator<Integer> iter = new DFSIterator(start);
-        while (iter.hasNext()) {
-            result.add(iter.next());
-            if (result.get(result.size() -1) == stop) {
-                break;
+        /**
+         if (!pathExists(start, stop)) {
+         return new ArrayList<Integer>();
+         }
+         if(start==stop){
+         ArrayList<Integer> oh = new ArrayList<Integer>();
+         oh.add(start);
+         return oh;
+         }
+         ArrayList<Integer> result = new ArrayList<>();
+         Iterator<Integer> iter = new DFSIterator(start);
+         while (iter.hasNext()) {
+         int v = iter.next();
+         if (v != stop) {
+         result.add(v);
+         } else {
+         break;
+         }
+         }
+         Integer prev = result.get(result.size() - 1); //maybe code is breaking here idk
+         ArrayList<Integer> toRemove = new ArrayList<>();
+         for (int i = result.size() - 2; i >= 0; i—) {
+         Integer current = result.get(i);
+         if (!isAdjacent(current, prev)) {
+         toRemove.add(i);
+         }
+         prev = current;
+         }
+         for (Integer i : toRemove) {
+         result.remove(i);
+         }
+         return result;**/
+        //revert to edited first method
+        ArrayList<Integer> finalLst = new ArrayList<>();
+        if (!pathExists(start,stop)){
+            return finalLst;
+        } else if (start == stop) {
+            finalLst.add(start);
+            return finalLst;
+        } else {
+            Iterator<Integer> iter = new DFSIterator(start);
+            ArrayList<Integer> temp = new ArrayList();
+            while (iter.hasNext()) {
+                int v = iter.next();
+                if (v != stop) {
+                    temp.add(v);
+                } else {
+                    break;
+                }
+            }
+            int end = stop;
+            finalLst.add(end);
+            for (int i = temp.size() - 1; i >= 0; i --) {
+                if (temp.get(i) == start && isAdjacent(start, end)) {
+                    finalLst.add(temp.get(i));
+                    break;
+                } else if (isAdjacent(temp.get(i), end)) {
+                    finalLst.add(temp.get(i));
+                    end = temp.get(i);
+                }
             }
         }
-        Integer prev = result.get(result.size() - 1);
-        ArrayList<Integer> toRemove = new ArrayList<>();
-        for (int i = result.size() - 2; i >= 0; i--) {
-            Integer current = result.get(i);
-            if (!isAdjacent(current, prev)) {
-                toRemove.add(i);
-            }
-            prev = current;
-        }
-        for (Integer i : toRemove) {
-            result.remove(i);
-        }
-        return result;
-
-//        List finalLst = new LinkedList<>();
-//        if (!pathExists(start,stop)){
-//            return finalLst;
-//        } else if (start == stop) {
-//            finalLst.add(start);
-//            return finalLst;
-//        } else {
-//            Iterator<Integer> iter = new DFSIterator(start);
-//            List<Integer> temp = new LinkedList();
-//            while (iter.hasNext()) {
-//                int v = iter.next();
-//                if (v != stop) {
-//                    temp.add(v);
-//                } else {
-//                    break;
-//                }
-//            }
-//            int end = stop;
-//            finalLst.add(end);
-//            for (int i = temp.size() - 1; i >= 0; i--) {
-//                if (temp.get(i) == start && isAdjacent(start, end)) {
-//                    finalLst.add(temp.get(i));
-//                    break;
-//                } else if (isAdjacent(temp.get(i), end)) {
-//                    finalLst.add(temp.get(i));
-//                    end = temp.get(i);
-//                }
-//            }
-//        }
-//        Collections.reverse(finalLst);
-//        return finalLst;
+        Collections.reverse(finalLst);
+        return finalLst;
     }
 
     public List<Integer> topologicalSort() {
@@ -351,7 +358,7 @@ public class Graph implements Iterable<Integer> {
             Integer curr = fringe.pop();
             for (int i = 0; i < currentInDegree.length; i ++) {
                 if (isAdjacent(curr, i)) {
-                    currentInDegree[i] --;
+                    currentInDegree[i]--;
                 }
             }
             for (Edge edge: adjLists[curr]) {
@@ -363,7 +370,7 @@ public class Graph implements Iterable<Integer> {
 
 //            Integer v = fringe.pop();
 //            for (int i : neighbors(v)) {
-//                currentInDegree[i] --;
+//                currentInDegree[i] —;
 //                if (currentInDegree[i] == 0) {
 //                    fringe.push(i);
 //                }
@@ -451,6 +458,16 @@ public class Graph implements Iterable<Integer> {
         addEdge(4, 2);
     }
 
+    private void generateG5() {
+        addUndirectedEdge(0, 1);
+        addUndirectedEdge(1, 2);
+        addUndirectedEdge(1, 3);
+        addUndirectedEdge(3, 6);
+        addUndirectedEdge(3, 7);
+        addUndirectedEdge(2, 4);
+        addUndirectedEdge(2, 5);
+    }
+
     private void printDFS(int start) {
         System.out.println("DFS traversal starting at " + start);
         List<Integer> result = dfs(start);
@@ -499,9 +516,33 @@ public class Graph implements Iterable<Integer> {
         g1.printPath(1, 3);
         g1.printPath(1, 4);
         g1.printPath(4, 0);
+        g1.printPath(0,4);
 
         Graph g2 = new Graph(5);
         g2.generateG2();
         g2.printTopologicalSort();
+
+        Graph g3= new Graph (7);
+        g3.generateG3();
+        g3.printPath(0,6); //MEGA ERROR IN FIRST METHOD
+        g3.printPath(6,0);
+        g3.printPath(2,6);
+        g3.printPath(6,2);
+        g3.printPath(3,6);
+        g3.printPath(5,4);
+        g3.printPath(4,0);
+        g3.printPath(4,6);
+
+        Graph g5 = new Graph (8);
+        g5.generateG5();
+        g5.printPath(1,1);
+        g5.printPath(1,2);
+        g5.printPath(2,1);
+        g5.printPath(1,5);
+        g5.printPath(5,1);
+        g5.printPath(5,6);
+
+        //it passes even undirected tree?
+        //undirected tree can hit up anyone?
     }
 }
