@@ -1,6 +1,6 @@
 public class UnionFind {
 
-    private int[] Parent;
+    public int[] Parent;
 
     /* Creates a UnionFind data structure holding N vertices. Initially, all
        vertices are in disjoint sets. */
@@ -33,7 +33,7 @@ public class UnionFind {
        allowing for fast search-time. If invalid vertices are passed into this
        function, throw an IllegalArgumentException. */
     public int find(int v) {
-        if (v > Parent.length - 1) {
+        if (Parent.length <= v || v < 0) {
             throw new IllegalArgumentException();
         } else {
             while (Parent[v] >= 0) {
