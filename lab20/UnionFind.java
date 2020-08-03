@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+
 public class UnionFind {
 
     public int[] Parent;
@@ -33,11 +35,16 @@ public class UnionFind {
        allowing for fast search-time. If invalid vertices are passed into this
        function, throw an IllegalArgumentException. */
     public int find(int v) {
+        ArrayList<Integer> index = new ArrayList<>();
         if (Parent.length <= v || v < 0) {
             throw new IllegalArgumentException();
         } else {
             while (Parent[v] >= 0) {
+                index.add(v);
                 v = Parent[v];
+            }
+            for (int bruh: index) {
+                Parent[bruh] = v;
             }
             return v;
         }
@@ -64,4 +71,5 @@ public class UnionFind {
             Parent[rt2] = rt1;
         }
     }
+
 }

@@ -34,10 +34,20 @@ public class UnionFindTest {
         uf.union(0, 1);
         uf.union(3, 2);
         uf.union(2, 1);
+        uf.find(3);
+        assertEquals(1, uf.parent(3));
         uf.union(0, 4);
         uf.union(4, 0);
         assertEquals(5, uf.sizeOf(2));
-
     }
+
+    @Test
+    public void test3() {
+        UnionFind uf = new UnionFind(2);
+        uf.union(0, 1);
+        System.out.println(uf.parent(1));
+        System.out.println(uf.parent(0));
+    }
+
 
 }
