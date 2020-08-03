@@ -1,38 +1,47 @@
 public class UnionFind {
 
-    /* TODO: Add instance variables here. */
+    private int[] Parent;
 
     /* Creates a UnionFind data structure holding N vertices. Initially, all
        vertices are in disjoint sets. */
     public UnionFind(int N) {
-        // TODO: YOUR CODE HERE
+        Parent = new int[N];
+        for (int i = 0; i < N; i++) {
+            Parent[i] = -1;
+        }
     }
 
     /* Returns the size of the set V belongs to. */
+    /** find root and multiply by -1 */
     public int sizeOf(int v) {
-        // TODO: YOUR CODE HERE
-        return -1;
+        return (-1) * Parent[find(v)];
     }
 
     /* Returns the parent of V. If V is the root of a tree, returns the
        negative size of the tree for which V is the root. */
     public int parent(int v) {
-        // TODO: YOUR CODE HERE
-        return -1;
+        return Parent[v];
     }
 
     /* Returns true if nodes V1 and V2 are connected. */
+    /** use find to see if they have the same root */
     public boolean connected(int v1, int v2) {
-        // TODO: YOUR CODE HERE
-        return false;
+        return find(v1) == find(v2);
     }
 
     /* Returns the root of the set V belongs to. Path-compression is employed
        allowing for fast search-time. If invalid vertices are passed into this
        function, throw an IllegalArgumentException. */
     public int find(int v) {
-        // TODO: YOUR CODE HERE
-        return -1;
+        if (v < Parent.length - 1) {
+            int pointer = v;
+            while (Parent[pointer] >= 0) {
+                pointer = Parent[pointer];
+            }
+            return pointer;
+        } else {
+            throw new IllegalArgumentException();
+        }
     }
 
     /* Connects two elements V1 and V2 together. V1 and V2 can be any element,
@@ -41,6 +50,19 @@ public class UnionFind {
        with itself or vertices that are already connected should not change the
        structure. */
     public void union(int v1, int v2) {
-        // TODO: YOUR CODE HERE
+        /** if same or connected */
+        if (connected(v1, v2)) {
+            return;
+        }
+        int rt1 = find(v1);
+        int rt2 = find(v2);
+        /** if same size, connect v1 root to v2 root */
+        if (sizeOf(v1) <= (sizeOf(v2))) {
+            Parent[rt2] += Parent[rt1];
+            Parent[rt1] = rt2;
+        } else {
+            Parent[rt1] += Parent[rt2];
+            Parent[rt2] = rt1;
+        }
     }
 }
