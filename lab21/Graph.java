@@ -133,8 +133,43 @@ public class Graph {
          */
         Graph result = new Graph();
 
+        HashMap<Integer, Edge> dist = new HashMap<>();
+        PriorityQueue<Integer> heap = new PriorityQueue<>(11, (a, b) -> {
+            int difference = dist.get(a).getWeight() - dist.get(b).getWeight();
+            return difference == 0 ? 1 : difference;
+        });
 
+        result.addVertex(start);
 
+        for (Edge e : getEdges(start)) {
+            dist.put(e.getDest(), e);
+            heap.add(e.getDest());
+        }
+        
+        while (result.getAllVertices().size() < this.getAllVertices().size()) {
+            Integer minimum = heap.poll();
+            if (minimum == null) {
+                break;
+            }
+            if (!result.containsVertex(minimum)) {
+                result.addEdge(dist.get(minimum));
+                for (Edge e : getEdges(minimum)) {
+                    if (!dist.containsKey(e.getDest())) {
+                        dist.put(e.getDest(), e);
+                        heap.add(e.getDest());
+                    } else {
+                        if (e.getWeight() < dist.get(e.getDest()).getWeight()) {
+                            dist.remove(e.getDest());
+                            dist.put(e.getDest(), e);
+                            heap.add(e.getDest());
+                        }
+                    }
+                }
+            }
+        }
+        if (result.spans(this)) {
+            return result;
+        }
         return null;
     }
 
