@@ -87,8 +87,102 @@ public class RasterAPIHandler extends APIRouteHandler<Map<String, Double>, Map<S
         //System.out.println("yo, wanna know the parameters given by the web browser? They are:");
         //System.out.println(requestParams);
         Map<String, Object> results = new HashMap<>();
-        System.out.println("Since you haven't implemented RasterAPIHandler.processRequest, nothing is displayed in "
-                + "your browser.");
+        results.put("render_grid", null);
+        results.put("raster_ul_lon", 0);
+        results.put("raster_ul_lat", 0);
+        results.put("raster_lr_lon", 0);
+        results.put("raster_lr_lat", 0);
+        results.put("depth", 0);
+
+        double q_minX = Constants.ROOT_ULLON;
+        double q_maxX = Constants.ROOT_LRLON;
+
+        double q_minY = Constants.ROOT_LRLAT;
+        double q_maxY = Constants.ROOT_ULLAT;
+
+        double r_maxX = requestParams.get("lrlon");
+        double r_minX = requestParams.get("ullon");
+
+        double r_maxY = requestParams.get("ullat");
+        double r_minY = requestParams.get("lrlat");
+
+        double width = requestParams.get("w");
+        double height = requestParams.get("h");
+        //else is query fail- update query_success=false
+
+        //if else is query inside rastering
+        if (r_minX >= r_maxX || r_minY >= r_maxY || r_minX >= q_maxX || r_minY >= q_maxY || r_maxX <= q_minX || r_maxY <= q_minY) {
+            results.put("query_success", false);
+            return results;
+        }
+        results.put("query_success", true);
+
+        //* calculate lonDPP
+        double lrlong_diff = r_maxX - r_minX;
+        double lonDPP = lrlong_diff / width;
+
+        //* get depth
+        int depth = 0;
+        for (int d = 0; d < 8; d++) {
+            double diffX = q_maxX - q_minX;
+            double curr = (diffX / Math.pow(2, d)) / Constants.TILE_SIZE;
+            depth = d;
+            if (curr <= lonDPP) {
+                break;
+            }
+        }
+        results.put("depth", depth);
+
+        //* calculate render grid
+
+        //* calculate tile x and y based on depth
+        double diffX = q_maxX - q_minX;
+        double diffY = q_maxY - q_minY;
+        //* deltaX
+        double tileX = diffX / (Math.pow(2, depth));
+        //* deltaY
+        double tileY = diffY / (Math.pow(2, depth));
+
+        double altMaxX = r_maxX - q_minX;
+        double altMinX = r_minX - q_minX;
+        double altMaxY = r_maxY - q_minY;
+        double altMinY = r_minY - q_minY;
+
+        //* calculate diff bw given and constant x and y
+        int endX = (int) (altMaxX / tileX);
+        int startX = (int) (altMinX / tileX);
+
+        int endY = (int) (altMaxY / tileY);
+        int startY = (int) (altMinY / tileY);
+
+        int altEndY = (int) Math.pow(2, depth) - 1 - startY;
+        int altStartY = (int) Math.pow(2, depth) - 1- endY;
+
+        //* calculate end and start coords by dividing diff / tile
+
+        //* set bounds for x and y for exact fit (double for loop to lookup pngs by x and y using calc)
+        int second = endX - startX + 1;
+        int first = endY - startY + 1;
+
+        //* fill up grid
+        String[][] render_grid = new String[first][second];
+        for (int j = altStartY; j <= altEndY; j++) {
+            for (int k = startX; k <= endX; k++) {
+                render_grid[j - altStartY][k - startX] = "d" + depth + "_x" + k + "_y" + j + ".png"; //outofbounds
+            }
+        }
+        results.put("render_grid", render_grid);
+
+        //* calculate corner coords
+        double ul_lon = Math.max(startX * tileX + q_minX, q_minX);
+        double lr_lon = Math.min((endX + 1) * tileX + q_minX, q_maxX);
+        double ul_lat = Math.min(-altStartY * tileY + q_maxY, q_maxY);
+        double lr_lat = Math.max(-(altEndY + 1) * tileY + q_maxY, q_minY);
+        results.put("raster_ul_lon", ul_lon);
+        results.put("raster_ul_lat", ul_lat);
+        results.put("raster_lr_lon", lr_lon);
+        results.put("raster_lr_lat", lr_lat);
+
         return results;
     }
 
