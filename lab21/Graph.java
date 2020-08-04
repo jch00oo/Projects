@@ -1,15 +1,11 @@
-import java.util.Set;
-import java.util.TreeSet;
-import java.util.HashSet;
-import java.util.HashMap;
+import edu.princeton.cs.algs4.WeightedQuickUnionUF;
+
+import java.util.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.io.BufferedReader;
 import java.nio.charset.Charset;
 import java.io.IOException;
-import java.util.Random;
-import java.util.Queue;
-import java.util.ArrayDeque;
 
 /* A mutable and finite Graph object. Edge labels are stored via a HashMap
    where labels are mapped to a key calculated by the following. The graph is
@@ -131,11 +127,58 @@ public class Graph {
 
     public Graph prims(int start) {
         // TODO: YOUR CODE HERE
+        /*
+        * copy over Dijkstra's code (modify fringe)
+        * add a hashmap, hashset -- visited
+         */
+        Graph result = new Graph();
+
+
+
         return null;
     }
 
     public Graph kruskals() {
         // TODO: YOUR CODE HERE
+        /* create union find structure (size: num of vertices)
+        * create a graph that represents MST (w vertices but no edges)
+        * for each edge in increasing order (for loop for edge e):
+        *       if edge source and destination are not already connected in MST
+        *       add the edge in to the MST
+        *       union the two vertices (in your union find structure)
+        * return the MST
+         */
+        UnionFind uf = new UnionFind(getAllVertices().size());
+
+        Graph result = new Graph();
+        for (int v: getAllVertices()) {
+            result.addVertex(v);
+        }
+
+        ArrayList<Edge> edges = new ArrayList<>();
+        PriorityQueue<Edge> pq = new PriorityQueue<>();
+
+        for (Edge e: getAllEdges()) {
+            pq.add(e);
+        }
+
+        while (pq.peek() != null) {
+            edges.add(pq.poll());
+        }
+
+        for (int i = 0; i < edges.size(); i ++) {
+            int from = edges.get(i).getSource();
+            int to = edges.get(i).getDest();
+            if (!uf.connected(from, to)) {
+                result.addEdge(edges.get(i));
+                uf.union(from, to);
+            }
+        }
+
+        if (result.spans(this)) {
+            return result;
+        }
+
         return null;
     }
 
