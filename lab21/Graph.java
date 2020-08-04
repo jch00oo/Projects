@@ -150,7 +150,7 @@ public class Graph {
             dist.put(e.getDest(), e);
             heap.add(e.getDest());
         }
-        
+
         while (result.getAllVertices().size() < this.getAllVertices().size()) {
             int min = heap.poll();
             if (min == 0) {
@@ -159,19 +159,20 @@ public class Graph {
             if (!(result.containsVertex(min))) {
                 result.addEdge(dist.get(min));
                 for (Edge e: getEdges(min)) {
-                    if (dist.containsKey(e.getDest())) {
+                    if (!dist.containsKey(e.getDest())) {
+                        dist.put(e.getDest(), e);
+                        heap.add(e.getDest());
+                    } else {
                         if (e.getWeight() < dist.get(e.getDest()).getWeight()) {
                             dist.remove(e.getDest());
                             dist.put(e.getDest(), e);
                             heap.add(e.getDest());
                         }
-                    } else {
-                        dist.put(e.getDest(), e);
-                        heap.add(e.getDest());
                     }
                 }
             }
         }
+        
         if (result.spans(this)) {
             return result;
         }
