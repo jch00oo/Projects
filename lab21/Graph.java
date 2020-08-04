@@ -130,39 +130,44 @@ public class Graph {
         /*
         * copy over Dijkstra's code (modify fringe)
         * add a hashmap, hashset -- visited
+        * keep track of diff bw weights
+        * use poll to do it in order
+        * uhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh
+        * maybe just compare weights each time??
          */
         Graph result = new Graph();
 
         HashMap<Integer, Edge> dist = new HashMap<>();
         PriorityQueue<Integer> heap = new PriorityQueue<>(11, (a, b) -> {
-            int difference = dist.get(a).getWeight() - dist.get(b).getWeight();
-            return difference == 0 ? 1 : difference;
+            int diff = dist.get(a).getWeight() - dist.get(b).getWeight();
+            return diff == 0 ? 1 : diff;
         });
 
         result.addVertex(start);
 
-        for (Edge e : getEdges(start)) {
+        TreeSet<Edge> allEdges = getEdges(start);
+        for (Edge e: allEdges) {
             dist.put(e.getDest(), e);
             heap.add(e.getDest());
         }
         
         while (result.getAllVertices().size() < this.getAllVertices().size()) {
-            Integer minimum = heap.poll();
-            if (minimum == null) {
+            int min = heap.poll();
+            if (min == 0) {
                 break;
             }
-            if (!result.containsVertex(minimum)) {
-                result.addEdge(dist.get(minimum));
-                for (Edge e : getEdges(minimum)) {
-                    if (!dist.containsKey(e.getDest())) {
-                        dist.put(e.getDest(), e);
-                        heap.add(e.getDest());
-                    } else {
+            if (!(result.containsVertex(min))) {
+                result.addEdge(dist.get(min));
+                for (Edge e: getEdges(min)) {
+                    if (dist.containsKey(e.getDest())) {
                         if (e.getWeight() < dist.get(e.getDest()).getWeight()) {
                             dist.remove(e.getDest());
                             dist.put(e.getDest(), e);
                             heap.add(e.getDest());
                         }
+                    } else {
+                        dist.put(e.getDest(), e);
+                        heap.add(e.getDest());
                     }
                 }
             }
