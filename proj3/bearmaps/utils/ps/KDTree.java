@@ -33,8 +33,17 @@ public class KDTree implements PointSet {
 
         boolean goLeft = (node.depth % 2 == 0);
 
-        double ptPos = goLeft ? pt.getX() : pt.getY();
-        double nodePos = goLeft ? node.point.getX() : node.point.getY();
+//        double nodePos = goLeft ? node.point.getX() : node.point.getY();
+
+        double ptPos;
+        double nodePos;
+        if (goLeft) {
+            ptPos = pt.getX();
+            nodePos = node.point.getX();
+        } else {
+            ptPos = pt.getY();
+            nodePos = node.point.getY();
+        }
 
         if (ptPos < nodePos) {
             node.left = insertHelper(node.left, pt, depth + 1);
@@ -67,8 +76,16 @@ public class KDTree implements PointSet {
         KDTreeNode bad = null;
 
         boolean goLeft = (curr.depth % 2 == 0);
-        double tarPos = goLeft ? targetPt.getX() : targetPt.getY();
-        double currPos = goLeft ? curr.point.getX() : curr.point.getY();
+
+        double tarPos;
+        double currPos;
+        if (goLeft) {
+            tarPos = targetPt.getX();
+            currPos = curr.point.getX();
+        } else {
+            tarPos = targetPt.getY();
+            currPos = curr.point.getY();
+        }
 
         if (tarPos < currPos) {
             good = curr.left;
@@ -80,7 +97,13 @@ public class KDTree implements PointSet {
 
         opt = nearestHelper(good, targetPt, opt);
 
-        Point tracker = goLeft ? new Point(curr.point.getX(), targetPt.getY()) : new Point(targetPt.getX(), curr.point.getY());
+        Point tracker;
+        if (goLeft) {
+            tracker = new Point(curr.point.getX(), targetPt.getY());
+        } else {
+            tracker = new Point(targetPt.getX(), curr.point.getY());
+        }
+
         double vDis = Point.distance(tracker, targetPt);
         double bDis = Point.distance(opt.point, targetPt);
         boolean toPrune = (vDis < bDis);
