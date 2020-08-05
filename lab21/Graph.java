@@ -152,8 +152,8 @@ public class Graph {
         }
 
         while (result.getAllVertices().size() < this.getAllVertices().size()) {
-            int min = heap.poll();
-            if (min == 0) {
+            Integer min = heap.poll();
+            if (min == null) {
                 break;
             }
             if (!(result.containsVertex(min))) {
@@ -172,7 +172,7 @@ public class Graph {
                 }
             }
         }
-        
+
         if (result.spans(this)) {
             return result;
         }
