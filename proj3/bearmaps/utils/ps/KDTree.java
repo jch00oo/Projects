@@ -9,7 +9,7 @@ public class KDTree {
     }
 
     public Point nearest(double x, double y) {
-
+        return new Point(x,y);
     }
 
 
