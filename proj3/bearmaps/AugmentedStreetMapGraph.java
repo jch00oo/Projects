@@ -1,6 +1,7 @@
 package bearmaps;
 
 import bearmaps.utils.Constants;
+import bearmaps.utils.MyTrieSet;
 import bearmaps.utils.graph.streetmap.Node;
 import bearmaps.utils.graph.streetmap.StreetMapGraph;
 import bearmaps.utils.ps.KDTree;
@@ -24,6 +25,12 @@ public class AugmentedStreetMapGraph extends StreetMapGraph {
     private HashMap<Point, Long> pointNodeMap;
     private KDTree searchTree;
 
+    /** extra credit instance variables */
+    private MyTrieSet trie;
+    private HashMap<String, LinkedList<String>> trieMap = new HashMap<>();
+    private HashMap<String, LinkedList<Node>> nodeTrieMap = new HashMap<>();
+
+
     public AugmentedStreetMapGraph(String dbPath) {
         super(dbPath);
         // You might find it helpful to uncomment the line below:
@@ -43,6 +50,28 @@ public class AugmentedStreetMapGraph extends StreetMapGraph {
         }
         searchTree = new KDTree(points);
 
+        /** for extra credit portion */
+        /** change nodes list to trie */
+        trie = new MyTrieSet();
+        for (Node node: nodes) {
+            if (node.name() != null) {
+                String cleanedVer = cleanString(node.name());
+                if (trieMap.containsKey(cleanedVer)) {
+                    trieMap.get(cleanedVer).add(node.name());
+                    nodeTrieMap.get(cleanedVer).add(node);
+                } else {
+                    LinkedList<String> values = new LinkedList<>();
+                    LinkedList<Node> nodeList = new LinkedList<>();
+
+                    values.add(node.name());
+                    trieMap.put(cleanedVer, values);
+
+                    nodeList.add(node);
+                    nodeTrieMap.put(cleanedVer, nodeList);
+                }
+                trie.add(cleanedVer);
+            }
+        }
     }
 
 
@@ -101,7 +130,15 @@ public class AugmentedStreetMapGraph extends StreetMapGraph {
      * cleaned <code>prefix</code>.
      */
     public List<String> getLocationsByPrefix(String prefix) {
-        return new LinkedList<>();
+        List<String> curr = new LinkedList<>();
+        LinkedList<String> result = new LinkedList<>();
+
+        curr.addAll(trie.keysWithPrefix(prefix));
+
+        for (String key: curr) {
+            result.addAll(trieMap.get(key));
+        }
+        return result;
     }
 
     /**
