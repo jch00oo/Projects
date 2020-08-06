@@ -20,6 +20,7 @@ public class MinHeapPQ<T> implements PriorityQueue<T> {
         return heap.findMin().item();
     }
 
+    /** edit to fit runtime */
     /* Inserts ITEM with the priority value PRIORITYVALUE into the MinHeapPQ. If
        ITEM is already in the MinHeapPQ, throw an IllegalArgumentException. */
     public void insert(T item, double priorityValue) {
@@ -38,6 +39,7 @@ public class MinHeapPQ<T> implements PriorityQueue<T> {
         return heap.removeMin().item();
     }
 
+    /** edit to fit runtime */
     /* Changes the PriorityItem with item ITEM to have priority value
        PRIORITYVALUE. Assume the items in the MinHeapPQ are all unique. If ITEM
        is not in the MinHeapPQ, throw a NoSuchElementException. */
