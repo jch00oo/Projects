@@ -194,18 +194,18 @@ public class MinHeap<E extends Comparable<E>> {
     public void update(E element) {
         // TODO: YOUR CODE HERE
         if (contains(element)) {
-            int index = exists.get(element);
-            setElement(index, element);
-            bubbleUp(index);
-            bubbleDown(index);
-//            for (int i = 1; i < contents.size(); i++) {
-//                if (getElement(i).equals(element)) {
-//                    setElement(i, element);
-//                    bubbleUp(i);
-//                    bubbleDown(i);
-//                    return;
-//                }
-//            }
+//            int index = exists.get(element);
+//            setElement(index, element);
+//            bubbleUp(index);
+//            bubbleDown(index);
+            for (int i = 1; i < contents.size(); i++) {
+                if (getElement(i).equals(element)) {
+                    setElement(i, element);
+                    bubbleUp(i);
+                    bubbleDown(i);
+                    return;
+                }
+            }
         } else {
             throw new NoSuchElementException();
         }
