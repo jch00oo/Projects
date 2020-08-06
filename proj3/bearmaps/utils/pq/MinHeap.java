@@ -180,7 +180,7 @@ public class MinHeap<E extends Comparable<E>> {
         E minimum = findMin();
         swap(1, size);
         E toDel = getElement(size);
-//        contents.remove(size);
+        contents.remove(size);
         bubbleDown(1);
         exists.remove(toDel);
         size--;

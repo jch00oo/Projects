@@ -1,8 +1,57 @@
+//package bearmaps.utils.graph.streetmap;
+//
+//import bearmaps.utils.ps.KDTree;
+//import bearmaps.utils.ps.Point;
+//
+//import java.util.HashMap;
+//import java.util.LinkedList;
+//import java.util.List;
+//
+//public class AugmentedStreetMapGraph extends StreetMapGraph {
+//
+//    private List<Node> nodes;
+//    private List<Point> points;
+//    private HashMap<Point, Long> pointNodeMap;
+//    private KDTree searchTree;
+//
+//    public AugmentedStreetMapGraph(String dbpath) {
+//        super(dbpath);
+//        nodes = this.getNodes();
+//        points = new LinkedList<>();
+//        pointNodeMap = new HashMap<>();
+//
+//        for (Node node: nodes) {
+//            if (neighbors(node.id()).size() > 0) {
+//                Point point = new Point(node.lon(), node.lat());
+//                pointNodeMap.put(point, node.id());
+//                points.add(point);
+//            }
+////            if (!this.neighbors(node.id()).isEmpty()) {
+////                double lon = node.lon();
+////                double lat = node.lat();
+////                Point point = new Point(lon, lat);
+////                points.add(point);
+////                pointNodeMap.put(point, node);
+////            }
+//        }
+//        searchTree = new KDTree(points);
+//    }
+//
+//    public long closest(double lon, double lat) {
+//        Point point = searchTree.nearest(lon, lat);
+//        return pointNodeMap.get(point);
+//    }
+//}
+
 package bearmaps;
 
 import bearmaps.utils.Constants;
+import bearmaps.utils.graph.streetmap.Node;
 import bearmaps.utils.graph.streetmap.StreetMapGraph;
+import bearmaps.utils.ps.KDTree;
+import bearmaps.utils.ps.Point;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.LinkedList;
@@ -16,10 +65,26 @@ import java.util.LinkedList;
  */
 public class AugmentedStreetMapGraph extends StreetMapGraph {
 
+    private List<Point> points;
+    private HashMap<Point, Long> pointNodeMap;
+    private KDTree searchTree;
+
     public AugmentedStreetMapGraph(String dbPath) {
         super(dbPath);
         // You might find it helpful to uncomment the line below:
-        // List<Node> nodes = this.getNodes();
+        List<Node> nodes = this.getNodes();
+        points = new LinkedList<>();
+        pointNodeMap = new HashMap<>();
+
+        for (Node node: nodes) {
+            if (neighbors(node.id()).size() > 0) {
+                Point point = new Point(node.lon(), node.lat());
+                pointNodeMap.put(point, node.id());
+                points.add(point);
+            }
+        }
+        searchTree = new KDTree(points);
+
     }
 
 
@@ -33,7 +98,8 @@ public class AugmentedStreetMapGraph extends StreetMapGraph {
     public long closest(double lon, double lat) {
         double x = projectToX(lon, lat);
         double y = projectToY(lon, lat);
-        return 0;
+        Point closestPoint = searchTree.nearest(lon, lat);
+        return pointNodeMap.get(closestPoint);
     }
 
     /**
