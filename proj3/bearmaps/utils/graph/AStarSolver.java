@@ -44,24 +44,27 @@ public class AStarSolver<Vertex> implements ShortestPathsSolver<Vertex> {
     public AStarSolver(AStarGraph<Vertex> input, Vertex start, Vertex end, double timeout) {
         HashMap<Vertex, Vertex> edgeTo = new HashMap<>();
         edgeTo.put(start, null);
+
         HashMap<Vertex, Double> distTo = new HashMap<>();
         distTo.put(start, 0.0);
+
         MinHeapPQ<Vertex> fringe = new MinHeapPQ<>();
         fringe.insert(start,0);
 
         Stopwatch sw = new Stopwatch();
+
         while (fringe.size() > 0) {
-            numStatesExplored++;
+            // Vertex target = fringe.poll();
             Vertex target = fringe.peek();
             if (target.equals(end)) {
-                Vertex solMin = end;
-                while (solMin != null) {
-                    solution.addFirst(solMin);
-                    solMin = edgeTo.get(solMin);
-                }
                 solutionWeight = distTo.get(end);
                 outcome = SolverOutcome.SOLVED;
                 explorationTime = sw.elapsedTime();
+                Vertex curr = end;
+                while (curr != null) {
+                    solution.addFirst(curr);
+                    curr = edgeTo.get(curr);
+                }
                 break;
             } else {
                 target = fringe.poll();
@@ -72,23 +75,30 @@ public class AStarSolver<Vertex> implements ShortestPathsSolver<Vertex> {
                     break;
                 } else {
                     /** relax */
+                    // p = e.from(), q = e.to(), w = e.weight()
                     for (WeightedEdge<Vertex> e: input.neighbors(target)) {
                         Vertex p = e.from();
                         Vertex q = e.to();
                         double w = e.weight();
-                        double curDist = distTo.get(target) + w;
-                        if (!distTo.containsKey(q) || Double.compare(curDist, distTo.get(q)) < 0) {
-                            distTo.put(q, curDist);
-                            edgeTo.put(q, target);
+
+                        // if distTo[p] + w < distTo[q]:
+                        if (distTo.get(p) + w < distTo.getOrDefault(q, Double.POSITIVE_INFINITY)) {
+                            // distTo[q] = distTo[p] + w
+                            distTo.put(q, distTo.get(p) + w);
+                            edgeTo.put(q, p);
+                            double priorityValue = distTo.get(q) + input.estimatedDistanceToGoal(q, end);
+                            // if q is in the PQ: PQ.changePriority(q, distTo[q] + h(q, goal))
                             if (fringe.contains(q)) {
-                                fringe.changePriority(q, curDist + input.estimatedDistanceToGoal(q, end));
+                                fringe.changePriority(q, priorityValue);
                             } else {
-                                fringe.insert(q, curDist + input.estimatedDistanceToGoal(q, end));
+                                // if q is not in PQ: PQ.insert(q, distTo[q] + h(q, goal))
+                                fringe.insert(q, priorityValue);
                             }
                         }
                     }
                 }
             }
+            numStatesExplored++;
         }
 
         if (outcome == SolverOutcome.UNSOLVABLE) {

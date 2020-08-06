@@ -33,8 +33,6 @@ public class KDTree implements PointSet {
 
         boolean goLeft = (node.depth % 2 == 0);
 
-//        double nodePos = goLeft ? node.point.getX() : node.point.getY();
-
         double ptPos;
         double nodePos;
         if (goLeft) {
