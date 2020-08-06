@@ -74,28 +74,7 @@ public class AStarSolver<Vertex> implements ShortestPathsSolver<Vertex> {
                     explorationTime = sw.elapsedTime();
                     break;
                 } else {
-                    /** relax */
-                    // p = e.from(), q = e.to(), w = e.weight()
-                    for (WeightedEdge<Vertex> e: input.neighbors(target)) {
-                        Vertex p = e.from();
-                        Vertex q = e.to();
-                        double w = e.weight();
-
-                        // if distTo[p] + w < distTo[q]:
-                        if (distTo.get(p) + w < distTo.getOrDefault(q, Double.POSITIVE_INFINITY)) {
-                            // distTo[q] = distTo[p] + w
-                            distTo.put(q, distTo.get(p) + w);
-                            edgeTo.put(q, p);
-                            double priorityValue = distTo.get(q) + input.estimatedDistanceToGoal(q, end);
-                            // if q is in the PQ: PQ.changePriority(q, distTo[q] + h(q, goal))
-                            if (fringe.contains(q)) {
-                                fringe.changePriority(q, priorityValue);
-                            } else {
-                                // if q is not in PQ: PQ.insert(q, distTo[q] + h(q, goal))
-                                fringe.insert(q, priorityValue);
-                            }
-                        }
-                    }
+                    relax(fringe, input, target, distTo, edgeTo, end);
                 }
             }
             numStatesExplored++;
@@ -104,6 +83,30 @@ public class AStarSolver<Vertex> implements ShortestPathsSolver<Vertex> {
         if (outcome == SolverOutcome.UNSOLVABLE) {
             solutionWeight = 0;
             explorationTime = sw.elapsedTime();
+        }
+    }
+
+    public void relax(MinHeapPQ<Vertex> fringe, AStarGraph<Vertex> curr, Vertex target, HashMap<Vertex, Double> distTo, HashMap<Vertex, Vertex> edgeTo, Vertex end) {
+
+        for (WeightedEdge<Vertex> e: curr.neighbors(target)) {
+            Vertex p = e.from();
+            Vertex q = e.to();
+            double w = e.weight();
+
+            // if distTo[p] + w < distTo[q]:
+            if (distTo.get(p) + w < distTo.getOrDefault(q, Double.POSITIVE_INFINITY)) {
+                // distTo[q] = distTo[p] + w
+                distTo.put(q, distTo.get(p) + w);
+                edgeTo.put(q, p);
+                double priorityValue = distTo.get(q) + curr.estimatedDistanceToGoal(q, end);
+                // if q is in the PQ: PQ.changePriority(q, distTo[q] + h(q, goal))
+                if (fringe.contains(q)) {
+                    fringe.changePriority(q, priorityValue);
+                } else {
+                    // if q is not in PQ: PQ.insert(q, distTo[q] + h(q, goal))
+                    fringe.insert(q, priorityValue);
+                }
+            }
         }
     }
 
