@@ -5,11 +5,11 @@ import java.util.NoSuchElementException;
 public class MinHeapPQ<T> implements PriorityQueue<T> {
 
     /* The heap backing our MinHeapPQ. */
-    private bearmaps.utils.pq.MinHeap<PriorityItem> heap;
+    private MinHeap<PriorityItem> heap;
 
     /* Initializes an empty MinHeapPQ. */
     public MinHeapPQ() {
-        heap = new bearmaps.utils.pq.MinHeap<PriorityItem>();
+        heap = new MinHeap<PriorityItem>();
     }
 
     /* Returns the item with the smallest priority value, but does not remove it
