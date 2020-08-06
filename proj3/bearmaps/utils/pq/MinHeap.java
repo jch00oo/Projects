@@ -1,6 +1,7 @@
 package bearmaps.utils.pq;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.NoSuchElementException;
 
 /* A MinHeap class of Comparable elements backed by an ArrayList. */
@@ -11,12 +12,14 @@ public class MinHeap<E extends Comparable<E>> {
     private int size;
     // TODO: YOUR CODE HERE (no code should be needed here if not 
     // implementing the more optimized version)
+    private HashMap<E, Integer> exists;
 
     /* Initializes an empty MinHeap. */
     public MinHeap() {
         contents = new ArrayList<>();
         contents.add(null);
         size = 0;
+        exists = new HashMap<E, Integer>();
     }
 
     /* Returns the element at index INDEX, and null if it is out of bounds. */
@@ -43,6 +46,10 @@ public class MinHeap<E extends Comparable<E>> {
         E element2 = getElement(index2);
         setElement(index2, element1);
         setElement(index1, element2);
+
+        /** uh */
+        exists.put(element1, index2);
+        exists.put(element2, index1);
     }
 
     /* Prints out the underlying heap sideways. Use for debugging. */
@@ -163,6 +170,7 @@ public class MinHeap<E extends Comparable<E>> {
         size++;
         int index = size;
         setElement(index, element);
+        exists.put(element, size);
         bubbleUp(index);
     }
 
@@ -171,8 +179,10 @@ public class MinHeap<E extends Comparable<E>> {
         // TODO: YOUR CODE HERE
         E minimum = findMin();
         swap(1, size);
-        contents.remove(size);
+        E toDel = getElement(size);
+//        contents.remove(size);
         bubbleDown(1);
+        exists.remove(toDel);
         size--;
         return minimum;
     }
@@ -184,14 +194,18 @@ public class MinHeap<E extends Comparable<E>> {
     public void update(E element) {
         // TODO: YOUR CODE HERE
         if (contains(element)) {
-            for (int i = 1; i < contents.size(); i++) {
-                if (getElement(i).equals(element)) {
-                    setElement(i, element);
-                    bubbleUp(i);
-                    bubbleDown(i);
-                    return;
-                }
-            }
+            int index = exists.get(element);
+            setElement(index, element);
+            bubbleUp(index);
+            bubbleDown(index);
+//            for (int i = 1; i < contents.size(); i++) {
+//                if (getElement(i).equals(element)) {
+//                    setElement(i, element);
+//                    bubbleUp(i);
+//                    bubbleDown(i);
+//                    return;
+//                }
+//            }
         } else {
             throw new NoSuchElementException();
         }
@@ -201,6 +215,7 @@ public class MinHeap<E extends Comparable<E>> {
        be checked using .equals(), not ==. */
     public boolean contains(E element) {
         // TODO: YOUR CODE HERE
-        return contents.contains(element);
+        exists.containsKey(element);
+//        return contents.contains(element);
     }
 }
