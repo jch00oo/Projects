@@ -267,8 +267,6 @@
 //}
 //
 
-package bearmaps.utils.pq;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.NoSuchElementException;
